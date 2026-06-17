@@ -463,92 +463,102 @@ function getTasks(grade) {
 // 海报导出功能
 // ========================================
 function exportPoster() {
-    var scores = JSON.parse(localStorage.getItem('testScores') || '{"R":0,"I":0,"A":0,"S":0,"E":0,"C":0}');
-    var userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    
-    // 创建一个canvas用于绘制海报
-    var canvas = document.createElement('canvas');
-    canvas.width = 600;
-    canvas.height = 800;
-    var ctx = canvas.getContext('2d');
-    
-    // 背景渐变
-    var gradient = ctx.createLinearGradient(0, 0, 0, 800);
-    gradient.addColorStop(0, '#4A90E2');
-    gradient.addColorStop(1, '#6BA3E0');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 600, 800);
-    
-    // 标题区域
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 32px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('大学生成长职途助手', 300, 60);
-    
-    ctx.font = '18px sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.fillText('我的专属职业规划报告', 300, 100);
-    
-    // 绘制雷达图
-    drawPosterRadar(ctx, scores, 300, 300, 120);
-    
-    // 个人信息卡片
-    ctx.fillStyle = 'rgba(255,255,255,0.95)';
-    ctx.fillRect(50, 480, 500, 280);
-    
-    ctx.fillStyle = '#303133';
-    ctx.font = 'bold 20px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText('📋 个人信息', 70, 520);
-    
-    ctx.font = '16px sans-serif';
-    ctx.fillStyle = '#606266';
-    ctx.fillText('专业：' + (userInfo.major || '未填写'), 70, 555);
-    ctx.fillText('年级：' + getGradeLabel(userInfo.grade) || '未选择', 70, 585);
-    ctx.fillText('技能：' + (userInfo.skills || '未填写'), 70, 615);
-    
-    // 得分展示
-    ctx.font = 'bold 18px sans-serif';
-    ctx.fillStyle = '#303133';
-    ctx.fillText('📊 兴趣维度得分', 70, 660);
-    
-    var dimensions = ['R', 'I', 'A', 'S', 'E', 'C'];
-    var labels = ['现实型', '研究型', '艺术型', '社会型', '企业型', '常规型'];
-    var x = 70;
-    var y = 690;
-    
-    for (var i = 0; i < dimensions.length; i++) {
-        ctx.font = 'bold 14px sans-serif';
-        ctx.fillStyle = '#4A90E2';
-        ctx.fillText(dimensions[i], x, y);
+    try {
+        var scores = JSON.parse(localStorage.getItem('testScores') || '{"R":0,"I":0,"A":0,"S":0,"E":0,"C":0}');
+        var userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
         
-        ctx.font = '12px sans-serif';
+        // 创建一个canvas用于绘制海报
+        var canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 800;
+        var ctx = canvas.getContext('2d');
+        
+        // 背景渐变
+        var gradient = ctx.createLinearGradient(0, 0, 0, 800);
+        gradient.addColorStop(0, '#4A90E2');
+        gradient.addColorStop(1, '#6BA3E0');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 600, 800);
+        
+        // 标题区域
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 32px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('大学生成长职途助手', 300, 60);
+        
+        ctx.font = '18px sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.fillText('我的专属职业规划报告', 300, 100);
+        
+        // 绘制雷达图
+        drawPosterRadar(ctx, scores, 300, 300, 120);
+        
+        // 个人信息卡片
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fillRect(50, 480, 500, 280);
+        
+        ctx.fillStyle = '#303133';
+        ctx.font = 'bold 20px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('个人信息', 70, 520);
+        
+        ctx.font = '16px sans-serif';
         ctx.fillStyle = '#606266';
-        ctx.fillText(labels[i], x - 8, y + 20);
+        ctx.fillText('专业：' + (userInfo.major || '未填写'), 70, 555);
+        ctx.fillText('年级：' + (getGradeLabel(userInfo.grade) || '未选择'), 70, 585);
+        ctx.fillText('技能：' + (userInfo.skills || '未填写'), 70, 615);
         
+        // 得分展示
         ctx.font = 'bold 18px sans-serif';
         ctx.fillStyle = '#303133';
-        ctx.fillText(scores[dimensions[i]] || 0, x, y + 45);
+        ctx.fillText('兴趣维度得分', 70, 660);
         
-        x += 80;
+        var dimensions = ['R', 'I', 'A', 'S', 'E', 'C'];
+        var labels = ['现实型', '研究型', '艺术型', '社会型', '企业型', '常规型'];
+        var x = 70;
+        var y = 690;
+        
+        for (var i = 0; i < dimensions.length; i++) {
+            ctx.font = 'bold 14px sans-serif';
+            ctx.fillStyle = '#4A90E2';
+            ctx.fillText(dimensions[i], x, y);
+            
+            ctx.font = '12px sans-serif';
+            ctx.fillStyle = '#606266';
+            ctx.fillText(labels[i], x - 8, y + 20);
+            
+            ctx.font = 'bold 18px sans-serif';
+            ctx.fillStyle = '#303133';
+            ctx.fillText(scores[dimensions[i]] || 0, x, y + 45);
+            
+            x += 80;
+        }
+        
+        // 底部装饰
+        ctx.fillStyle = 'rgba(74,144,226,0.3)';
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('基于霍兰德职业兴趣理论 · 原创测评体系', 300, 770);
+        
+        // 导出图片
+        var url = canvas.toDataURL('image/png');
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = '职途规划海报_' + new Date().toISOString().slice(0, 10) + '.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        alert('海报已导出！');
+        
+        // 确保保持在结果页面
+        nav('result');
+    } catch (error) {
+        console.error('海报生成失败:', error);
+        alert('海报生成失败，请重试！');
+        // 确保保持在结果页面
+        nav('result');
     }
-    
-    // 底部装饰
-    ctx.fillStyle = 'rgba(74,144,226,0.3)';
-    ctx.font = '12px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('基于霍兰德职业兴趣理论 · 原创测评体系', 300, 770);
-    
-    // 导出图片
-    var url = canvas.toDataURL('image/png');
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = '职途规划海报_' + new Date().toISOString().slice(0, 10) + '.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    
-    alert('海报已导出！');
 }
 
 function drawPosterRadar(ctx, scores, centerX, centerY, radius) {
