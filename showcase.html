@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大学生成长职途助手 - 创意展示</title>
+<style>
+/* ============ Reset & Base ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --blue: #4A90E2;
+  --blue-dark: #357ABD;
+  --blue-light: #E8F1FB;
+  --green: #67C23A;
+  --green-light: #F0F9EB;
+  --text: #2C3E50;
+  --text-light: #7F8C8D;
+  --bg: #F5F7FA;
+  --white: #FFFFFF;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 30px rgba(0,0,0,0.10);
+  --radius: 14px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ Container ============ */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============ Section ============ */
+.section {
+  padding: 80px 0;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--text-light);
+  margin-bottom: 48px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============ 1. Hero ============ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #E8F1FB 0%, #F5F7FA 40%, #FFFFFF 100%);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: var(--blue);
+  opacity: 0.06;
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: var(--green);
+  opacity: 0.05;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(20px, -20px); }
+}
+
+.hero .deco-diamond {
+  position: absolute;
+  width: 40px; height: 40px;
+  background: var(--blue);
+  opacity: 0.04;
+  transform: rotate(45deg);
+  border-radius: 6px;
+}
+
+.hero .deco-diamond:nth-child(2) { top: 15%; left: 8%; animation: float 7s ease-in-out infinite; }
+.hero .deco-diamond:nth-child(3) { top: 60%; right: 10%; animation: float 9s ease-in-out infinite reverse; }
+.hero .deco-diamond:nth-child(4) { bottom: 25%; left: 15%; animation: float 8s ease-in-out infinite; }
+
+.hero-inner { position: relative; z-index: 1; }
+
+.hero-badge {
+  display: inline-block;
+  background: var(--blue-light);
+  color: var(--blue);
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.hero-title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 16px;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.hero-title span { color: var(--blue); }
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-light);
+  margin-bottom: 40px;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.btn {
+  display: inline-block;
+  padding: 14px 34px;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.btn:hover { transform: translateY(-2px) scale(1.03); }
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(74,144,226,0.3);
+}
+
+.btn-primary:hover { box-shadow: 0 6px 24px rgba(74,144,226,0.4); }
+
+.btn-outline {
+  background: var(--white);
+  color: var(--blue);
+  border: 2px solid var(--blue);
+}
+
+.btn-outline:hover { background: var(--blue-light); }
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-light);
+  font-size: 0.82rem;
+  animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.arrow-down {
+  width: 24px; height: 24px;
+  border-right: 2px solid var(--text-light);
+  border-bottom: 2px solid var(--text-light);
+  transform: rotate(45deg);
+  animation: bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); }
+  50% { transform: rotate(45deg) translateY(8px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ Cards Grid ============ */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--blue-light);
+}
+
+.card-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 18px;
+  position: relative;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.card-desc {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* ============ Pain Point Icons (Pure CSS) ============ */
+.icon-compass {
+  width: 48px; height: 48px;
+  border: 3px solid var(--blue);
+  border-radius: 50%;
+  position: relative;
+  margin: 4px auto;
+}
+.icon-compass::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 20px solid var(--blue);
+  transform: translate(-50%, -50%);
+}
+
+.icon-crossroads {
+  width: 48px; height: 48px;
+  position: relative;
+  margin: 4px auto;
+}
+.icon-crossroads::before, .icon-crossroads::after {
+  content: '';
+  position: absolute;
+  background: var(--green);
+  border-radius: 3px;
+}
+.icon-crossroads::before {
+  width: 48px; height: 6px;
+  top: 50%; left: 0;
+  transform: translateY(-50%);
+}
+.icon-crossroads::after {
+  width: 6px; height: 48px;
+  left: 50%; top: 0;
+  transform: translateX(-50%);
+}
+
+.icon-paper {
+  width: 40px; height: 48px;
+  border: 3px solid #E6A23C;
+  border-radius: 4px 4px 4px 12px;
+  position: relative;
+  margin: 0 auto;
+  background: linear-gradient(180deg, transparent 0%, transparent 30%, #E6A23C 30%, #E6A23C 32%, transparent 32%, transparent 50%, #E6A23C 50%, #E6A23C 52%, transparent 52%, transparent 70%, #E6A23C 70%, #E6A23C 72%, transparent 72%);
+}
+
+.icon-coin {
+  width: 48px; height: 48px;
+  border: 3px solid #909399;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto;
+  background: conic-gradient(#909399 0deg 20deg, transparent 20deg 80deg, #909399 80deg 100deg);
+}
+.icon-coin::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 14px; height: 14px;
+  background: #909399;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ============ Feature Icons ============ */
+.icon-target {
+  width: 44px; height: 44px;
+  border: 3px solid var(--blue);
+  border-radius: 50%;
+  position: relative;
+  margin: 6px auto;
+}
+.icon-target::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 16px; height: 16px;
+  background: var(--blue);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.icon-target::before {
+  content: '';
+  position: absolute;
+  top: 8px; right: -6px;
+  width: 20px; height: 2px;
+  background: var(--blue);
+  transform: rotate(-45deg);
+  border-radius: 1px;
+}
+
+.icon-compare {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  justify-content: center;
+  height: 48px;
+  margin: 4px auto;
+}
+.icon-compare::before, .icon-compare::after {
+  content: '';
+  display: block;
+  width: 14px;
+  background: var(--green);
+  border-radius: 3px 3px 0 0;
+}
+.icon-compare::before { height: 28px; opacity: 0.45; }
+.icon-compare::after { height: 44px; }
+
+.icon-magnify {
+  width: 38px; height: 38px;
+  border: 3px solid #E6A23C;
+  border-radius: 50%;
+  position: relative;
+  margin: 5px auto;
+}
+.icon-magnify::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; right: -6px;
+  width: 18px; height: 3px;
+  background: #E6A23C;
+  border-radius: 2px;
+  transform: rotate(-45deg);
+}
+
+.icon-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  margin: 4px auto;
+}
+.icon-checklist::before, .icon-checklist::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 4px;
+  background: var(--blue);
+  border-radius: 2px;
+}
+.icon-checklist::after { width: 28px; }
+
+/* ============ Scenario Timeline ============ */
+.timeline {
+  position: relative;
+  padding-left: 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 80px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--blue-light), var(--blue), var(--blue-light));
+  border-radius: 3px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.timeline-item:last-child { margin-bottom: 0; }
+
+.timeline-stage {
+  width: 100px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--blue);
+  font-size: 1rem;
+  flex-shrink: 0;
+  padding-top: 6px;
+  position: relative;
+}
+
+.timeline-stage::after {
+  content: '';
+  position: absolute;
+  right: -37px;
+  top: 10px;
+  width: 12px; height: 12px;
+  background: var(--blue);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--blue-light);
+}
+
+.timeline-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  flex: 1;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.timeline-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.timeline-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+
+.timeline-card p { color: var(--text-light); font-size: 0.9rem; }
+
+.timeline-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-bottom: 6px;
+}
+
+.tag-explore { background: #FFF4E6; color: #E6A23C; }
+.tag-grow { background: var(--blue-light); color: var(--blue); }
+.tag-decide { background: #FEF0F0; color: #F56C6C; }
+.tag-sprint { background: var(--green-light); color: var(--green); }
+
+/* ============ Tech Section ============ */
+.tech-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.tech-card {
+  padding: 32px 28px;
+  border-radius: var(--radius);
+}
+
+.tech-card-left {
+  background: var(--blue-light);
+  border: 1px solid rgba(74,144,226,0.15);
+}
+
+.tech-card-right {
+  background: linear-gradient(135deg, #667eea0d, #764ba20d);
+  border: 1px solid rgba(102,126,234,0.15);
+}
+
+.tech-label {
+  font-weight: 700;
+  margin-bottom: 14px;
+  font-size: 1.05rem;
+}
+
+.tech-label-left { color: var(--blue); }
+.tech-label-right { color: #667eea; }
+
+.tech-items { list-style: none; }
+.tech-items li {
+  padding: 5px 0;
+  font-size: 0.92rem;
+  color: var(--text);
+  position: relative;
+  padding-left: 18px;
+}
+.tech-items li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 12px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+}
+.tech-card-left .tech-items li::before { background: var(--blue); }
+.tech-card-right .tech-items li::before { background: #667eea; }
+
+/* ============ Value Section ============ */
+.value-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.value-card {
+  background: var(--white);
+  padding: 32px 28px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.value-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.value-num {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.value-num-blue { color: var(--blue); }
+.value-num-green { color: var(--green); }
+
+.value-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 8px; }
+.value-desc { color: var(--text-light); font-size: 0.9rem; }
+
+/* ============ Footer ============ */
+.footer {
+  text-align: center;
+  padding: 48px 0;
+  background: var(--white);
+  border-top: 1px solid #EBEEF5;
+}
+
+.footer-slogan {
+  font-size: 1.15rem;
+  color: var(--text);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.footer-meta {
+  font-size: 0.82rem;
+  color: var(--text-light);
+}
+
+.footer-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: var(--blue);
+  border-radius: 50%;
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 768px) {
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .section { padding: 56px 0; }
+  .section-title { font-size: 1.5rem; }
+
+  .card-grid,
+  .card-grid-2,
+  .tech-split,
+  .value-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline::before { left: 0; }
+  .timeline-item { flex-direction: column; gap: 12px; }
+  .timeline-stage { text-align: left; padding-left: 20px; }
+  .timeline-stage::after {
+    right: auto;
+    left: -5px;
+    top: 8px;
+  }
+
+  .hero { padding: 0 16px; }
+  .hero .deco-diamond:nth-child(3) { display: none; }
+
+  .btn { padding: 12px 24px; font-size: 0.95rem; }
+  .tech-card { padding: 24px 20px; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 1.7rem; }
+  .btn { width: 100%; text-align: center; }
+  .hero-buttons { flex-direction: column; }
+}
+
+/* ============ Scroll Animations ============ */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- ========== 1. Hero ========== -->
+<section class="hero">
+  <div class="deco-diamond"></div>
+  <div class="deco-diamond"></div>
+  <div class="deco-diamond"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">TRAE AI 创造力大赛 · 参赛作品</div>
+    <h1 class="hero-title">大学生成长<span>职途助手</span></h1>
+    <p class="hero-subtitle">按学期拆解目标，动态规划你的大学职途</p>
+    <div class="hero-buttons">
+      <a href="#features" class="btn btn-primary">查看功能</a>
+      <a href="#scenarios" class="btn btn-outline">使用场景</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>向下滚动探索</span>
+    <div class="arrow-down"></div>
+  </div>
+</section>
+
+<!-- ========== 2. Pain Points ========== -->
+<section class="section" id="pain-points">
+  <div class="container">
+    <h2 class="section-title">大学成长，你是不是也有这些困惑？</h2>
+    <p class="section-subtitle">每一个大学生都会经历的成长选择题，我们懂你</p>
+    <div class="card-grid">
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-compass"></div>
+        <h3 class="card-title">方向迷茫</h3>
+        <p class="card-desc">低年级不知道适合什么职业，错过成长黄金期，到大三大四才匆忙决定</p>
+      </div>
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-crossroads"></div>
+        <h3 class="card-title">选择困难</h3>
+        <p class="card-desc">就业/考研/考公多赛道纠结，信息分散难对比，缺乏科学决策依据</p>
+      </div>
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-paper"></div>
+        <h3 class="card-title">落地困难</h3>
+        <p class="card-desc">规划只停留在纸面，没有可执行的学期任务，想法和行动严重脱节</p>
+      </div>
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-coin"></div>
+        <h3 class="card-title">成本高昂</h3>
+        <p class="card-desc">专业规划服务价格高，普通学生难以负担，信息壁垒阻碍成长机会</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 3. Core Features ========== -->
+<section class="section" id="features" style="background: var(--white);">
+  <div class="container">
+    <h2 class="section-title">一站式解决职业规划全流程</h2>
+    <p class="section-subtitle">从自我认知到行动落地，四步闭环完成你的专属职途蓝图</p>
+    <div class="card-grid">
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-target"></div>
+        <h3 class="card-title">原创职业测评</h3>
+        <p class="card-desc">基于霍兰德RIASEC职业兴趣理论，20道原创题目快速定位你的兴趣方向，6维度精准画像</p>
+      </div>
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-compare"></div>
+        <h3 class="card-title">多赛道并行对比</h3>
+        <p class="card-desc">就业/考研/考公三条路线一键生成适配方案，横向对比适配度，辅助科学决策</p>
+      </div>
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-magnify"></div>
+        <h3 class="card-title">能力差距分析</h3>
+        <p class="card-desc">精准定位当前能力短板，结合目标路线给出针对性提升建议，让努力方向更明确</p>
+      </div>
+      <div class="card animate-on-scroll">
+        <div class="card-icon icon-checklist"></div>
+        <h3 class="card-title">学期任务拆解</h3>
+        <p class="card-desc">按年级拆解成长目标，生成5条可执行的学期行动清单，支持打卡追踪完成进度</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4. User Scenarios ========== -->
+<section class="section" id="scenarios">
+  <div class="container">
+    <h2 class="section-title">不同阶段，都有适合你的成长方案</h2>
+    <p class="section-subtitle">大学四年，每个阶段都有独特的任务和挑战</p>
+    <div class="timeline">
+      <div class="timeline-item animate-on-scroll">
+        <div class="timeline-stage">大一探索期</div>
+        <div class="timeline-card">
+          <span class="timeline-tag tag-explore">自我认知</span>
+          <h3>快速定位兴趣方向，搭建大学成长框架</h3>
+          <p>通过霍兰德测评发现职业兴趣倾向，结合专业特点建立大学四年目标地图，避免从零开始盲目探索</p>
+        </div>
+      </div>
+      <div class="timeline-item animate-on-scroll">
+        <div class="timeline-stage">大二成长期</div>
+        <div class="timeline-card">
+          <span class="timeline-tag tag-grow">能力积累</span>
+          <h3>明确能力提升路径，规划证书与竞赛目标</h3>
+          <p>根据测评反馈的能力差距，制定针对性学习计划，规划专业技能证书与学科竞赛时间线</p>
+        </div>
+      </div>
+      <div class="timeline-item animate-on-scroll">
+        <div class="timeline-stage">大三抉择期</div>
+        <div class="timeline-card">
+          <span class="timeline-tag tag-decide">关键决策</span>
+          <h3>多赛道横向对比，敲定升学或就业方向</h3>
+          <p>同时评估考研、就业、考公三条路线的适配度，结合专业与兴趣做出最适合自己的选择</p>
+        </div>
+      </div>
+      <div class="timeline-item animate-on-scroll">
+        <div class="timeline-stage">大四冲刺期</div>
+        <div class="timeline-card">
+          <span class="timeline-tag tag-sprint">全力冲刺</span>
+          <h3>梳理能力短板，精准匹配求职与备考节奏</h3>
+          <p>针对性补齐简历与面试短板，规划秋招/春招投递节奏，制定考研冲刺或公考复习方案</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 5. Tech & Iteration ========== -->
+<section class="section" style="background: var(--white);">
+  <div class="container">
+    <h2 class="section-title">技术架构与发展路径</h2>
+    <p class="section-subtitle">立足当下，着眼未来的产品演进思路</p>
+    <div class="tech-split">
+      <div class="tech-card tech-card-left animate-on-scroll">
+        <div class="tech-label tech-label-left">当前实现</div>
+        <ul class="tech-items">
+          <li>基于 TRAE IDE · SOLO纯原生开发</li>
+          <li>HTML + CSS + JavaScript 单页应用</li>
+          <li>4页面完整闭环：首页→填表→测评→报告</li>
+          <li>霍兰德6维度20题原创测评体系</li>
+          <li>Canvas雷达图 + 个性化推荐引擎</li>
+          <li>localStorage 本地数据持久化</li>
+          <li>完全响应式，PC端与移动端适配</li>
+        </ul>
+      </div>
+      <div class="tech-card tech-card-right animate-on-scroll">
+        <div class="tech-label tech-label-right">后续迭代规划</div>
+        <ul class="tech-items">
+          <li>接入后端服务，支持用户账号体系</li>
+          <li>云端档案存储，多端数据同步</li>
+          <li>AI 模拟面试，智能问答辅导</li>
+          <li>简历智能解析与优化建议</li>
+          <li>多套测评维度交叉参考（MBTI等）</li>
+          <li>专业-岗位匹配数据库扩充</li>
+          <li>社区分享与成长轨迹可视化</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 6. Value ========== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">不止是规划工具</h2>
+    <p class="section-subtitle">我们相信好的工具应该让每个人都触手可及</p>
+    <div class="value-cards">
+      <div class="value-card animate-on-scroll">
+        <div class="value-num value-num-blue">15<span style="font-size: 1.2rem; margin-left: 2px;">min</span></div>
+        <div class="value-title">效率提升</div>
+        <div class="value-desc">将职业探索周期从数周压缩至15分钟，一站式完成从自我测评到行动落地的全流程规划</div>
+      </div>
+      <div class="value-card animate-on-scroll">
+        <div class="value-num value-num-green">∞</div>
+        <div class="value-title">社会价值</div>
+        <div class="value-desc">免费向全体大学生开放，降低职业规划信息差，助力教育资源均衡，让每个学生都有清晰的成长路径</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 7. Footer ========== -->
+<footer class="footer">
+  <div class="container">
+    <p class="footer-slogan">按学期拆解目标<span class="footer-dot"></span>动态规划你的大学职途</p>
+    <p class="footer-meta">大学生成长职途助手 · 基于 TRAE AI 创造力大赛提交作品 · 纯原生前端技术栈 · 版权开放共享</p>
+  </div>
+</footer>
+
+<script>
+// Scroll-triggered animations
+const observerCallback = function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+};
+
+const observer = new IntersectionObserver(observerCallback, {
+  threshold: 0.15,
+  rootMargin: '0px 0px -40px 0px'
+});
+
+document.querySelectorAll('.animate-on-scroll').forEach(function(el) {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
