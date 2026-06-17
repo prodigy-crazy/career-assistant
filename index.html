@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大学生成长职途助手</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">职途助手</div>
+                <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">🌓</button>
+            </div>
+        </nav>
+        
+        <main class="main-content">
+            <section id="home" class="page active">
+                <div class="hero">
+                    <h1>大学生成长职途助手</h1>
+                    <p class="slogan">按学期拆解目标，动态规划你的大学职途</p>
+                    <div class="growth-ladder">
+                        <div class="ladder-item">
+                            <div class="ladder-step">1</div>
+                            <span class="ladder-label">大一</span>
+                        </div>
+                        <div class="ladder-arrow">→</div>
+                        <div class="ladder-item">
+                            <div class="ladder-step">2</div>
+                            <span class="ladder-label">大二</span>
+                        </div>
+                        <div class="ladder-arrow">→</div>
+                        <div class="ladder-item">
+                            <div class="ladder-step">3</div>
+                            <span class="ladder-label">大三</span>
+                        </div>
+                        <div class="ladder-arrow">→</div>
+                        <div class="ladder-item">
+                            <div class="ladder-step">4</div>
+                            <span class="ladder-label">大四</span>
+                        </div>
+                        <div class="ladder-arrow">→</div>
+                        <div class="ladder-future">未来</div>
+                    </div>
+                    <button class="btn-primary btn-large" onclick="nav('info')">开始规划</button>
+                    <p class="footer-note">基于霍兰德职业兴趣理论 · 原创测评体系</p>
+                </div>
+            </section>
+
+            <section id="info" class="page">
+                <div class="form-container">
+                    <div class="form-header">
+                        <button type="button" class="btn-back" onclick="nav('home')">← 返回</button>
+                        <h2>填写你的基础信息</h2>
+                    </div>
+                    <form id="info-form" onsubmit="submitInfo(event)">
+                        <div class="form-group">
+                            <label>所在专业 <span class="required">*</span></label>
+                            <input type="text" id="major" placeholder="请输入你的专业">
+                            <span class="error-message" id="error-major"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>当前年级 <span class="required">*</span></label>
+                            <select id="grade">
+                                <option value="">请选择年级</option>
+                                <option value="freshman">大一</option>
+                                <option value="sophomore">大二</option>
+                                <option value="junior">大三</option>
+                                <option value="senior">大四</option>
+                            </select>
+                            <span class="error-message" id="error-grade"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>已掌握技能</label>
+                            <textarea id="skills" placeholder="可填写编程语言、软件、特长等"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>意向方向</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="direction" value="job">
+                                    <span>就业</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="direction" value="graduate">
+                                    <span>考研</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="direction" value="public">
+                                    <span>考公</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="direction" value="undecided">
+                                    <span>暂未确定</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">下一步，去测评</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="test" class="page">
+                <div class="test-container">
+                    <div class="test-header">
+                        <h2>职业测评</h2>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <span class="progress-text" id="progress-text">1 / 20</span>
+                    </div>
+                    <div class="question-container" id="question-container">
+                        <div class="question-number" id="question-number">1</div>
+                        <h3 class="question-text" id="question-text">题目加载中...</h3>
+                        <div class="options" id="options">
+                            <label class="option">
+                                <input type="radio" name="answer" value="1">
+                                <span>非常不符合</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="answer" value="2">
+                                <span>不符合</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="answer" value="3">
+                                <span>一般</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="answer" value="4">
+                                <span>符合</span>
+                            </label>
+                            <label class="option">
+                                <input type="radio" name="answer" value="5">
+                                <span>非常符合</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="test-actions">
+                        <button class="btn-secondary" onclick="prevQuestion()" id="btn-prev">上一题</button>
+                        <button class="btn-primary" onclick="nextQuestion()" id="btn-next">下一题</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="result" class="page">
+                <div class="result-page">
+                    <div class="result-header">
+                        <button class="btn-back" onclick="restartAssessment()">← 返回首页</button>
+                        <h2>你的专属职途规划报告</h2>
+                    </div>
+
+                    <div class="result-module" id="module-radar">
+                        <h3>兴趣维度雷达图</h3>
+                        <div class="radar-container">
+                            <canvas id="radar-canvas" width="400" height="400"></canvas>
+                            <div class="score-display">
+                                <div class="score-item"><span class="label">R</span><span class="value" id="disp-R">0</span></div>
+                                <div class="score-item"><span class="label">I</span><span class="value" id="disp-I">0</span></div>
+                                <div class="score-item"><span class="label">A</span><span class="value" id="disp-A">0</span></div>
+                                <div class="score-item"><span class="label">S</span><span class="value" id="disp-S">0</span></div>
+                                <div class="score-item"><span class="label">E</span><span class="value" id="disp-E">0</span></div>
+                                <div class="score-item"><span class="label">C</span><span class="value" id="disp-C">0</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-module" id="module-routes">
+                        <h3>推荐发展路线</h3>
+                        <div class="routes-container" id="routes-container">
+                        </div>
+                    </div>
+
+                    <div class="result-module" id="module-abilities">
+                        <h3>能力差距分析</h3>
+                        <div class="abilities-list" id="abilities-list">
+                        </div>
+                    </div>
+
+                    <div class="result-module" id="module-tasks">
+                        <h3>本学期行动清单</h3>
+                        <div class="tasks-list" id="tasks-list">
+                        </div>
+                    </div>
+
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="exportReport()">导出报告</button>
+                        <button class="btn-secondary" onclick="exportPoster()">生成海报</button>
+                        <button class="btn-primary" onclick="restartAssessment()">重新测评</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <p>大学生成长职途助手 © 2024</p>
+        </footer>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>

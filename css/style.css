@@ -1,0 +1,1071 @@
+/* ========================================
+   大学生成长职途助手 - 全局样式
+   ======================================== */
+
+/* CSS变量 - 主题色彩 */
+:root {
+    --primary: #4A90E2;
+    --secondary: #67C23A;
+    --bg-light: #f5f7fa;
+    --bg-white: #fff;
+    --text-primary: #303133;
+    --text-secondary: #606266;
+    --text-light: #909399;
+    --border: #dcdfe6;
+    --shadow: 0 2px 12px rgba(0,0,0,0.1);
+    --error: #f56c6c;
+}
+
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* ========================================
+   布局容器
+   ======================================== */
+.app {
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+/* ========================================
+   导航栏
+   ======================================== */
+.navbar {
+    background: var(--bg-white);
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background 0.3s;
+    min-height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: var(--primary);
+    color: white;
+}
+
+/* ========================================
+   页面切换动画
+   ======================================== */
+.page {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ========================================
+   首页样式
+   ======================================== */
+.hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, var(--primary) 0%, #6BA3E0 100%);
+    color: white;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero .slogan {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+/* 阶梯成长图形 */
+.growth-ladder {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 0.5rem;
+    margin: 3rem 0;
+    padding: 2rem;
+    flex-wrap: wrap;
+}
+
+.ladder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ladder-step {
+    width: 50px;
+    height: 50px;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.ladder-item:nth-child(1) .ladder-step { height: 40px; }
+.ladder-item:nth-child(3) .ladder-step { height: 60px; }
+.ladder-item:nth-child(5) .ladder-step { height: 80px; }
+.ladder-item:nth-child(7) .ladder-step { height: 100px; }
+
+.ladder-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-top: 0.5rem;
+}
+
+.ladder-arrow {
+    font-size: 1.2rem;
+    opacity: 0.7;
+    margin-bottom: 1rem;
+}
+
+.ladder-future {
+    height: 120px;
+    width: 60px;
+    background: rgba(255,255,255,0.1);
+    border: 2px dashed rgba(255,255,255,0.3);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.footer-note {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 1.5rem;
+}
+
+/* ========================================
+   按钮样式
+   ======================================== */
+.btn-primary {
+    background: var(--secondary);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-height: 48px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(103,194,58,0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 12px 32px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-height: 48px;
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-secondary:active {
+    transform: scale(0.98);
+}
+
+.btn-large {
+    min-width: 200px;
+    height: 56px;
+    font-size: 1.1rem;
+    padding: 0 40px;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.3s;
+    min-height: 48px;
+    min-width: 48px;
+}
+
+.btn-back:hover {
+    color: #3a7bc8;
+}
+
+.btn-back:active {
+    transform: scale(0.95);
+}
+
+/* ========================================
+   表单样式
+   ======================================== */
+.form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.form-container h2 {
+    flex: 1;
+    text-align: center;
+    margin-bottom: 0;
+    color: var(--text-primary);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.required {
+    color: var(--error);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74,144,226,0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.checkbox-item:hover {
+    background: var(--bg-light);
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.error-message {
+    color: var(--error);
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 0.25rem;
+    min-height: 1.2rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.form-actions .btn-primary {
+    width: 100%;
+}
+
+/* ========================================
+   测评页样式
+   ======================================== */
+.test-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.test-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.test-header h2 {
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e4e7ed;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s;
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.question-container {
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.question-number {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.question-text {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option:hover {
+    border-color: var(--primary);
+    background: rgba(74,144,226,0.05);
+}
+
+.option.selected {
+    border-color: var(--primary);
+    background: rgba(74,144,226,0.1);
+}
+
+.option input[type="radio"] {
+    margin-right: 1rem;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.test-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.test-actions .btn-primary {
+    min-width: 120px;
+}
+
+.test-actions .btn-secondary {
+    min-width: 100px;
+}
+
+/* ========================================
+   结果页样式
+   ======================================== */
+.result-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.result-header h2 {
+    flex: 1;
+    text-align: center;
+}
+
+.result-module {
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+}
+
+.result-module h3 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+}
+
+/* 雷达图 */
+.radar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+#radar-canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.score-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.score-display .score-item {
+    background: var(--bg-light);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+}
+
+.score-display .label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.score-display .value {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* 发展路线 */
+.routes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.route-card {
+    background: var(--bg-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+
+.route-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.route-name {
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.route-match {
+    background: var(--secondary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.route-desc {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+/* 能力分析 */
+.abilities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ability-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.ability-num {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.ability-content h4 {
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+.ability-content p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* 任务清单 */
+.tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.task-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+}
+
+.task-priority {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.task-text {
+    flex: 1;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* ========================================
+   页脚
+   ======================================== */
+.footer {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg-white);
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+/* ========================================
+   响应式适配 - 平板/手机
+   ======================================== */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .hero {
+        padding: 2rem 1rem;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero .slogan {
+        font-size: 0.95rem;
+    }
+
+    .growth-ladder {
+        gap: 0.25rem;
+        padding: 1rem;
+    }
+
+    .ladder-step {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .ladder-item:nth-child(1) .ladder-step { height: 30px; }
+    .ladder-item:nth-child(3) .ladder-step { height: 45px; }
+    .ladder-item:nth-child(5) .ladder-step { height: 60px; }
+    .ladder-item:nth-child(7) .ladder-step { height: 75px; }
+
+    .ladder-future {
+        height: 90px;
+        width: 50px;
+        font-size: 0.75rem;
+    }
+
+    .btn-large {
+        min-width: 180px;
+        height: 48px;
+        font-size: 1rem;
+        padding: 0 24px;
+    }
+
+    .footer-note {
+        font-size: 0.75rem;
+    }
+
+    .form-container {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .test-container {
+        padding: 0;
+    }
+
+    .test-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .test-actions .btn-primary,
+    .test-actions .btn-secondary {
+        width: 100%;
+    }
+
+    .result-module {
+        padding: 1.5rem;
+    }
+
+    .route-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+
+    .result-actions .btn-primary {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   响应式适配 - 超小屏幕 (375px)
+   ======================================== */
+@media (max-width: 375px) {
+    body {
+        font-size: 14px;
+    }
+
+    .hero {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero .slogan {
+        font-size: 0.85rem;
+    }
+
+    .growth-ladder {
+        gap: 0.15rem;
+        padding: 0.5rem;
+    }
+
+    .ladder-step {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+
+    .ladder-item:nth-child(1) .ladder-step { height: 24px; }
+    .ladder-item:nth-child(3) .ladder-step { height: 36px; }
+    .ladder-item:nth-child(5) .ladder-step { height: 48px; }
+    .ladder-item:nth-child(7) .ladder-step { height: 60px; }
+
+    .ladder-future {
+        height: 72px;
+        width: 40px;
+        font-size: 0.65rem;
+    }
+
+    .ladder-arrow {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .ladder-label {
+        font-size: 0.7rem;
+    }
+
+    .btn-large {
+        min-width: 160px;
+        height: 44px;
+        font-size: 0.9rem;
+        padding: 0 20px;
+    }
+
+    .footer-note {
+        font-size: 0.7rem;
+    }
+
+    .form-container {
+        padding: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .checkbox-group {
+        gap: 0.75rem;
+    }
+
+    .checkbox-item {
+        padding: 0.25rem;
+        font-size: 14px;
+    }
+
+    .question-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .question-text {
+        font-size: 1rem;
+    }
+
+    .option {
+        padding: 0.75rem;
+    }
+
+    .result-module {
+        padding: 1rem;
+    }
+
+    .result-module h3 {
+        font-size: 1rem;
+    }
+
+    .score-display .score-item {
+        padding: 0.4rem 0.75rem;
+        min-width: 50px;
+    }
+
+    .score-display .label {
+        font-size: 1rem;
+    }
+
+    .score-display .value {
+        font-size: 0.8rem;
+    }
+
+    .route-card {
+        padding: 1rem;
+    }
+
+    .route-name {
+        font-size: 0.95rem;
+    }
+
+    .route-desc {
+        font-size: 0.85rem;
+    }
+
+    .ability-item {
+        padding: 0.75rem;
+    }
+
+    .ability-num {
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+    }
+
+    .ability-content h4 {
+        font-size: 0.9rem;
+    }
+
+    .ability-content p {
+        font-size: 0.8rem;
+    }
+
+    .task-item {
+        padding: 0.75rem;
+    }
+
+    .task-priority {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .task-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* ========================================
+   暗黑模式
+   ======================================== */
+.dark-theme {
+    --bg-light: #1a1a2e;
+    --bg-white: #16213e;
+    --text-primary: #ffffff;
+    --text-secondary: #b8b8d0;
+    --text-light: #6b6b8a;
+    --border: #2d2d44;
+    --shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.dark-theme .hero {
+    background: linear-gradient(135deg, #3a5070 0%, #4a6fa5 100%);
+}
+
+.dark-theme .ladder-step {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.dark-theme .ladder-future {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* ========================================
+   任务打卡样式
+   ======================================== */
+.task-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+    transition: all 0.3s;
+}
+
+.task-item.completed {
+    opacity: 0.6;
+    border-left-color: var(--secondary);
+}
+
+.task-checkbox {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--secondary);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.task-content {
+    flex: 1;
+}
+
+.task-content p {
+    margin: 0;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+}
+
+/* ========================================
+   动画效果
+   ======================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page.active {
+    animation: fadeIn 0.3s ease forwards;
+}
