@@ -717,14 +717,80 @@ body {
 .routes-container {
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
+}
+
+.route-category {
+    background: var(--bg-light);
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+}
+
+.route-category-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.route-category-icon {
+    font-size: 1.5rem;
+}
+
+.route-category-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.route-list {
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
 }
 
 .route-card {
-    background: var(--bg-light);
-    padding: 1.5rem;
+    background: var(--white);
+    padding: 1.25rem;
     border-radius: 8px;
     border-left: 4px solid var(--primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.route-card-title {
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+}
+
+.route-card-detail {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    word-break: break-word;
+    margin-bottom: 0.5rem;
+}
+
+.route-salary {
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(74, 144, 226, 0.1);
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.salary-label {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.salary-value {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 0.9rem;
 }
 
 .route-header {
@@ -1141,8 +1207,21 @@ body {
         padding: 1rem;
     }
 
-    .route-name {
+    .route-card-title {
         font-size: 0.95rem;
+    }
+
+    .route-category-header {
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .route-category-icon {
+        font-size: 1.25rem;
+    }
+
+    .route-category-name {
+        font-size: 1rem;
     }
 
     .route-desc {
@@ -1196,6 +1275,359 @@ body {
 
 .dark-theme .hero {
     background: linear-gradient(135deg, #3a5070 0%, #4a6fa5 30%, #4a8a4a 100%);
+}
+
+/* ========================================
+   路线规划按钮样式
+   ======================================== */
+.route-plan-btn {
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--primary), #357abd);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.route-plan-btn:hover {
+    background: linear-gradient(135deg, #357abd, #2a5f8f);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.route-plan-btn:active {
+    transform: translateY(0);
+}
+
+/* ========================================
+   规划弹窗样式
+   ======================================== */
+#plan-modal-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+.plan-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.plan-modal-content {
+    background: var(--bg-white);
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.plan-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--primary), #357abd);
+    color: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.plan-modal-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.plan-modal-close {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plan-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.plan-section {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.plan-section:last-of-type {
+    border-bottom: none;
+}
+
+.plan-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.plan-section-icon {
+    font-size: 1.1rem;
+}
+
+/* 当前状态 */
+.plan-status-box {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+}
+
+.plan-grade-tag {
+    padding: 0.5rem 1rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.plan-status-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* 能力评估 */
+.plan-abilities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.plan-ability-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    color: var(--text-secondary);
+}
+
+.plan-ability-dot {
+    color: var(--secondary);
+    font-size: 0.8rem;
+}
+
+/* 学习规划时间线 */
+.plan-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.plan-phase {
+    background: var(--bg-light);
+    border-radius: 12px;
+    padding: 1rem;
+    border-left: 4px solid var(--primary);
+}
+
+.plan-phase-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.plan-phase-num {
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.plan-phase-title {
+    font-weight: bold;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.plan-tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.plan-task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.plan-task-checkbox {
+    color: var(--text-light);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.plan-task-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* 提示信息 */
+.plan-tip-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(103, 194, 58, 0.1), rgba(74, 144, 226, 0.1));
+    border-radius: 8px;
+    margin: 1rem 1.5rem;
+}
+
+.plan-tip-icon {
+    font-size: 1.2rem;
+}
+
+.plan-tip-text {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* ========================================
+   规划弹窗响应式适配
+   ======================================== */
+@media (max-width: 768px) {
+    .plan-modal-content {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+
+    .plan-modal-header {
+        padding: 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .plan-modal-title {
+        font-size: 1rem;
+    }
+
+    .plan-section {
+        padding: 1rem;
+    }
+
+    .plan-status-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .plan-phase {
+        padding: 0.75rem;
+    }
+
+    .plan-tip-box {
+        margin: 1rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .plan-modal-header {
+        padding: 0.75rem;
+    }
+
+    .plan-modal-title {
+        font-size: 0.9rem;
+    }
+
+    .plan-modal-close {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+
+    .plan-section {
+        padding: 0.75rem;
+    }
+
+    .plan-section-header {
+        font-size: 0.9rem;
+    }
+
+    .plan-grade-tag {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+
+    .plan-phase-num {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+    }
+
+    .plan-phase-title {
+        font-size: 0.85rem;
+    }
+
+    .plan-task-text {
+        font-size: 0.85rem;
+    }
+
+    .plan-tip-text {
+        font-size: 0.8rem;
+    }
 }
 
 .dark-theme .direction-card {

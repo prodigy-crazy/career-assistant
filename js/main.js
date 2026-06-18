@@ -19,103 +19,163 @@ var majorCategoryMap = {
     '社会学':'social','统计学':'science','物流管理':'business','旅游管理':'business'
 };
 
-// 扩展题库：60道题，每维度10道，含反向题和专业适配题
+// 扩展题库：100道题，每维度约17题，含反向题和专业适配题
 // reverse: true = 反向计分题（选了5分实际得1分）
 // majorCategory: 专业适配类别，为空则通用所有专业
+// direction: 题目适配的方向，['job','graduate','public']或为空表示通用
 var questionBank = [
-    // R 实际型 - 通用
+    // ===== R 实际型 (17题) =====
+    // R 通用（适配所有方向）
     { dimension: 'R', text: '我喜欢动手组装、修理电子产品或手工物件', reverse: false },
     { dimension: 'R', text: '我更愿意做有具体实物产出的实操类任务', reverse: false },
     { dimension: 'R', text: '我擅长拆解和解决机械、设备类的实际问题', reverse: false },
     { dimension: 'R', text: '我偏好户外活动多于室内伏案工作', reverse: false },
     { dimension: 'R', text: '我享受使用工具完成实际工作的过程', reverse: false },
-    { dimension: 'R', text: '我对动植物养护、手工制作等活动感兴趣', reverse: false },
-    { dimension: 'R', text: '我不喜欢长时间坐在电脑前处理文字工作', reverse: false },
-    { dimension: 'R', text: '我能熟练使用各种维修工具和仪器设备', reverse: false },
-    // R 反向题
+    // R 就业方向
+    { dimension: 'R', text: '我对动植物养护、手工制作等活动感兴趣', reverse: false, direction: 'job' },
+    { dimension: 'R', text: '我能熟练使用各种维修工具和仪器设备', reverse: false, direction: 'job' },
+    { dimension: 'R', text: '我喜欢自己动手解决生活中的小问题', reverse: false, direction: 'job' },
+    // R 考研方向
+    { dimension: 'R', text: '我享受建造或制作东西的过程', reverse: false, direction: 'graduate' },
+    { dimension: 'R', text: '我更喜欢用实际操作来学习新知识', reverse: false, direction: 'graduate' },
+    // R 考公方向
+    { dimension: 'R', text: '我注重实践操作能力的培养', reverse: false, direction: 'public' },
+    // R 反向题（通用）
     { dimension: 'R', text: '我更喜欢思考抽象问题而不是动手操作', reverse: true },
     { dimension: 'R', text: '我倾向于用软件模拟而不是实际搭建', reverse: true },
+    { dimension: 'R', text: '我不喜欢任何体力劳动或手工操作', reverse: true },
     // R 技术类专业
-    { dimension: 'R', text: '我享受debug和修复bug的过程', reverse: false, majorCategory: 'tech' },
-    { dimension: 'R', text: '我愿意花时间搭建开发环境、配置工具链', reverse: false, majorCategory: 'tech' },
+    { dimension: 'R', text: '我享受debug和修复bug的过程', reverse: false, majorCategory: 'tech', direction: 'job' },
+    { dimension: 'R', text: '我愿意花时间搭建开发环境、配置工具链', reverse: false, majorCategory: 'tech', direction: 'job' },
+    { dimension: 'R', text: '我喜欢自己组装电脑或配置硬件', reverse: false, majorCategory: 'tech' },
     // R 设计类专业
     { dimension: 'R', text: '我喜欢绘制草图、制作实体模型', reverse: false, majorCategory: 'design' },
 
-    // I 研究型 - 通用
+    // ===== I 研究型 (17题) =====
+    // I 通用
     { dimension: 'I', text: '我喜欢探索事物背后的原理，做逻辑分析与推导', reverse: false },
     { dimension: 'I', text: '我乐于查阅文献、研究学术问题与新兴技术', reverse: false },
     { dimension: 'I', text: '遇到难题时我习惯先收集数据再得出结论', reverse: false },
     { dimension: 'I', text: '我对科学实验、数据分析类工作有浓厚兴趣', reverse: false },
-    { dimension: 'I', text: '我享受解决复杂问题带来的成就感', reverse: false },
-    { dimension: 'I', text: '我愿意深入研究一个领域直到成为专家', reverse: false },
-    { dimension: 'I', text: '我习惯用数学或统计方法验证我的想法', reverse: false },
-    { dimension: 'I', text: '我对学术论文和技术文档有较强的阅读理解能力', reverse: false },
+    // I 就业方向
+    { dimension: 'I', text: '我享受解决复杂问题带来的成就感', reverse: false, direction: 'job' },
+    { dimension: 'I', text: '我愿意深入研究一个领域直到成为专家', reverse: false, direction: 'job' },
+    // I 考研方向（重点）
+    { dimension: 'I', text: '我习惯用数学或统计方法验证我的想法', reverse: false, direction: 'graduate' },
+    { dimension: 'I', text: '我对学术论文和技术文档有较强的阅读理解能力', reverse: false, direction: 'graduate' },
+    { dimension: 'I', text: '我喜欢提出假设并验证它', reverse: false, direction: 'graduate' },
+    { dimension: 'I', text: '我享受钻研难题直到找到答案', reverse: false, direction: 'graduate' },
+    // I 考公方向
+    { dimension: 'I', text: '我注重数据分析和逻辑推理能力', reverse: false, direction: 'public' },
     // I 反向题
     { dimension: 'I', text: '我更关注how而不是why', reverse: true },
     { dimension: 'I', text: '我很少追根究底，差不多就行', reverse: true },
+    { dimension: 'I', text: '我不喜欢复杂的理论和抽象概念', reverse: true },
     // I 学术类专业
-    { dimension: 'I', text: '我愿意为发表论文投入大量时间精力', reverse: false, majorCategory: 'science' },
+    { dimension: 'I', text: '我愿意为发表论文投入大量时间精力', reverse: false, majorCategory: 'science', direction: 'graduate' },
+    { dimension: 'I', text: '我对科研项目有强烈的兴趣', reverse: false, majorCategory: 'science', direction: 'graduate' },
+    // I 技术类专业
+    { dimension: 'I', text: '我喜欢研究新技术和算法原理', reverse: false, majorCategory: 'tech' },
 
-    // A 艺术型 - 通用
+    // ===== A 艺术型 (17题) =====
+    // A 通用
     { dimension: 'A', text: '我喜欢通过创意设计、文字或艺术形式表达想法', reverse: false },
     { dimension: 'A', text: '我更愿意做有创造性、不按固定流程的工作', reverse: false },
     { dimension: 'A', text: '我对审美、排版、视觉呈现比较敏感', reverse: false },
     { dimension: 'A', text: '我经常产生独特的想法并想付诸实践', reverse: false },
-    { dimension: 'A', text: '我享受艺术创作和灵感迸发的过程', reverse: false },
-    { dimension: 'A', text: '我善于用非传统方式解决问题', reverse: false },
-    { dimension: 'A', text: '我对方程式和程序代码没有美感要求', reverse: false },
-    { dimension: 'A', text: '我喜欢独立工作而不是按指令完成任务', reverse: false },
+    // A 就业方向
+    { dimension: 'A', text: '我享受艺术创作和灵感迸发的过程', reverse: false, direction: 'job' },
+    { dimension: 'A', text: '我善于用非传统方式解决问题', reverse: false, direction: 'job' },
+    // A 考研方向
+    { dimension: 'A', text: '我喜欢独立工作而不是按指令完成任务', reverse: false, direction: 'graduate' },
+    { dimension: 'A', text: '我对色彩和构图有天生的敏感度', reverse: false, direction: 'graduate' },
+    // A 考公方向
+    { dimension: 'A', text: '我享受音乐、绘画或写作等艺术活动', reverse: false, direction: 'public' },
+    { dimension: 'A', text: '我喜欢尝试新的艺术形式和创作方法', reverse: false, direction: 'public' },
     // A 反向题
     { dimension: 'A', text: '我更喜欢有明确步骤的工作任务', reverse: true },
     { dimension: 'A', text: '我更注重结果而不是过程的美感', reverse: true },
+    { dimension: 'A', text: '我对艺术和创意活动缺乏兴趣', reverse: true },
     // A 设计类专业
-    { dimension: 'A', text: '我能接受为追求完美效果而反复修改作品', reverse: false, majorCategory: 'design' },
+    { dimension: 'A', text: '我能接受为追求完美效果而反复修改作品', reverse: false, majorCategory: 'design', direction: 'job' },
+    { dimension: 'A', text: '我对UI/UX设计有浓厚兴趣', reverse: false, majorCategory: 'design', direction: 'job' },
+    // A 语言类专业
+    { dimension: 'A', text: '我喜欢用文字表达复杂的思想', reverse: false, majorCategory: 'lang' },
 
-    // S 社会型 - 通用
+    // ===== S 社会型 (17题) =====
+    // S 通用
     { dimension: 'S', text: '我乐于倾听和帮助他人解决学习或生活中的问题', reverse: false },
     { dimension: 'S', text: '我喜欢参与志愿服务、社群运营类的活动', reverse: false },
     { dimension: 'S', text: '我擅长和不同的人沟通协作，愿意从事服务类工作', reverse: false },
-    { dimension: 'S', text: '我享受教导和传授知识给他人的过程', reverse: false },
-    { dimension: 'S', text: '我关心社会问题，愿意为公共利益出力', reverse: false },
-    { dimension: 'S', text: '我擅长调解冲突、维护团队和谐', reverse: false },
-    { dimension: 'S', text: '我更喜欢与人互动而不是独自工作', reverse: false },
-    { dimension: 'S', text: '我愿意倾听他人的倾诉并给予支持', reverse: false },
+    // S 就业方向
+    { dimension: 'S', text: '我享受教导和传授知识给他人的过程', reverse: false, direction: 'job' },
+    { dimension: 'S', text: '我关心社会问题，愿意为公共利益出力', reverse: false, direction: 'job' },
+    // S 考研方向
+    { dimension: 'S', text: '我擅长调解冲突、维护团队和谐', reverse: false, direction: 'graduate' },
+    // S 考公方向（重点）
+    { dimension: 'S', text: '我更喜欢与人互动而不是独自工作', reverse: false, direction: 'public' },
+    { dimension: 'S', text: '我愿意倾听他人的倾诉并给予支持', reverse: false, direction: 'public' },
+    { dimension: 'S', text: '我享受帮助他人成长和进步的过程', reverse: false, direction: 'public' },
+    { dimension: 'S', text: '我善于理解他人的处境和感受', reverse: false, direction: 'public' },
     // S 反向题
     { dimension: 'S', text: '我更喜欢独立完成工作而不是团队协作', reverse: true },
     { dimension: 'S', text: '我不太擅长处理复杂的人际关系', reverse: true },
+    { dimension: 'S', text: '我对帮助他人没有太大兴趣', reverse: true },
     // S 教育/心理类专业
     { dimension: 'S', text: '我能够耐心倾听并理解他人的情绪和需求', reverse: false, majorCategory: 'social' },
+    { dimension: 'S', text: '我对心理咨询和辅导有兴趣', reverse: false, majorCategory: 'social' },
+    // S 医学类专业
+    { dimension: 'S', text: '我愿意花时间关心和照顾病人', reverse: false, majorCategory: 'medical' },
 
-    // E 企业型 - 通用
+    // ===== E 企业型 (17题) =====
+    // E 通用
     { dimension: 'E', text: '我喜欢带领团队完成任务，承担组织与决策工作', reverse: false },
     { dimension: 'E', text: '我对商业运营、市场推广、创业类话题感兴趣', reverse: false },
-    { dimension: 'E', text: '我愿意挑战有业绩目标、能快速获得回报的工作', reverse: false },
-    { dimension: 'E', text: '我善于说服他人接受我的观点和建议', reverse: false },
-    { dimension: 'E', text: '我享受竞争和冒险带来的刺激感', reverse: false },
-    { dimension: 'E', text: '我对权力和影响力有较强的渴望', reverse: false },
-    { dimension: 'E', text: '我善于发现商机并付诸行动', reverse: false },
-    { dimension: 'E', text: '我愿意承担管理职责，带领团队达成目标', reverse: false },
+    // E 就业方向（重点）
+    { dimension: 'E', text: '我愿意挑战有业绩目标、能快速获得回报的工作', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我善于说服他人接受我的观点和建议', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我享受竞争和冒险带来的刺激感', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我对权力和影响力有较强的渴望', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我善于发现商机并付诸行动', reverse: false, direction: 'job' },
+    // E 考研方向
+    { dimension: 'E', text: '我愿意承担管理职责，带领团队达成目标', reverse: false, direction: 'graduate' },
+    // E 考公方向
+    { dimension: 'E', text: '我享受制定战略和实现目标的过程', reverse: false, direction: 'public' },
+    { dimension: 'E', text: '我善于谈判和达成商业合作', reverse: false, direction: 'public' },
     // E 反向题
     { dimension: 'E', text: '我更倾向于稳定的工作环境而不愿冒险', reverse: true },
     { dimension: 'E', text: '我更愿意做执行者而不是决策者', reverse: true },
+    { dimension: 'E', text: '我对商业和管理没有兴趣', reverse: true },
     // E 商科类专业
-    { dimension: 'E', text: '我愿意为创业梦想承担风险', reverse: false, majorCategory: 'business' },
+    { dimension: 'E', text: '我愿意为创业梦想承担风险', reverse: false, majorCategory: 'business', direction: 'job' },
+    { dimension: 'E', text: '我对市场营销和品牌建设有热情', reverse: false, majorCategory: 'business', direction: 'job' },
+    // E 管理类专业
+    { dimension: 'E', text: '我喜欢分析市场趋势并做出商业决策', reverse: false, majorCategory: 'business' },
 
-    // C 常规型 - 通用
+    // ===== C 常规型 (17题) =====
+    // C 通用
     { dimension: 'C', text: '我喜欢按规范流程做事，确保细节准确无误', reverse: false },
     { dimension: 'C', text: '我擅长整理资料、数据统计与事务性工作', reverse: false },
     { dimension: 'C', text: '我更偏好稳定、规则清晰的工作环境', reverse: false },
     { dimension: 'C', text: '我习惯按照计划严格执行任务', reverse: false },
-    { dimension: 'C', text: '我注重工作的准确性和完整性', reverse: false },
-    { dimension: 'C', text: '我喜欢处理数字、报表、数据核对工作', reverse: false },
-    { dimension: 'C', text: '我习惯将工作安排得井井有条', reverse: false },
-    { dimension: 'C', text: '我愿意遵守规章制度而不是打破规则', reverse: false },
+    // C 就业方向
+    { dimension: 'C', text: '我注重工作的准确性和完整性', reverse: false, direction: 'job' },
+    // C 考研方向
+    { dimension: 'C', text: '我喜欢处理数字、报表、数据核对工作', reverse: false, direction: 'graduate' },
+    { dimension: 'C', text: '我习惯将工作安排得井井有条', reverse: false, direction: 'graduate' },
+    // C 考公方向（重点）
+    { dimension: 'C', text: '我愿意遵守规章制度而不是打破规则', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我注重工作的条理性和系统性', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我擅长处理行政事务和文书工作', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我注重文件的规范性和程序的合规性', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我习惯于按部就班地完成任务', reverse: false, direction: 'public' },
     // C 反向题
     { dimension: 'C', text: '我更喜欢灵活自由的工作方式', reverse: true },
     { dimension: 'C', text: '我经常打破常规寻找新方法', reverse: true },
+    { dimension: 'C', text: '我对规则和流程感到束缚', reverse: true },
     // C 医疗/法律类专业
     { dimension: 'C', text: '我愿意严格遵守职业规范和操作流程', reverse: false, majorCategory: 'medical' },
-    { dimension: 'C', text: '我注重文件的规范性和程序的合规性', reverse: false, majorCategory: 'law' }
+    { dimension: 'C', text: '我注重法律条文和规章制度的学习', reverse: false, majorCategory: 'law', direction: 'public' }
 ];
 
 // 方向权重配置：影响不同维度的题目数量和推荐权重
@@ -126,73 +186,143 @@ var directionWeightConfig = {
     undecided: { R: 1.0, I: 1.0, A: 1.0, S: 1.0, E: 1.0, C: 1.0 }
 };
 
-// 根据专业和方向选择题目
+// 根据专业和方向选择题目（100题题库，严格无重复）
+// 逻辑：
+// 1. 如果用户选择了明确方向（就业/考研/考公），只选择该方向的题目（含通用题）
+// 2. 如果用户选择未确定，选择所有三个方向的题目
 function selectQuestions(major, directions) {
     var category = majorCategoryMap[major] || 'general';
     var totalNeeded = 20;
-    var perDimension = Math.floor(totalNeeded / 6); // 每维度约3-4题
+    var dimensions = ['R', 'I', 'A', 'S', 'E', 'C'];
+
+    // 确定可用的方向列表
+    var allowedDirections = [];
+    var isUndecided = directions.length === 0 || directions.includes('undecided');
+    
+    if (isUndecided) {
+        // 未确定：使用所有三个方向
+        allowedDirections = ['job', 'graduate', 'public'];
+    } else {
+        // 确定方向：只使用用户选择的方向
+        allowedDirections = directions;
+    }
 
     // 计算方向权重
     var weights = { R: 1, I: 1, A: 1, S: 1, E: 1, C: 1 };
-    directions.forEach(function(dir) {
+    allowedDirections.forEach(function(dir) {
         var dirWeights = directionWeightConfig[dir] || directionWeightConfig.undecided;
         for (var d in dirWeights) {
             weights[d] = weights[d] * dirWeights[d];
         }
     });
 
-    // 筛选题目：优先选专业适配题，再选通用题
-    var selected = [];
-    var usedIds = new Set();
-
-    // 计算每个维度需要的题目数（根据权重调整）
-    var dimCounts = {};
-    var dimensions = ['R', 'I', 'A', 'S', 'E', 'C'];
+    // 严格计算每个维度的题目数量（确保总题数20，每维度至少3题）
     var totalWeight = Object.values(weights).reduce(function(a, b) { return a + b; }, 0);
-
+    var dimCounts = {};
+    
+    // 先按权重分配基础题数
     dimensions.forEach(function(dim) {
-        dimCounts[dim] = Math.max(2, Math.round(perDimension * weights[dim] / totalWeight * 6));
+        dimCounts[dim] = Math.max(3, Math.round((weights[dim] / totalWeight) * totalNeeded));
     });
 
-    // 微调确保总数为20
+    // 强制调整为20题，确保每维度3-4题
     var sum = Object.values(dimCounts).reduce(function(a, b) { return a + b; }, 0);
-    if (sum < totalNeeded) {
-        dimCounts['I'] += totalNeeded - sum; // 研究型多补
-    } else if (sum > totalNeeded) {
-        dimCounts['C'] -= sum - totalNeeded; // 常规型少补
+    var diff = sum - totalNeeded;
+    
+    // 调整策略：优先调整权重较高的维度
+    if (diff > 0) {
+        // 需要减少题目，从权重较低的维度开始
+        var sortedDims = dimensions.slice().sort(function(a, b) { return weights[a] - weights[b]; });
+        for (var i = 0; i < diff && i < sortedDims.length; i++) {
+            if (dimCounts[sortedDims[i]] > 3) {
+                dimCounts[sortedDims[i]]--;
+            }
+        }
+    } else if (diff < 0) {
+        // 需要增加题目，向权重较高的维度增加
+        var sortedDims = dimensions.slice().sort(function(a, b) { return weights[b] - weights[a]; });
+        for (var i = 0; i < Math.abs(diff) && i < sortedDims.length; i++) {
+            dimCounts[sortedDims[i]]++;
+        }
     }
 
-    // 选择题目
+    // 最终验证总数
+    sum = Object.values(dimCounts).reduce(function(a, b) { return a + b; }, 0);
+    if (sum !== totalNeeded) {
+        // 微调最后一个维度
+        dimCounts[dimensions[dimensions.length - 1]] += totalNeeded - sum;
+    }
+
+    // 开始选择题目，确保无重复
+    var selected = [];
+    var usedTexts = new Set(); // 用题目文本作为唯一标识，确保无重复
+
     dimensions.forEach(function(dim) {
         var count = dimCounts[dim] || 3;
-        // 优先选择专业适配题
-        var categoryQuestions = questionBank.filter(function(q) {
-            return q.dimension === dim &&
-                   (q.majorCategory === category || !q.majorCategory) &&
-                   !usedIds.has(q.text);
-        });
-        // 再选通用题
-        var generalQuestions = questionBank.filter(function(q) {
-            return q.dimension === dim &&
-                   !q.majorCategory &&
-                   !usedIds.has(q.text);
+        
+        // 筛选该维度可用的题目：
+        // 1. 方向匹配：题目无方向标签 或 题目方向在允许列表中
+        // 2. 专业匹配（优先）
+        // 3. 未被使用
+        var availableQuestions = questionBank.filter(function(q) {
+            if (q.dimension !== dim || usedTexts.has(q.text)) {
+                return false;
+            }
+            // 检查方向匹配
+            if (!q.direction) {
+                // 无方向标签的题目通用
+                return true;
+            }
+            // 有方向标签的题目必须在允许列表中
+            return allowedDirections.includes(q.direction);
         });
 
-        var pool = [...categoryQuestions, ...generalQuestions];
-        // 打乱顺序
-        pool.sort(function() { return Math.random() - 0.5; });
+        // 按优先级排序：专业适配 + 方向匹配优先
+        availableQuestions.sort(function(a, b) {
+            var aScore = 0;
+            var bScore = 0;
+            
+            // 专业匹配加分
+            if (a.majorCategory === category) aScore += 2;
+            if (b.majorCategory === category) bScore += 2;
+            
+            // 方向匹配加分（非通用题）
+            if (a.direction) aScore += 1;
+            if (b.direction) bScore += 1;
+            
+            return bScore - aScore;
+        });
 
-        for (var i = 0; i < Math.min(count, pool.length); i++) {
-            selected.push(pool[i]);
-            usedIds.add(pool[i].text);
-        }
+        // 随机打乱同优先级的题目
+        var highPriority = availableQuestions.filter(function(q) { 
+            return q.majorCategory === category && q.direction; 
+        });
+        var midPriority = availableQuestions.filter(function(q) { 
+            return (q.majorCategory === category || q.direction) && !(q.majorCategory === category && q.direction); 
+        });
+        var lowPriority = availableQuestions.filter(function(q) { 
+            return !q.majorCategory && !q.direction; 
+        });
+        
+        // 打乱各自的顺序
+        highPriority.sort(function() { return Math.random() - 0.5; });
+        midPriority.sort(function() { return Math.random() - 0.5; });
+        lowPriority.sort(function() { return Math.random() - 0.5; });
+        
+        var shuffled = [...highPriority, ...midPriority, ...lowPriority];
+
+        // 选择所需数量
+        var toSelect = shuffled.slice(0, count);
+        toSelect.forEach(function(q) {
+            selected.push(q);
+            usedTexts.add(q.text);
+        });
     });
 
-    // 最终打乱所有题目
+    // 最终打乱所有题目的顺序
     selected.sort(function() { return Math.random() - 0.5; });
 
-    // 确保正好20题
-    return selected.slice(0, totalNeeded);
+    return selected;
 }
 
 // 计算最终得分（处理反向题）
@@ -987,23 +1117,918 @@ function drawRadarChart(scores,directions){
  }
 }
 
+// 专业 × 发展方向路线映射（基于互联网大数据：麦可思就业报告、猎聘薪资数据、各高校就业质量报告）
+var majorDirectionRoutesMap = {
+  '计算机科学与技术':{
+    job:[
+      {title:'后端开发工程师',detail:'Java/Go/Python技术栈，掌握Spring Boot/Django框架，精通MySQL/Redis/消息队列，大厂校招起薪15-30万/年',salary:'15-30万/年'},
+      {title:'前端开发工程师',detail:'Vue/React/Angular任一框架深入，掌握TypeScript和前端工程化，一线城市的本科起薪10-25万/年',salary:'10-25万/年'},
+      {title:'算法工程师',detail:'机器学习/深度学习/自然语言处理，需硕士学历为大厂门槛，硕士起薪25-60万/年',salary:'25-60万/年'},
+      {title:'测试开发工程师',detail:'自动化测试框架搭建、CI/CD流水线维护，质量保障方向起薪12-20万/年',salary:'12-20万/年'},
+      {title:'DevOps工程师',detail:'Kubernetes/Docker集群运维，Linux系统及Shell脚本，年薪18-35万',salary:'18-35万/年'}
+    ],
+    graduate:[
+      {title:'学术硕士（学硕）',detail:'计算机科学与技术方向，研究型硕士学制3年，适合读博或进科研院所，需发表论文',salary:'补贴800-2000/月'},
+      {title:'专业硕士（专硕）',detail:'电子信息大类，就业导向，学制2-3年，导师项目实战丰富，秋招春招不耽误',salary:'补贴1200-3000/月'},
+      {title:'跨专业考研',detail:'金融科技（计算机+金融）、生物信息（计算机+生物），复合型人才薪资溢价30-50%',salary:'学历提升后薪资增幅显著'},
+      {title:'AI/大数据方向',detail:'人工智能专硕火爆，985/211名额紧张，需提前准备项目经历和竞赛获奖',salary:'大厂核心岗位硕士占60%+'}
+    ],
+    public:[
+      {title:'国家公务员（国考）',detail:'税务局、统计局、海关、银保监等计算机相关岗位，35岁前均可报考，竞争比1:50-200',salary:'年薪10-18万（视地区）'},
+      {title:'选调生',detail:'985/211名校生优先，基层锻炼后晋升快，近年计算机专业需求增加',salary:'年薪8-15万+晋升空间'},
+      {title:'事业单位',detail:'高校、医院、研究院的信息化岗位，工作稳定，部分有编制，笔试+面试',salary:'年薪8-15万'},
+      {title:'公安机关（网警）',detail:'网络安全岗位，需计算机相关背景，专业技术性强，福利待遇较好',salary:'年薪12-20万'}
+    ],
+    other:[
+      {title:'留学深造',detail:'美国CS硕士（Stanford/MIT/CMU）、英国AI方向，顶尖院校毕业后可留当地工作或回国进大厂',salary:'留学投入30-80万，回馈周期2-4年'},
+      {title:'创业/自由职业',detail:'小程序开发、SaaS工具、AI应用创业，早期团队融资难但成功后回报高，适合有技术+商业嗅觉的学生',salary:'风险高但上限极高'},
+      {title:'产品经理',detail:'技术背景转产品有优势，需补充商业思维和沟通能力，大厂产品起薪15-30万',salary:'15-30万/年'}
+    ]
+  },
+  '软件工程':{
+    job:[
+      {title:'Java开发工程师',detail:'掌握Spring Cloud微服务、分布式系统设计，大厂中级岗年薪30-50万',salary:'15-40万/年'},
+      {title:'移动端开发工程师',detail:'Android(Java/Kotlin)/iOS(Swift)，移动开发需求稳定，大厂起薪15-28万',salary:'15-28万/年'},
+      {title:'测试工程师',detail:'功能测试、自动化测试、性能测试，质量保障岗起薪10-18万',salary:'10-18万/年'},
+      {title:'实施工程师',detail:'ERP、OA等企业软件实施，需出差但技术要求适中，职业路径稳定',salary:'8-15万/年'},
+      {title:'技术支持工程师',detail:'售前售后技术支持，客户培训和技术文档编写，跳槽选择多',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'软件工程学术硕士',detail:'软件工程理论、软件架构研究，学制3年，读博或进高校为佳',salary:'补贴800-2000/月'},
+      {title:'软件工程专业硕士',detail:'专硕就业导向，2年制，导师项目实战为主，秋招不耽误',salary:'补贴1200-3000/月'},
+      {title:'人工智能方向',detail:'机器学习应用、软件开发智能化，研究AI辅助编程等前沿方向',salary:'大厂算法岗硕士薪资高'}
+    ],
+    public:[
+      {title:'国家公务员',detail:'税务局、海关、统计局等，每年招录计算机类岗位',salary:'年薪10-18万'},
+      {title:'选调生',detail:'基层公务员储备干部，985/211优先，晋升机制透明',salary:'年薪8-15万'},
+      {title:'银保监/证监会',detail:'金融监管科技岗位，专业性强，竞争相对较小',salary:'年薪15-25万'}
+    ],
+    other:[
+      {title:'留学（英国/澳洲）',detail:'英国1年制硕士（CS/AI方向），澳洲留学后可申请工作签证，QS前100院校回国认可度高',salary:'留学费用25-60万'},
+      {title:'IT培训讲师',detail:'技术培训机构讲师，传授Java/Python/前端等技能，薪资8-20万，需技术扎实+表达能力强',salary:'8-20万/年'},
+      {title:'产品经理',detail:'软件专业转产品有优势，对接技术和业务，需补充商业和用户思维',salary:'15-30万/年'}
+    ]
+  },
+  '金融学':{
+    job:[
+      {title:'银行管培生',detail:'国有大行（工农中建）校招，经过2年轮岗后定岗，稳定性强',salary:'年薪12-20万'},
+      {title:'证券分析师',detail:'研究所行业研究、宏观策略分析，需CPA/CFA加分，薪资与研究能力挂钩',salary:'base+奖金20-50万'},
+      {title:'金融科技岗位',detail:'FinTech、银行IT、支付系统开发，金融+技术复合人才需求旺盛',salary:'15-30万/年'},
+      {title:'基金/信托',detail:'基金会计、风控合规、销售岗，985/211硕士进头部机构机会大',salary:'15-35万/年'},
+      {title:'企业财务',detail:'上市公司财务管培，职业路径：专员→主管→经理→CFO',salary:'10-20万/年'}
+    ],
+    graduate:[
+      {title:'金融学硕士（学硕）',detail:'学术导向，学制3年，读博或进高校/研究机构',salary:'补贴800-2000/月'},
+      {title:'金融专硕（MF）',detail:'就业导向，名校金专2年制，秋招头部机构，起薪20-40万',salary:'补贴2000-4000/月'},
+      {title:'CFA/FRM方向',detail:'考研+考证双线， CFA Level II/III 通过后薪资大幅提升',salary:'持证后薪资涨幅50%+'}
+    ],
+    public:[
+      {title:'国家公务员',detail:'财政部、税务局、审计署、央行总部，竞争激烈但待遇优厚',salary:'年薪12-20万'},
+      {title:'银保监/证监会',detail:'金融监管岗位，专业性强，需金融+法律复合背景',salary:'年薪15-25万'},
+      {title:'选调生（财政系统）',detail:'地方财政、发改系统，发展前景好',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（英美金融）',detail:'美国MFE（金融工程）、英国LSE/IC金融硕士，回国进外资投行/PE，留学投入50-100万',salary:'顶级机构年薪可达80万+'},
+      {title:'CPA考证+事务所',detail:'注册会计师，审计岗起薪低但晋升快，5年可升经理，薪资30-60万',salary:'30-60万/（5年经验）'},
+      {title:'创业（金融科技）',detail:'支付、理财、征信等FinTech创业，需要金融+技术+资源的复合能力',salary:'风险高回报高'}
+    ]
+  },
+  '会计学':{
+    job:[
+      {title:'四大会计师事务所',detail:'审计/税务方向，ACCA优先，3年可升经理，5年可签字',salary:'起薪12-18万，5年经理30-50万'},
+      {title:'企业财务',detail:'总账、成本、税务岗位，需CPA加持，三年可升主管',salary:'8-18万/年'},
+      {title:'上市公司财务管培',detail:'财务管培生，轮岗后定岗，职业路径清晰',salary:'10-20万/年'},
+      {title:'银行',detail:'柜员→客户经理→支行行长，国有行稳定但晋升需资源',salary:'8-15万/年'},
+      {title:'内审/风控',detail:'企业内部审计、风险管理，需CIA/CPA证书',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'会计学硕士（学硕）',detail:'财务会计、管理会计研究，学制3年，读博或高校',salary:'补贴800-2000/月'},
+      {title:'会计专硕（MPAcc）',detail:'就业导向，2年制，名校MPAcc竞争激烈',salary:'补贴1500-3000/月'},
+      {title:'审计学硕士',detail:'审计方向，审计署、央企内审需求大',salary:'补贴1200-2500/月'}
+    ],
+    public:[
+      {title:'国家公务员（税务）',detail:'税务局稽查局，国考招录大户，工作稳定',salary:'年薪10-18万'},
+      {title:'审计署/特派办',detail:'中央审计机关，专业性强，晋升渠道清晰',salary:'年薪12-20万'},
+      {title:'地方审计局',detail:'地方审计系统，基层锻炼后晋升',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'CPA注册会计师',detail:'国内最高含金量财会证书，持证后年薪30-80万',salary:'30-80万/（持证后）'},
+      {title:'ACCA国际注册会计师',detail:'外企/外资金融机构认可，留学/移民加分',salary:'国际认可度高'},
+      {title:'留学（英国/澳洲）',detail:'英国会计与金融硕士，澳洲会计专业可移民，留学费用25-50万',salary:'回本周期3-5年'}
+    ]
+  },
+  '法学':{
+    job:[
+      {title:'律所（律师助理）',detail:'红圈所起薪2-3万/月，需过司考，3-5年成为初级律师',salary:'起薪20-40万/年（红圈所）'},
+      {title:'法务专员',detail:'企业合同审查、知识产权、合规管理，大型集团需求大',salary:'12-25万/年'},
+      {title:'法律顾问',detail:'私人/企业法律服务，执业3年后可独立',salary:'15-30万/年'},
+      {title:'公证员',detail:'公证机构从业，需过司考+公证员资格证，工作稳定',salary:'10-18万/年'},
+      {title:'考研/法硕辅导',detail:'司考/法硕培训机构讲师，知识变现',salary:'15-30万/年'}
+    ],
+    graduate:[
+      {title:'法学硕士（学硕）',detail:'法理学、民法、刑法等研究方向，学制3年，读博或高校',salary:'补贴800-2000/月'},
+      {title:'法律硕士（JM）',detail:'非法本可跨考，2年制，就业导向，律所/法务认可',salary:'补贴1500-3000/月'},
+      {title:'法学博士',detail:'学术路线，发表C刊，高校任教，需耐得住寂寞',salary:'高校待遇稳定+课题收入'}
+    ],
+    public:[
+      {title:'法官/检察官',detail:'通过司法考试+公务员考试，入额后薪资显著提升',salary:'年薪15-30万+社会地位高'},
+      {title:'公安机关',detail:'经侦、刑侦、法制岗位，专业对口',salary:'年薪12-22万'},
+      {title:'司法局/公证处',detail:'基层法律服务，稳定但晋升慢',salary:'年薪8-15万'},
+      {title:'纪检监察',detail:'纪委监委，近年扩招，反腐工作需求大',salary:'年薪12-20万'}
+    ],
+    other:[
+      {title:'留学（美国LLM/T14）',detail:'美国LLM一年制，T14法学院回国进红圈所，留学费用40-60万',salary:'海归红圈所起薪高30%'},
+      {title:'企业合规师',detail:'新兴职业，ESG合规、数据合规，需求快速增长',salary:'20-40万/年'},
+      {title:'仲裁员',detail:'国际商事仲裁，需多年执业经验+境外背景',salary:'按案件提成，上不封顶'}
+    ]
+  },
+  '英语':{
+    job:[
+      {title:'翻译（同声传译/笔译）',detail:'专业翻译需CATTI二级口译/笔译证书，自由译者收入可观',salary:'同传日薪5000-15000'},
+      {title:'英语教师（机构）',detail:'新东方/好未来等，薪资与课时量挂钩，寒暑假旺季收入高',salary:'10-25万/年'},
+      {title:'外贸/跨境电商',detail:'英语作为工作语言，B2B/B2C平台运营，阿里巴巴国际站',salary:'8-18万/年+提成'},
+      {title:'海外运营/市场',detail:'字节跳动、TikTok等出海企业，海外社交媒体运营',salary:'15-30万/年'},
+      {title:'空乘/航空',detail:'国际航线空乘，英文要求高，福利待遇好',salary:'15-30万/年（含飞行补贴）'}
+    ],
+    graduate:[
+      {title:'英语语言文学硕士',detail:'文学/文化方向，学硕3年，读博或高校',salary:'补贴800-2000/月'},
+      {title:'翻译硕士（MTI）',detail:'口译/笔译方向，专业性强，2年制',salary:'补贴1500-3000/月'},
+      {title:'英语教育硕士',detail:'TESOL方向，回国可当老师或继续读博',salary:'补贴1200-2500/月'}
+    ],
+    public:[
+      {title:'海关（英语岗）',detail:'外语类专业国考有优势，检验检疫、稽查岗位',salary:'年薪10-18万'},
+      {title:'外交部/商务部',detail:'高级翻译/外交官，需通过严格遴选，竞争激烈',salary:'驻外补贴高+晋升快'},
+      {title:'税务局（外语岗）',detail:'国际税务、出口退税审核',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（TESOL/教育）',detail:'英国/澳洲TESOL硕士，1年制，回国可当老师或留学移民',salary:'留学费用20-40万'},
+      {title:'雅思/托福培训',detail:'机构名师或独立教师，高水平英语教师收入可观',salary:'20-50万/年'},
+      {title:'留学顾问',detail:'申请文书、选校咨询、面试培训，淡季需销售能力',salary:'底薪+提成10-25万/年'}
+    ]
+  },
+  '汉语言文学':{
+    job:[
+      {title:'出版社/编辑',detail:'图书编辑、期刊编辑，需文学素养和文字功底',salary:'8-15万/年'},
+      {title:'新媒体运营/文案策划',detail:'公众号、短视频脚本、企业宣传，大厂薪资可观',salary:'10-20万/年'},
+      {title:'语文教师',detail:'初高中教师，需教师资格证，带薪寒暑假',salary:'10-18万/年（教师编更高）'},
+      {title:'广告/文案',detail:'广告公司文案策划，天马行空创意型工作',salary:'10-20万/年'},
+      {title:'公务员（文职）',detail:'政府机关文字材料岗，稳定但需写作能力',salary:'年薪10-18万'}
+    ],
+    graduate:[
+      {title:'古代文学/现当代文学硕士',detail:'学硕3年，读博或高校教师',salary:'补贴800-2000/月'},
+      {title:'学科语文（教育专硕）',detail:'2年制，就业导向，师范类院校招生多',salary:'补贴1500-3000/月'},
+      {title:'创意写作MFA',detail:'创意写作硕士，培养作家/编剧人才',salary:'补贴1200-2500/月'}
+    ],
+    public:[
+      {title:'中学语文教师（编制）',detail:'事业编，稳定且有社会地位，需教师资格证',salary:'年薪10-18万+寒暑假'},
+      {title:'政府文职',detail:'党委、政府文字材料岗，写作能力是核心竞争力',salary:'年薪10-18万'},
+      {title:'文化局/博物馆',detail:'文化遗产保护、文物管理，体制内文化岗',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'出版人/图书策划',detail:'图书选题策划、版权贸易，创业型工作',salary:'15-40万/年（创业型）'},
+      {title:'自由撰稿人/专栏作家',detail:'自媒体、内容创业，需长期内容积累',salary:'不固定，上限高'},
+      {title:'留学（教育/传媒）',detail:'英国教育学、传媒硕士，回国进高校或媒体',salary:'留学费用20-45万'}
+    ]
+  },
+  '工商管理':{
+    job:[
+      {title:'管培生（快消/互联网）',detail:'宝洁/京东管培生，2年轮岗后定岗，晋升快',salary:'15-30万/年'},
+      {title:'市场营销/策划',detail:'品牌管理、市场推广、数字营销，大厂市场岗',salary:'12-25万/年'},
+      {title:'人力资源',detail:'HR六大模块，需沟通能力和Office技能',salary:'10-20万/年'},
+      {title:'管理咨询',detail:'麦肯锡/贝恩/波士顿，顶尖MBA学历背景',salary:'25-60万/年（顶尖咨询）'},
+      {title:'运营管理',detail:'电商运营、产品运营、内容运营',salary:'12-25万/年'}
+    ],
+    graduate:[
+      {title:'工商管理硕士（MBA）',detail:'在职/全日制，名校MBA学费30-60万，回报需考量',salary:'毕业5年薪资翻倍'},
+      {title:'管理学硕士（学硕）',detail:'学术方向，学制3年，读博或高校',salary:'补贴800-2000/月'},
+      {title:'会计/法律硕士',detail:'MBA转会计、法律，跳槽薪资涨幅大',salary:'复合背景薪资溢价'}
+    ],
+    public:[
+      {title:'公务员（管理类）',detail:'工商、质检、食药监等，岗位多',salary:'年薪10-18万'},
+      {title:'选调生',detail:'管理岗储备干部，晋升机制透明',salary:'年薪8-15万+晋升空间'},
+      {title:'事业单位（管理岗）',detail:'高校、医院行政，稳定性强',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（MBA）',detail:'美国/欧洲MBA，2年制，名校需GMAT700+，创业资源丰富',salary:'留学费用60-120万'},
+      {title:'创业',detail:'商业创业，创业管理方向，适合有商业嗅觉的学生',salary:'风险高回报高'},
+      {title:'PMP项目管理',detail:'项目管理认证，转管理岗位加分，跳槽认可度高',salary:'15-30万/年'}
+    ]
+  },
+  '临床医学':{
+    job:[
+      {title:'住院医师规范化培训',detail:'3年规培是必经历程，定科后成为住院医师',salary:'规培期3-8万/年'},
+      {title:'专科医生',detail:'5+3+3+年主治+副高+正高，熬资历的长期路线',salary:'主治后15-40万/年'},
+      {title:'医药代表',detail:'药企销售，收入与业绩挂钩，医学背景是优势',salary:'10-30万/年（看业绩）'},
+      {title:'医疗数据/AI',detail:'医疗信息化、医院HIS系统、AI辅助诊断',salary:'15-30万/年'},
+      {title:'医学编辑/出版',detail:'医学期刊、教科书编辑，需医学背景',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'专业硕士（专硕）',detail:'5+3专硕，四证合一（学历+规培+执医+学位），就业导向',salary:'补贴1000-2000/月'},
+      {title:'学术硕士（学硕）',detail:'3年学硕+3年规培，读博或科研岗',salary:'补贴800-2000/月'},
+      {title:'博士（PhD/MD）',detail:'顶尖三甲医院必要条件，科研+临床双发展',salary:'博士安家费30-100万'}
+    ],
+    public:[
+      {title:'医院事业编',detail:'公立医院编制，稳定性强，福利好',salary:'年薪12-25万（看职称）'},
+      {title:'卫生局/疾控中心',detail:'行政管理/公共卫生，体制内',salary:'年薪10-18万'},
+      {title:'狱医',detail:'监狱卫生员，工作轻松，夜班少',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'美国执业医师（USMLE）',detail:'USMLE考试，通过后可申请美国住院医，难度极高',salary:'美国住院医年薪20-50万美元'},
+      {title:'医学翻译',detail:'医疗器械注册翻译、医学论文翻译',salary:'日薪800-3000'},
+      {title:'健康管理/高端私立',detail:'和睦家/卓正等高端私立，高薪资但需服务意识',salary:'15-35万/年'}
+    ]
+  },
+  '数据科学与大数据技术':{
+    job:[
+      {title:'数据分析师',detail:'SQL/Hive数据提取，Python/R数据分析，Tableau可视化，大厂数据分析起薪15-30万',salary:'15-30万/年'},
+      {title:'数据工程师',detail:'ETL流水线、数据仓库搭建、Spark/Flink处理，大数据开发工程师需求旺盛',salary:'20-35万/年'},
+      {title:'算法工程师',detail:'机器学习/深度学习建模，特征工程，模型优化，大厂算法岗硕士为主',salary:'25-60万/年'},
+      {title:'BI工程师',detail:'商业智能报表开发，企业数据中台，指标体系建设',salary:'15-28万/年'},
+      {title:'数据产品经理',detail:'数据产品设计，数据需求对接，技术+业务复合能力',salary:'20-35万/年'}
+    ],
+    graduate:[
+      {title:'数据科学硕士',detail:'DS/CS数据科学方向，学制2年，名校竞争激烈',salary:'补贴2000-4000/月'},
+      {title:'人工智能方向',detail:'AI/ML/DL研究，发表顶会论文，进大厂研究院',salary:'大厂算法岗薪资高'},
+      {title:'统计学/数学方向',detail:'概率论、数理统计、贝叶斯方法，学术路线',salary:'补贴800-2000/月'}
+    ],
+    public:[
+      {title:'统计局',detail:'政府统计岗位，数据处理分析，体制内稳定',salary:'年薪10-18万'},
+      {title:'银保监/央行',detail:'金融监管数据岗，需统计/数学背景',salary:'年薪15-25万'},
+      {title:'信息安全相关',detail:'政府数据安全部门',salary:'年薪12-20万'}
+    ],
+    other:[
+      {title:'留学（美国DS/CS）',detail:'美国DS/BA硕士项目，Stanford/CMU等顶尖院校，回国进大厂',salary:'留学费用40-80万'},
+      {title:'数据咨询',detail:'咨询公司数据分析，为企业做数据化转型',salary:'15-30万/年'},
+      {title:'创业（数据服务）',detail:'数据交易平台、API服务',salary:'风险高回报高'}
+    ]
+  },
+  '人工智能':{
+    job:[
+      {title:'算法工程师',detail:'NLP/CV/推荐算法，大厂核心岗，需硕士及以上学历',salary:'25-60万/年'},
+      {title:'AI应用开发工程师',detail:'大模型应用开发、Agent开发、AI产品落地',salary:'20-40万/年'},
+      {title:'自动驾驶工程师',detail:'感知/规划/控制算法，车企/自动驾驶公司',salary:'25-50万/年'},
+      {title:'AI infra工程师',detail:'模型训练平台、推理优化、GPU集群管理',salary:'25-45万/年'},
+      {title:'AI产品经理',detail:'AI产品规划，需技术背景+产品思维',salary:'20-35万/年'}
+    ],
+    graduate:[
+      {title:'人工智能博士',detail:'PhD学术路线，发表顶会，进高校或研究院',salary:'博士安家费+科研启动费'},
+      {title:'计算机视觉方向',detail:'CV/DL研究，人脸识别、自动驾驶视觉',salary:'大厂算法岗高薪'},
+      {title:'自然语言处理方向',detail:'NLP/LLM研究，大模型研究',salary:'大厂研究院薪资顶尖'}
+    ],
+    public:[
+      {title:'科研院所',detail:'中科院、自动化所等AI研究机构',salary:'年薪12-25万+福利'},
+      {title:'国企科技岗',detail:'央企数字化转型AI岗，稳定性强',salary:'年薪15-25万'},
+      {title:'公安系统',detail:'视频图像分析、AI辅助办案',salary:'年薪12-20万'}
+    ],
+    other:[
+      {title:'留学（美国AI博士）',detail:'Stanford/MIT/CMU PhD，全奖录取难度大',salary:'全额奖学金'},
+      {title:'AI创业',detail:'AI应用创业，大模型落地服务',salary:'VC投资，风险高回报高'},
+      {title:'AI培训讲师',detail:'AI培训机构授课，Python/机器学习',salary:'15-35万/年'}
+    ]
+  },
+  '电子信息工程':{
+    job:[
+      {title:'硬件工程师',detail:'电路设计、PCB绘制、硬件调试，大厂/国企需求大',salary:'12-25万/年'},
+      {title:'嵌入式工程师',detail:'STM32/ARM开发、RTOS、驱动开发，物联网方向',salary:'15-30万/年'},
+      {title:'通信协议工程师',detail:'5G/LTE/蓝牙协议，通信设备商',salary:'15-28万/年'},
+      {title:'FPGA工程师',detail:'Xilinx/Intel FPGA，信号处理，薪资高',salary:'20-40万/年'},
+      {title:'芯片验证工程师',detail:'IC验证，数字电路验证，芯片设计',salary:'20-40万/年'}
+    ],
+    graduate:[
+      {title:'电子科学与技术硕士',detail:'微电子/电路方向，学硕3年',salary:'补贴800-2000/月'},
+      {title:'通信工程硕士',detail:'无线通信/信号处理方向',salary:'补贴1200-3000/月'},
+      {title:'集成电路方向',detail:'IC设计/工艺，芯片国产化方向',salary:'国家战略需求，薪资上涨'}
+    ],
+    public:[
+      {title:'军工/航天院所',detail:'航天科技/科工集团，稳定但需双985背景',salary:'年薪15-25万+福利'},
+      {title:'铁路/交通系统',detail:'信号控制、轨道通信',salary:'年薪10-18万'},
+      {title:'运营商',detail:'中国移动/电信/联通，技术岗',salary:'年薪10-20万'}
+    ],
+    other:[
+      {title:'留学（美国EE）',detail:'美国电子工程硕士，Stanford/UC Berkeley等名校',salary:'留学费用40-70万'},
+      {title:'医疗器械',detail:'迈瑞、联影等医疗器械公司硬件岗',salary:'15-30万/年'},
+      {title:'智能硬件',detail:'无人机、机器人、智能家居',salary:'15-30万/年'}
+    ]
+  },
+  '机械设计制造及其自动化':{
+    job:[
+      {title:'机械设计工程师',detail:'CAD/SolidWorks设计，机械结构设计，大厂/国企',salary:'10-20万/年'},
+      {title:'工艺工程师',detail:'加工工艺、工装设计、质量控制',salary:'10-18万/年'},
+      {title:'机电工程师',detail:'PLC/电气控制，工业自动化',salary:'12-22万/年'},
+      {title:'项目经理',detail:'工程项目管理，需经验积累',salary:'15-30万/年'},
+      {title:'3D打印工程师',detail:'增材制造，新兴方向',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'机械工程硕士',detail:'机械设计/制造/自动化方向，学硕3年',salary:'补贴800-2000/月'},
+      {title:'机械专硕',detail:'专硕2年，就业导向',salary:'补贴1200-3000/月'},
+      {title:'智能制造方向',detail:'数字化工厂、工业4.0',salary:'制造业转型升级需求大'}
+    ],
+    public:[
+      {title:'机械类公务员',detail:'质监局、安监局、海关机械检验',salary:'年薪10-18万'},
+      {title:'军工院所',detail:'航空/航天/船舶/兵器，稳定性强',salary:'年薪12-22万+福利'},
+      {title:'铁路/交通',detail:'高铁/地铁维护，央企稳定',salary:'年薪10-20万'}
+    ],
+    other:[
+      {title:'留学（德国/日本）',detail:'德国TU9/日本东京大学，机械强校',salary:'留学费用10-30万（德国免学费）'},
+      {title:'专利代理',detail:'机械领域专利撰写，需理工科背景',salary:'15-25万/年'},
+      {title:'机械销售',detail:'机械设备销售，底薪+提成',salary:'10-25万/年（看业绩）'}
+    ]
+  },
+  '自动化':{
+    job:[
+      {title:'自动化工程师',detail:'PLC/SCADA/DCS控制系统，工业自动化',salary:'12-25万/年'},
+      {title:'机器人工程师',detail:'ROS机器人开发，运动控制，薪资高',salary:'18-35万/年'},
+      {title:'电气工程师',detail:'电气设计、供配电、PLC编程',salary:'12-22万/年'},
+      {title:'控制算法工程师',detail:'运动控制、PID、滤波算法',salary:'18-35万/年'},
+      {title:'工业互联网',detail:'工业物联网平台开发，智能制造',salary:'15-28万/年'}
+    ],
+    graduate:[
+      {title:'控制科学与工程硕士',detail:'控制理论/模式识别，学硕3年',salary:'补贴800-2000/月'},
+      {title:'人工智能方向',detail:'AI+控制结合，热门方向',salary:'大厂算法岗薪资高'},
+      {title:'机器人方向',detail:'机器人视觉/导航，智能机器人',salary:'机器人行业发展迅猛'}
+    ],
+    public:[
+      {title:'科研院所',detail:'自动化所、航天院所',salary:'年薪12-22万+福利'},
+      {title:'国企自动化岗',detail:'国家电网/中石化/中石油',salary:'年薪12-20万'},
+      {title:'交通系统',detail:'高铁/地铁控制系统',salary:'年薪10-20万'}
+    ],
+    other:[
+      {title:'留学（美国/德国）',detail:'美国CMU/德国TU9，自动化强校',salary:'留学费用20-60万'},
+      {title:'智能制造',detail:'工厂自动化改造，工业4.0',salary:'15-30万/年'},
+      {title:'创业（机器人）',detail:'服务机器人/工业机器人',salary:'风险高，政策扶持'}
+    ]
+  },
+  '土木工程':{
+    job:[
+      {title:'结构工程师',detail:'建筑结构设计，CAD/BIM，施工单位',salary:'10-20万/年'},
+      {title:'工程造价',detail:'预算编制、成本控制、造价咨询',salary:'10-22万/年'},
+      {title:'施工项目经理',detail:'现场管理、进度控制，需现场经验',salary:'12-25万/年'},
+      {title:'BIM工程师',detail:'建筑信息模型搭建，Revit建模',salary:'12-22万/年'},
+      {title:'检测加固工程师',detail:'房屋检测、结构加固',salary:'10-20万/年'}
+    ],
+    graduate:[
+      {title:'结构工程硕士',detail:'土木工程学硕3年，进设计院/高校',salary:'补贴800-2000/月'},
+      {title:'土木水利专硕',detail:'专硕2年，就业导向',salary:'补贴1200-3000/月'},
+      {title:'智能建造方向',detail:'建筑业数字化转型',salary:'新兴方向，需求增长'}
+    ],
+    public:[
+      {title:'住建局/规划局',detail:'政府建设管理部门',salary:'年薪10-18万'},
+      {title:'事业单位（住建类）',detail:'质监站、安监站',salary:'年薪8-15万'},
+      {title:'交通系统',detail:'公路/铁路局',salary:'年薪10-20万'}
+    ],
+    other:[
+      {title:'留学（美国/英国）',detail:'美国土木工程硕士，名校就业好',salary:'留学费用30-60万'},
+      {title:'房地产评估',detail:'资产评估事务所',salary:'12-22万/年'},
+      {title:'工程监理',detail:'工程监理咨询',salary:'8-15万/年'}
+    ]
+  },
+  '建筑学':{
+    job:[
+      {title:'建筑设计师',detail:'建筑方案设计、施工图设计，需创新思维',salary:'12-25万/年'},
+      {title:'城市规划师',detail:'城市规划设计，政策传导',salary:'12-25万/年'},
+      {title:'景观设计师',detail:'园林景观设计，绿化设计',salary:'10-20万/年'},
+      {title:'室内设计师',detail:'室内装修设计，家装/工装',salary:'10-22万/年'},
+      {title:'BIM建筑师',detail:'建筑信息化模型',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'建筑学硕士',detail:'建筑历史/设计/技术方向',salary:'补贴800-2000/月'},
+      {title:'城市设计方向',detail:'城市设计、可持续建筑',salary:'新兴方向'},
+      {title:'建筑历史与理论',detail:'古建筑保护、修缮',salary:'学术路线'}
+    ],
+    public:[
+      {title:'规划局',detail:'政府规划管理部门',salary:'年薪10-18万'},
+      {title:'设计院（国有）',detail:'国营设计院，稳定',salary:'年薪12-22万'},
+      {title:'文保单位',detail:'文物保护单位',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（意大利/美国）',detail:'AA/Cooper Union/哈佛GSD',salary:'留学费用40-80万'},
+      {title:'建筑摄影',detail:'建筑摄影、建筑渲染',salary:'10-25万/年（创业型）'},
+      {title:'独立设计师',detail:'个人工作室，接项目',salary:'不固定，上限高'}
+    ]
+  },
+  '教育学':{
+    job:[
+      {title:'中小学教师',detail:'学科教学，需教师资格证+教师编',salary:'年薪10-18万（带编）'},
+      {title:'教育培训',detail:'新东方/好未来等，课程研发/教学',salary:'12-25万/年'},
+      {title:'课程研发',detail:'教材编写、课程设计',salary:'10-20万/年'},
+      {title:'教育产品经理',detail:'教育App/平台产品设计',salary:'15-28万/年'},
+      {title:'学校行政',detail:'高校行政、辅导员',salary:'年薪8-15万'}
+    ],
+    graduate:[
+      {title:'教育学硕士',detail:'教育原理/教育史，学术路线',salary:'补贴800-2000/月'},
+      {title:'学科教育硕士',detail:'语数英等学科教学，师范类',salary:'补贴1200-2500/月'},
+      {title:'教育技术方向',detail:'教育信息化、在线教育',salary:'互联网教育需求大'}
+    ],
+    public:[
+      {title:'教育局',detail:'政府教育管理部门',salary:'年薪10-18万'},
+      {title:'事业单位（教育类）',detail:'教研室、电教馆',salary:'年薪8-15万'},
+      {title:'高校教师',detail:'硕士进专科/民办本科，博士进一本',salary:'年薪10-25万+科研'}
+    ],
+    other:[
+      {title:'留学（教育学）',detail:'英国/澳洲教育学硕士，TESOL方向',salary:'留学费用20-45万'},
+      {title:'留学顾问',detail:'留学申请咨询',salary:'底薪+提成10-25万/年'},
+      {title:'教育创业',detail:'培训工作室、在线教育平台',salary:'风险高回报高'}
+    ]
+  },
+  '心理学':{
+    job:[
+      {title:'心理咨询师',detail:'心理咨询/治疗，需经验积累+证书',salary:'100-500/小时（独立）'},
+      {title:'心理产品经理',detail:'心理App/平台产品',salary:'15-28万/年'},
+      {title:'人力资源（HR）',detail:'招聘/培训/员工关系',salary:'10-20万/年'},
+      {title:'市场研究',detail:'用户研究、消费心理',salary:'12-22万/年'},
+      {title:'心理健康教师',detail:'中小学心理老师，需教师证',salary:'年薪8-15万（带编）'}
+    ],
+    graduate:[
+      {title:'心理学硕士',detail:'基础心理学/应用心理学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'临床心理学方向',detail:'心理咨询与治疗，执照咨询师路线',salary:'需要长期督导和个人体验'},
+      {title:'应用心理专硕',detail:'MAP，就业导向',salary:'补贴1500-3000/月'}
+    ],
+    public:[
+      {title:'监狱/戒毒所',detail:'心理矫治工作',salary:'年薪10-18万'},
+      {title:'公安系统',detail:'犯罪心理分析',salary:'年薪12-20万'},
+      {title:'学校心理教师',detail:'中小学心理辅导',salary:'年薪8-15万（带编）'}
+    ],
+    other:[
+      {title:'留学（临床心理学）',detail:'美国PsyD/PhD，心理咨询师培养',salary:'留学费用50-100万'},
+      {title:'EAP咨询师',detail:'企业员工帮助计划',salary:'15-30万/年'},
+      {title:'心理测评师',detail:'人才测评工具开发',salary:'15-25万/年'}
+    ]
+  },
+  '新闻学':{
+    job:[
+      {title:'记者/编辑',detail:'传统媒体/新媒体，文字功底强',salary:'8-18万/年'},
+      {title:'新媒体运营',detail:'公众号/短视频运营，大厂需求大',salary:'12-25万/年'},
+      {title:'内容策划',detail:'内容选题策划，IP打造',salary:'12-22万/年'},
+      {title:'视频编导',detail:'短视频/纪录片制作',salary:'12-25万/年'},
+      {title:'品牌公关',detail:'企业品牌传播，媒体关系',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'新闻传播学硕士',detail:'新闻学/传播学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'MJC（新闻专硕）',detail:'纽约大学/哥伦比亚大学模式',salary:'补贴1500-3000/月'},
+      {title:'广播电视方向',detail:'纪录片/新媒体研究',salary:'新媒体行业需求大'}
+    ],
+    public:[
+      {title:'宣传部',detail:'政府宣传部门',salary:'年薪10-18万'},
+      {title:'央媒/党媒',detail:'人民日报/新华社，有编制',salary:'年薪12-20万'},
+      {title:'高校新闻教师',detail:'硕博进高校任教',salary:'年薪10-20万+科研'}
+    ],
+    other:[
+      {title:'留学（传媒）',detail:'英国LSE/美国哥大传播学，回国进媒体/大厂',salary:'留学费用30-60万'},
+      {title:'自媒体/博主',detail:'个人IP打造，流量变现',salary:'不固定，上限高'},
+      {title:'广告/公关公司',detail:'奥美/蓝色光标',salary:'10-20万/年'}
+    ]
+  }
+};
+
+// 默认专业路线映射（适用于未在上述列表中的专业）
+var defaultDirectionRoutes = {
+  job:[
+    {title:'技术类岗位',detail:'扎实的专业基础+项目经验，积极寻找实习机会，建立作品集',salary:'根据专业和地区浮动'},
+    {title:'管培生',detail:'大企业校招管培生，轮岗培训后定岗，晋升通道明确',salary:'10-20万/年'},
+    {title:'专业对口岗位',detail:'根据专业背景选择对口中大型企业，积累行业经验',salary:'8-18万/年'}
+  ],
+  graduate:[
+    {title:'学术硕士',detail:'学硕3年，读博或进高校/科研院所，需发表论文',salary:'补贴800-2000/月'},
+    {title:'专业硕士',detail:'专硕2年，就业导向，职业培训为主',salary:'补贴1200-3000/月'},
+    {title:'跨专业考研',detail:'选择热门/交叉方向，如金融科技、人工智能',salary:'复合背景薪资溢价'}
+  ],
+  public:[
+    {title:'国家公务员',detail:'税务局、海关、统计局等，每年国考省考',salary:'年薪10-18万（视地区）'},
+    {title:'选调生',detail:'基层公务员储备干部，985/211优先',salary:'年薪8-15万+晋升空间'},
+    {title:'事业单位',detail:'高校、医院、科研院所，工作稳定',salary:'年薪8-15万'}
+  ],
+  other:[
+    {title:'留学深造',detail:'英国/澳洲1年制硕士，美/加2年制，学历提升+国际化视野',salary:'留学费用20-60万'},
+    {title:'创业',detail:'结合专业+市场需求的创业方向',salary:'风险高回报高'},
+    {title:'自由职业/斜杠',detail:'专业技能+个人品牌，多元化收入',salary:'不固定，上限高'}
+  ]
+};
+
+// 年级学习规划数据（基于互联网大数据）
+var gradePlanData = {
+  // 就业方向的年级规划
+  job: {
+    freshman: {
+      currentStatus: '大一新生，专业基础阶段',
+      abilities: ['正在学习专业基础课程', '初步了解行业概况', '掌握基础编程/专业技能'],
+      plans: [
+        {phase: '大一上学期', tasks: ['认真学习高数、线代、概率论等数学基础课程', '掌握一门编程语言基础（Python/Java/C++）', '加入专业相关社团或技术俱乐部', '了解本专业就业方向和行业前景', '考取英语四级']},
+        {phase: '大一下学期', tasks: ['深入学习数据结构与算法基础', '完成课程配套的编程练习项目', '参加校内编程竞赛或技能比赛', '开始建立个人GitHub代码仓库', '考取计算机二级证书']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，专业能力成型阶段',
+      abilities: ['已掌握专业基础课程', '具备基础编程能力', '了解行业技术栈'],
+      plans: [
+        {phase: '大二上学期', tasks: ['深入学习专业核心课程（操作系统、数据库、网络）', '学习主流技术栈（Web开发/移动开发/数据分析）', '参加专业技能竞赛（ACM、程序设计赛等）', '完成3-5个完整的技术小项目', '考取英语六级']},
+        {phase: '大二下学期', tasks: ['寻找第一份实习或兼职机会', '深入学习一门技术方向（前端/后端/算法）', '参与开源项目贡献', '建立个人技术博客', '为大三实习做准备']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，求职准备关键期',
+      abilities: ['掌握专业核心技能', '有项目实践经验', '了解目标岗位要求'],
+      plans: [
+        {phase: '大三上学期', tasks: ['系统准备秋招（算法刷题、项目整理、面试准备）', '争取名企暑期实习机会', '完成一个高质量的技术项目', '积累GitHub开源项目贡献经验', '完善个人简历和技术博客']},
+        {phase: '大三下学期', tasks: ['全力冲刺暑期实习申请', '参加企业宣讲会和招聘活动', '深入准备技术面试（算法、系统设计）', '学习目标岗位入职前技能', '建立行业人脉关系']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，求职冲刺阶段',
+      abilities: ['具备完整专业技能', '有实习/项目经验', '准备进入职场'],
+      plans: [
+        {phase: '大四上学期', tasks: ['全力冲刺秋招，获取offer', '参加校园招聘宣讲会和双选会', '完成毕业设计和毕业论文', '准备入职体检和三方协议签订', '提前学习目标岗位入职前技能']},
+        {phase: '大四下学期', tasks: ['完成毕业答辩', '办理入职手续', '参加入职前培训', '建立职场人脉关系', '规划职业发展路径']}
+      ]
+    },
+    graduate: {
+      currentStatus: '毕业一年内，职场新人阶段',
+      abilities: ['具备完整专业技能', '有实习/项目经验', '完成学生到职场人的转变'],
+      plans: [
+        {phase: '毕业后第1-3个月', tasks: ['完成试用期工作', '熟悉公司业务和团队', '学习职场沟通和协作', '建立职业习惯和工作节奏', '参加新员工培训']},
+        {phase: '毕业后第4-6个月', tasks: ['独立承担工作任务', '提升专业技能深度', '建立跨部门合作关系', '准备试用期答辩/转正', '规划职业发展方向']},
+        {phase: '毕业后第7-12个月', tasks: ['成为团队骨干成员', '参与重要项目', '积累成功案例', '准备晋升或跳槽', '持续学习提升竞争力']}
+      ]
+    }
+  },
+  // 考研方向的年级规划
+  graduate: {
+    freshman: {
+      currentStatus: '大一新生，考研基础积累期',
+      abilities: ['正在学习专业基础课程', '英语基础待提升', '数学基础待夯实'],
+      plans: [
+        {phase: '大一上学期', tasks: ['认真学习高数、线代等数学课程（考研数学基础）', '扎实学习英语，为考研英语做准备', '了解考研基本信息和流程', '保持高GPA，为复试做准备', '考取英语四级']},
+        {phase: '大一下学期', tasks: ['继续夯实数学基础', '学习专业基础课程', '了解目标院校和专业方向', '参加学术讲座和科研活动', '考取英语六级']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，考研方向探索期',
+      abilities: ['数学基础已建立', '英语能力提升中', '专业方向待确定'],
+      plans: [
+        {phase: '大二上学期', tasks: ['确定考研目标院校和专业方向', '继续夯实数学基础', '阅读目标专业经典教材', '参与科研项目积累科研经历', '关注目标院校招生信息']},
+        {phase: '大二下学期', tasks: ['开始接触考研英语词汇', '学习专业课核心内容', '参加学科竞赛积累履历', '联系目标院校学长学姐', '准备考研复习资料']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，考研备考关键期',
+      abilities: ['数学基础扎实', '英语能力达标', '专业方向已确定'],
+      plans: [
+        {phase: '大三上学期', tasks: ['系统复习考研数学（教材+课后习题）', '背诵考研英语核心词汇', '通读专业课教材构建知识框架', '收集目标院校真题和参考书目', '制定详细复习计划']},
+        {phase: '大三下学期', tasks: ['进入强化复习阶段', '攻克数学重难点题型', '开始做英语真题', '深入学习专业课', '参加考研辅导班或网课']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，考研冲刺阶段',
+      abilities: ['复习进入冲刺期', '真题训练阶段', '准备初试复试'],
+      plans: [
+        {phase: '大四上学期（9-12月）', tasks: ['全力冲刺考研初试', '做真题套卷模拟考试', '背诵政治核心考点', '专业课强化背诵', '调整心态，保持作息']},
+        {phase: '大四下学期（1-6月）', tasks: ['准备考研复试', '联系导师了解研究方向', '准备复试面试材料', '完成毕业论文', '等待录取结果']}
+      ]
+    },
+    graduate: {
+      currentStatus: '读研期间，学术能力提升期',
+      abilities: ['研究生录取', '学术研究能力培养', '专业领域深入探索'],
+      plans: [
+        {phase: '研一上学期', tasks: ['适应研究生学习节奏', '完成专业课程学习', '阅读大量文献打基础', '参加学术研讨会', '确定研究方向']},
+        {phase: '研一下学期', tasks: ['确定论文课题方向', '学习研究方法论', '参与导师科研项目', '撰写文献综述', '准备开题报告']},
+        {phase: '研二-研三', tasks: ['开展实验/调研', '撰写学术论文', '参加学术会议', '准备毕业论文', '规划博士申请或就业']}
+      ]
+    }
+  },
+  // 考公方向的年级规划
+  public: {
+    freshman: {
+      currentStatus: '大一新生，考公基础准备期',
+      abilities: ['了解考公基本信息', '政治素养待提升', '写作能力待培养'],
+      plans: [
+        {phase: '大一上学期', tasks: ['了解公务员考试类型（国考、省考、选调生）', '提交入党申请书', '加入学生会或社团锻炼组织能力', '关注时政新闻培养政策敏感度', '保持高GPA']},
+        {phase: '大一下学期', tasks: ['继续入党流程', '参加社会实践或志愿服务', '学习公文写作基础', '考取英语四级', '了解目标岗位招录要求']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，考公能力积累期',
+      abilities: ['政治素养提升中', '组织协调能力培养', '政策敏感度建立'],
+      plans: [
+        {phase: '大二上学期', tasks: ['考取英语六级和计算机二级', '参加学生干部竞选', '关注人民日报评论培养申论思维', '学习行测基础模块（资料分析、判断推理）', '积累时政素材']},
+        {phase: '大二下学期', tasks: ['完成入党流程成为预备党员', '参加政府部门实习', '系统学习行测各模块', '练习申论写作', '建立岗位数据库']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，考公备考黄金期',
+      abilities: ['政治面貌达标', '行测基础已建立', '申论能力培养中'],
+      plans: [
+        {phase: '大三上学期', tasks: ['成为正式党员', '确定目标岗位', '系统学习行测五大模块', '每周练习申论写作', '参加公考辅导班']},
+        {phase: '大三下学期', tasks: ['刷行测真题套卷', '申论批改提升', '参加模拟考试', '准备选调生考试', '关注国考省考公告']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，考公冲刺阶段',
+      abilities: ['行测能力成熟', '申论写作达标', '准备参加考试'],
+      plans: [
+        {phase: '大四上学期（9-12月）', tasks: ['参加国考报名和笔试', '继续刷题提速', '申论重点练大作文框架', '准备省考复习', '参加选调生考试']},
+        {phase: '大四下学期（1-6月）', tasks: ['参加省考笔试', '准备面试', '参加事业单位联考', '完成毕业论文', '等待录用结果']}
+      ]
+    },
+    graduate: {
+      currentStatus: '上岸后，新入职公务员阶段',
+      abilities: ['成功考取公务员', '完成身份转变', '进入体制内工作'],
+      plans: [
+        {phase: '入职第1-3个月', tasks: ['完成试用期工作', '熟悉单位业务和流程', '学习机关工作规范', '建立同事关系网络', '参加新公务员培训']},
+        {phase: '入职第4-6个月', tasks: ['独立承担岗位工作', '学习公文写作', '了解单位规章制度', '参与重要会议和活动', '培养政治素养']},
+        {phase: '入职第7-12个月', tasks: ['成为科室业务骨干', '积累群众工作经验', '准备职级晋升', '规划职业发展路径', '持续学习提升能力']}
+      ]
+    }
+  },
+  // 留学方向的年级规划
+  studyAbroad: {
+    freshman: {
+      currentStatus: '大一新生，留学基础准备期',
+      abilities: ['GPA积累阶段', '语言基础待建立', '专业方向待明确'],
+      plans: [
+        {phase: '大一上学期', tasks: ['确定留学目标国家和专业方向', '保持高GPA（目标85+）', '开始学习雅思/托福词汇', '参加校内科研或竞赛', '了解目标院校申请要求']},
+        {phase: '大一下学期', tasks: ['继续提升GPA', '系统备考雅思/托福', '参加暑期课程或夏校', '考取英语四级', '建立留学信息渠道']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，留学能力提升期',
+      abilities: ['GPA稳步提升', '语言备考中', '背景提升阶段'],
+      plans: [
+        {phase: '大二上学期', tasks: ['考取雅思/托福首考', '继续提升GPA', '参加科研项目', '考取英语六级', '了解目标院校专业课程']},
+        {phase: '大二下学期', tasks: ['刷雅思/托福高分', '参加专业相关实习', '准备GMAT/GRE（商科/理工）', '参加夏令营或夏校', '积累背景提升经历']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，留学申请准备期',
+      abilities: ['语言成绩达标', 'GPA稳定', '背景经历丰富'],
+      plans: [
+        {phase: '大三上学期', tasks: ['拿到目标语言成绩', '继续刷GPA', '准备GMAT/GRE', '确定申请院校名单', '开始准备文书素材']},
+        {phase: '大三下学期', tasks: ['撰写个人陈述和简历', '联系推荐人准备推荐信', '参加高质量实习', '准备作品集（艺术类）', '关注申请截止日期']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，留学申请冲刺期',
+      abilities: ['申请材料准备完毕', '等待录取结果', '准备签证'],
+      plans: [
+        {phase: '大四上学期（9-12月）', tasks: ['提交网申材料', '跟进申请状态', '准备面试', '继续刷语言成绩（如需）', '等待录取结果']},
+        {phase: '大四下学期（1-6月）', tasks: ['确认入读院校', '缴纳押金', '办理签证', '申请宿舍', '准备行李和机票']}
+      ]
+    },
+    graduate: {
+      currentStatus: '留学期间，海外学习与成长阶段',
+      abilities: ['成功获得留学 offer', '海外学习能力', '跨文化交流能力'],
+      plans: [
+        {phase: '留学第1学期', tasks: ['适应海外学习生活', '完成课程学习取得好成绩', '建立国际人脉关系', '参与校园活动', '了解当地就业市场']},
+        {phase: '留学第2学期至毕业', tasks: ['深入学习专业知识', '寻找实习机会积累经验', '准备毕业论文/项目', '建立导师关系', '规划毕业后发展方向']},
+        {phase: '毕业后', tasks: ['考虑是否继续读博', '参加海外就业或回国发展', '利用海归身份优势', '积累海外工作经验', '建立职业发展网络']}
+      ]
+    }
+  },
+  // 创业方向的年级规划
+  startup: {
+    freshman: {
+      currentStatus: '大一新生，创业意识培养期',
+      abilities: ['了解创业基础知识', '市场敏感度待培养', '团队协作能力待建立'],
+      plans: [
+        {phase: '大一上学期', tasks: ['学习创业基础课程', '参加创业讲座和沙龙', '加入创业社团或俱乐部', '了解行业市场动态', '培养创新思维']},
+        {phase: '大一下学期', tasks: ['参加创业比赛（如挑战杯）', '学习商业模式设计', '建立创业人脉关系', '了解融资和股权知识', '尝试小规模创业实践']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，创业能力积累期',
+      abilities: ['创业知识初步建立', '市场分析能力培养', '团队管理能力提升'],
+      plans: [
+        {phase: '大二上学期', tasks: ['深入学习创业方法论', '参加创业训练营', '寻找创业合伙人', '进行市场调研', '学习财务和法律知识']},
+        {phase: '大二下学期', tasks: ['启动创业项目试点', '申请创业孵化器入驻', '参加创业大赛', '积累行业资源', '建立团队协作机制']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，创业实践关键期',
+      abilities: ['创业项目启动', '团队组建完成', '市场验证阶段'],
+      plans: [
+        {phase: '大三上学期', tasks: ['完善创业项目方案', '进行产品原型开发', '寻找天使投资机会', '参加创业路演', '建立客户关系']},
+        {phase: '大三下学期', tasks: ['产品上线测试', '收集用户反馈', '优化商业模式', '申请创业扶持资金', '建立品牌影响力']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，创业发展期',
+      abilities: ['创业项目成熟', '团队运营稳定', '寻求规模化发展'],
+      plans: [
+        {phase: '大四上学期', tasks: ['完善产品和服务', '扩大市场推广', '寻求融资机会', '建立运营体系', '完成毕业论文']},
+        {phase: '大四下学期', tasks: ['项目规模化发展', '建立公司架构', '招聘团队成员', '规划未来发展', '平衡学业与创业']}
+      ]
+    },
+    graduate: {
+      currentStatus: '毕业后，创业正式起步阶段',
+      abilities: ['创业项目成熟', '团队组建完成', '市场需求验证'],
+      plans: [
+        {phase: '毕业后第1-3个月', tasks: ['全职投入创业', '完善产品和服务', '获取首批付费客户', '建立运营体系', '申请创业扶持资金']},
+        {phase: '毕业后第4-6个月', tasks: ['扩大市场规模', '寻求天使轮/种子轮融资', '完善商业模式', '建立核心团队', '参加创业大赛/路演']},
+        {phase: '毕业后第7-12个月', tasks: ['实现稳定营收', '扩大团队规模', '寻求A轮融资', '建立品牌影响力', '规划公司未来3年发展']}
+      ]
+    }
+  }
+};
+
+// 当前用户信息（用于规划展示）
+var currentUserInfoForPlan = null;
+
 function generateRoutes(scores,userInfo){
- var routes=[
- {key:'tech',name:'技术就业路线',dimensions:['R','I'],baseMatch:0.85,description:'适合喜欢动手实践、追求技术深度的同学，未来可成为技术专家或技术管理者'},
- {key:'graduate',name:'考研深造路线',dimensions:['I','A'],baseMatch:0.80,description:'适合喜欢理论研究、追求学术发展的同学，通过考研提升专业竞争力'},
- {key:'civil',name:'公考体制路线',dimensions:['S','E','C'],baseMatch:0.75,description:'适合注重稳定、擅长沟通协调的同学，体制内工作具有稳定性和社会地位'}
- ];
- routes.forEach(function(route){
- var avgScore=route.dimensions.reduce(function(sum,d){return sum+(scores[d]||0)},0)/route.dimensions.length;
- route.match=Math.round((avgScore/20)*route.baseMatch*100);
- });
- routes.sort(function(a,b){return b.match-a.match});
+ // 保存用户信息用于规划展示
+ currentUserInfoForPlan = userInfo;
+ 
+ var directions=userInfo.directions||[];
+ var major=userInfo.major||'';
+ var grade=userInfo.grade||'freshman';
+ var isUndecided=directions.length===0||directions.includes('undecided');
+ 
  var container=document.getElementById('routes-container');
  container.innerHTML='';
- routes.forEach(function(route){
- var html='<div class="route-card"><div class="route-header"><span class="route-name">'+route.name+'</span><span class="route-match">'+route.match+'%</span></div><p class="route-desc">'+route.description+'</p></div>';
- container.innerHTML+=html;
+ 
+ // 获取该专业的发展路线数据
+ var routeData=majorDirectionRoutesMap[major]||defaultDirectionRoutes;
+ 
+ // 年级标签映射
+ var gradeLabels={freshman:'大一',sophomore:'大二',junior:'大三',senior:'大四'};
+ 
+ if(isUndecided){
+ // 用户未确定方向：展示多条路线（就业+考研+考公+其它）
+ var routeCategories=[
+ {key:'job',name:'就业发展方向',icon:'💼',routes:routeData.job||[],planKey:'job'},
+ {key:'graduate',name:'考研深造方向',icon:'📚',routes:routeData.graduate||[],planKey:'graduate'},
+ {key:'public',name:'考公体制方向',icon:'🏛',routes:routeData.public||[],planKey:'public'},
+ {key:'other',name:'其它发展路线',icon:'🌟',routes:routeData.other||[],planKey:'studyAbroad'}
+ ];
+ 
+ routeCategories.forEach(function(category){
+ if(category.routes.length===0) return;
+ var categoryHtml='<div class="route-category"><div class="route-category-header"><span class="route-category-icon">'+category.icon+'</span><span class="route-category-name">'+category.name+'</span></div><div class="route-list">';
+ category.routes.forEach(function(route,index){
+ var skillsHtml='';
+ if(route.salary){
+ skillsHtml='<div class="route-salary"><span class="salary-label">预期收益：</span><span class="salary-value">'+route.salary+'</span></div>';
+ }
+ // 添加查看详细规划按钮
+ var planBtnHtml='<button class="route-plan-btn" onclick="showRoutePlan(\''+category.planKey+'\',\''+route.title+'\',\''+grade+'\')">📋 查看详细规划</button>';
+ categoryHtml+='<div class="route-card"><div class="route-card-title">'+route.title+'</div><div class="route-card-detail">'+route.detail+'</div>'+skillsHtml+planBtnHtml+'</div>';
  });
+ categoryHtml+='</div></div>';
+ container.innerHTML+=categoryHtml;
+ });
+ 
+ } else {
+ // 用户已确定方向：只展示该方向的发展路线
+ var directionLabels={job:'就业发展',graduate:'考研深造',public:'考公体制',undecided:'暂未确定'};
+ var planKeyMap={job:'job',graduate:'graduate',public:'public',other:'studyAbroad'};
+ directions.forEach(function(dir){
+ if(dir==='undecided') return;
+ var dirRoutes=routeData[dir]||[];
+ if(dirRoutes.length===0) return;
+ 
+ var planKey=planKeyMap[dir]||'job';
+ var dirLabel=directionLabels[dir]||dir;
+ var categoryHtml='<div class="route-category"><div class="route-category-header"><span class="route-category-icon">'+(dir==='job'?'💼':dir==='graduate'?'📚':'🏛')+'</span><span class="route-category-name">'+dirLabel+'方向推荐路线</span></div><div class="route-list">';
+ dirRoutes.forEach(function(route,index){
+ var skillsHtml='';
+ if(route.salary){
+ skillsHtml='<div class="route-salary"><span class="salary-label">预期收益：</span><span class="salary-value">'+route.salary+'</span></div>';
+ }
+ // 添加查看详细规划按钮
+ var planBtnHtml='<button class="route-plan-btn" onclick="showRoutePlan(\''+planKey+'\',\''+route.title+'\',\''+grade+'\')">📋 查看详细规划</button>';
+ categoryHtml+='<div class="route-card"><div class="route-card-title">'+route.title+'</div><div class="route-card-detail">'+route.detail+'</div>'+skillsHtml+planBtnHtml+'</div>';
+ });
+ categoryHtml+='</div></div>';
+ container.innerHTML+=categoryHtml;
+ });
+ }
+}
+
+// 显示路线详细规划弹窗
+function showRoutePlan(planKey, routeTitle, grade) {
+ var gradeLabels={freshman:'大一',sophomore:'大二',junior:'大三',senior:'大四',fifth:'大五',graduate:'毕业一年内'};
+ 
+ // 获取规划数据
+ var planData = gradePlanData[planKey] || gradePlanData['job'];
+ 
+ // 定义年级顺序（支持五年制专业）
+ var gradeOrder = ['freshman', 'sophomore', 'junior', 'senior', 'fifth', 'graduate'];
+ 
+ // 五年制专业判断（医学、建筑学、城乡规划等）
+ var isFiveYearMajor = ['临床医学', '口腔医学', '预防医学', '中医学', '建筑学', '城乡规划', '风景园林', '航海技术', '轮机工程'].some(function(m) {
+ return currentUserInfoForPlan && currentUserInfoForPlan.major && currentUserInfoForPlan.major.includes(m);
+ });
+ 
+ // 如果是五年制专业，调整年级顺序
+ if (isFiveYearMajor) {
+ gradeOrder = ['freshman', 'sophomore', 'junior', 'senior', 'fifth', 'graduate'];
+ } else {
+ gradeOrder = ['freshman', 'sophomore', 'junior', 'senior', 'graduate'];
+ }
+ 
+ // 找到当前年级在顺序中的位置
+ var currentIndex = gradeOrder.indexOf(grade);
+ if (currentIndex === -1) {
+ currentIndex = 0; // 如果找不到，默认从第一个开始
+ }
+ 
+ // 构建弹窗内容
+ var modalHtml = '<div class="plan-modal-overlay" onclick="closePlanModal()">';
+ modalHtml += '<div class="plan-modal-content">';
+ modalHtml += '<div class="plan-modal-header">';
+ modalHtml += '<h2 class="plan-modal-title">📋 ' + routeTitle + ' - 学习发展规划</h2>';
+ modalHtml += '<button class="plan-modal-close" onclick="closePlanModal()">✕</button>';
+ modalHtml += '</div>';
+ 
+ // 添加提示信息
+ modalHtml += '<div class="plan-tip-box" style="margin: 1rem; background: #e8f4f8; border-left: 4px solid #0077cc;">';
+ modalHtml += '<span class="plan-tip-icon">📌</span>';
+ modalHtml += '<span class="plan-tip-text">以下规划从您当前年级开始，系统展示后续各阶段的详细学习计划。请结合个人实际情况灵活调整。</span>';
+ modalHtml += '</div>';
+ 
+ // 学习规划路线 - 从当前年级开始，显示所有后续年级
+ modalHtml += '<div class="plan-section" style="padding: 0 1rem 1rem 1rem;">';
+ modalHtml += '<div class="plan-section-header"><span class="plan-section-icon">🎯</span>全程学习规划（' + gradeLabels[grade] + '开始）</div>';
+ modalHtml += '<div class="plan-timeline">';
+ 
+ var planCount = 0;
+ // 遍历从当前年级开始的所有后续年级
+ for (var i = currentIndex; i < gradeOrder.length; i++) {
+ var g = gradeOrder[i];
+ var gradeData = planData[g];
+ if (!gradeData) continue;
+ 
+ // 标记当前年级
+ var isCurrentGrade = (g === grade);
+ var currentTag = isCurrentGrade ? ' <span style="background:#0077cc;color:white;padding:2px 8px;border-radius:10px;font-size:0.75rem;margin-left:8px;">当前年级</span>' : '';
+ 
+ modalHtml += '<div class="plan-phase" style="' + (isCurrentGrade ? 'border-left: 3px solid #0077cc; background: #f8fbff;' : '') + '">';
+ modalHtml += '<div class="plan-phase-header">';
+ modalHtml += '<span class="plan-phase-num" style="' + (isCurrentGrade ? 'background:#0077cc;' : '') + '">' + (planCount + 1) + '</span>';
+ modalHtml += '<span class="plan-phase-title">' + gradeLabels[g] + currentTag + '</span>';
+ modalHtml += '</div>';
+ 
+ // 当前状态（仅当前年级显示）
+ if (isCurrentGrade) {
+ modalHtml += '<div class="plan-status-box" style="margin: 0.75rem 0; padding: 0.5rem; background: #f0f7ff; border-radius: 8px;">';
+ modalHtml += '<div style="font-size: 0.85rem; color: #666; margin-bottom: 0.25rem;">📍 当前状态：</div>';
+ modalHtml += '<div style="font-size: 0.9rem; color: #333;">' + gradeData.currentStatus + '</div>';
+ modalHtml += '</div>';
+ 
+ // 当前能力（仅当前年级显示）
+ modalHtml += '<div style="margin: 0.75rem 0;">';
+ modalHtml += '<div style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">💪 当前应掌握能力：</div>';
+ modalHtml += '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">';
+ gradeData.abilities.forEach(function(ability) {
+ modalHtml += '<span style="background: #e8f4f8; color: #0077cc; padding: 4px 10px; border-radius: 15px; font-size: 0.8rem;">' + ability + '</span>';
+ });
+ modalHtml += '</div></div>';
+ }
+ 
+ modalHtml += '<div class="plan-tasks-list">';
+ gradeData.plans.forEach(function(plan) {
+ modalHtml += '<div class="plan-task-item">';
+ modalHtml += '<span class="plan-task-checkbox">☐</span>';
+ modalHtml += '<div>';
+ modalHtml += '<div style="font-weight: 600; font-size: 0.85rem; color: #555; margin-bottom: 0.25rem;">📅 ' + plan.phase + '</div>';
+ plan.tasks.forEach(function(task) {
+ modalHtml += '<div style="display: flex; align-items: flex-start; margin: 0.25rem 0;">';
+ modalHtml += '<span style="color: #999; margin-right: 0.5rem;">•</span>';
+ modalHtml += '<span class="plan-task-text">' + task + '</span>';
+ modalHtml += '</div>';
+ });
+ modalHtml += '</div></div>';
+ });
+ modalHtml += '</div></div>';
+ planCount++;
+ }
+ 
+ modalHtml += '</div></div>';
+ 
+ // 提示信息
+ modalHtml += '<div class="plan-tip-box">';
+ modalHtml += '<span class="plan-tip-icon">💡</span>';
+ modalHtml += '<span class="plan-tip-text">以上规划基于互联网大数据分析。建议定期复盘进度，及时调整学习重点。如有疑问，可咨询专业导师。</span>';
+ modalHtml += '</div>';
+ 
+ modalHtml += '</div></div>';
+ 
+ // 添加到页面
+ var modalContainer = document.getElementById('plan-modal-container');
+ if (!modalContainer) {
+ modalContainer = document.createElement('div');
+ modalContainer.id = 'plan-modal-container';
+ document.body.appendChild(modalContainer);
+ }
+ modalContainer.innerHTML = modalHtml;
+ 
+ // 显示弹窗
+ modalContainer.style.display = 'block';
+}
+
+// 关闭规划弹窗
+function closePlanModal() {
+ var modalContainer = document.getElementById('plan-modal-container');
+ if (modalContainer) {
+ modalContainer.style.display = 'none';
+ }
 }
 
 function generateAbilities(scores){
@@ -1145,10 +2170,14 @@ function exportReport() {
     report += `## 🎯 推荐发展路线\n\n`;
     
     // 计算发展路线
-    var routes = calculateRoutes(scores);
+    var routes = calculateRoutes(scores, userInfo);
     routes.forEach(function(route, index) {
-        report += `${index + 1}. **${route.name}** (适配度：${route.match}%)\n`;
-        report += `   - ${route.description}\n\n`;
+        report += `${index + 1}. **${route.name}**\n`;
+        report += `   - ${route.description}\n`;
+        if (route.salary) {
+            report += `   - 预期收益：${route.salary}\n`;
+        }
+        report += '\n';
     });
     
     report += `---\n\n`;
@@ -1156,13 +2185,6 @@ function exportReport() {
     var abilities = getAbilities(scores);
     abilities.forEach(function(ability, index) {
         report += `${index + 1}. ${ability}\n`;
-    });
-    
-    report += `\n---\n\n`;
-    report += `## ✅ 本学期行动清单\n\n`;
-    var tasks = getTasks(userInfo.grade);
-    tasks.forEach(function(task, index) {
-        report += `${index + 1}. ${task}\n`;
     });
     
     report += `\n---\n\n`;
@@ -1193,19 +2215,44 @@ function getGradeLabel(grade) {
     return labels[grade];
 }
 
-function calculateRoutes(scores) {
-    var routes = [
-        {key:'tech',name:'技术就业路线',dimensions:['R','I'],baseMatch:0.85,description:'适合喜欢动手实践、追求技术深度的同学，未来可成为技术专家或技术管理者'},
-        {key:'graduate',name:'考研深造路线',dimensions:['I','A'],baseMatch:0.80,description:'适合喜欢理论研究、追求学术发展的同学，通过考研提升专业竞争力'},
-        {key:'civil',name:'公考体制路线',dimensions:['S','E','C'],baseMatch:0.75,description:'适合注重稳定、擅长沟通协调的同学，体制内工作具有稳定性和社会地位'}
-    ];
+function calculateRoutes(scores, userInfo) {
+    var directions = userInfo.directions || [];
+    var major = userInfo.major || '';
+    var isUndecided = directions.length === 0 || directions.includes('undecided');
     
-    routes.forEach(function(route) {
-        var avgScore = route.dimensions.reduce(function(sum, d) { return sum + (scores[d] || 0); }, 0) / route.dimensions.length;
-        route.match = Math.round((avgScore / 20) * route.baseMatch * 100);
-    });
+    var routeData = majorDirectionRoutesMap[major] || defaultDirectionRoutes;
+    var results = [];
     
-    return routes.sort(function(a, b) { return b.match - a.match; });
+    if (isUndecided) {
+        // 未确定方向：返回所有路线
+        ['job', 'graduate', 'public', 'other'].forEach(function(key) {
+            var routes = routeData[key] || [];
+            routes.forEach(function(route) {
+                results.push({
+                    name: route.title,
+                    description: route.detail,
+                    salary: route.salary || '',
+                    category: key
+                });
+            });
+        });
+    } else {
+        // 确定方向：只返回该方向的路线
+        directions.forEach(function(dir) {
+            if (dir === 'undecided') return;
+            var routes = routeData[dir] || [];
+            routes.forEach(function(route) {
+                results.push({
+                    name: route.title,
+                    description: route.detail,
+                    salary: route.salary || '',
+                    category: dir
+                });
+            });
+        });
+    }
+    
+    return results;
 }
 
 function getAbilities(scores) {
@@ -1228,17 +2275,6 @@ function getAbilities(scores) {
     });
     
     return result;
-}
-
-function getTasks(grade) {
-    var taskLibrary = {
-        freshman: ['参加新生专业导学活动，了解专业方向和就业前景', '学习基础编程语言（Python/Java/C++任选其一）', '加入专业相关社团或技术俱乐部', '完成课程配套的基础编程练习', '考取计算机一级或二级证书'],
-        sophomore: ['参加专业技能竞赛（如ACM、程序设计赛等）', '完成3-5个完整的技术小项目', '寻找第一份实习或兼职机会', '学习主流技术栈（Web开发/移动开发/数据处理）', '为保研或出国做准备（英语、成绩）'],
-        junior: ['争取名企暑期实习机会', '系统准备秋招/春招（算法、项目、面试）', '完成一个高质量的技术项目', '积累GitHub开源项目贡献经验', '完善个人技术博客和简历'],
-        senior: ['全力冲刺秋招/春招，获取offer', '完成毕业设计和毕业论文', '参加校园招聘宣讲会和双选会', '提前学习目标岗位入职前技能', '准备入职体检和三方协议签订']
-    };
-    
-    return taskLibrary[grade] || taskLibrary.freshman;
 }
 
 // ========================================
