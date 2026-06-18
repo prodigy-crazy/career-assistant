@@ -1,27 +1,206 @@
 var currentQuestion = 0;
 var answers = [];
-var questions = [
- { dimension: 'R', text: '我喜欢动手组装、修理电子产品或手工物件' },
- { dimension: 'R', text: '我更愿意做有具体实物产出的实操类任务' },
- { dimension: 'R', text: '我擅长拆解和解决机械、设备类的实际问题' },
- { dimension: 'R', text: '我偏好户外活动多于室内伏案工作' },
- { dimension: 'I', text: '我喜欢探索事物背后的原理，做逻辑分析与推导' },
- { dimension: 'I', text: '我乐于查阅文献、研究学术问题与新兴技术' },
- { dimension: 'I', text: '遇到难题时我习惯先收集数据再得出结论' },
- { dimension: 'I', text: '我对科学实验、数据分析类工作有浓厚兴趣' },
- { dimension: 'A', text: '我喜欢通过创意设计、文字或艺术形式表达想法' },
- { dimension: 'A', text: '我更愿意做有创造性、不按固定流程的工作' },
- { dimension: 'A', text: '我对审美、排版、视觉呈现比较敏感' },
- { dimension: 'S', text: '我乐于倾听和帮助他人解决学习或生活中的问题' },
- { dimension: 'S', text: '我喜欢参与志愿服务、社群运营类的活动' },
- { dimension: 'S', text: '我擅长和不同的人沟通协作，愿意从事服务类工作' },
- { dimension: 'E', text: '我喜欢带领团队完成任务，承担组织与决策工作' },
- { dimension: 'E', text: '我对商业运营、市场推广、创业类话题感兴趣' },
- { dimension: 'E', text: '我愿意挑战有业绩目标、能快速获得回报的工作' },
- { dimension: 'C', text: '我喜欢按规范流程做事，确保细节准确无误' },
- { dimension: 'C', text: '我擅长整理资料、数据统计与事务性工作' },
- { dimension: 'C', text: '我更偏好稳定、规则清晰的工作环境' }
+var selectedQuestions = []; // 当前测评使用的题目
+
+// 专业分类：用于题目适配
+var majorCategoryMap = {
+    '计算机科学与技术':'tech','软件工程':'tech','数据科学与大数据技术':'tech',
+    '人工智能':'tech','电子信息工程':'tech','通信工程':'tech','电气工程及其自动化':'tech',
+    '自动化':'tech','机械设计制造及其自动化':'tech','土木工程':'tech','建筑学':'design',
+    '城乡规划':'design','金融学':'business','会计学':'business','工商管理':'business',
+    '市场营销':'business','人力资源管理':'business','国际经济与贸易':'business',
+    '经济学':'business','财务管理':'business','法学':'law','社会工作':'social',
+    '行政管理':'social','汉语言文学':'arts','新闻学':'media','广告学':'design',
+    '英语':'lang','日语':'lang','数学与应用数学':'science','应用物理学':'science',
+    '化学':'science','生物科学':'science','环境工程':'science','临床医学':'medical',
+    '护理学':'medical','药学':'medical','心理学':'social','教育学':'education',
+    '学前教育':'education','体育教育':'education','美术学':'design','视觉传达设计':'design',
+    '数字媒体艺术':'design','音乐学':'arts','历史学':'arts','哲学':'arts',
+    '社会学':'social','统计学':'science','物流管理':'business','旅游管理':'business'
+};
+
+// 扩展题库：60道题，每维度10道，含反向题和专业适配题
+// reverse: true = 反向计分题（选了5分实际得1分）
+// majorCategory: 专业适配类别，为空则通用所有专业
+var questionBank = [
+    // R 实际型 - 通用
+    { dimension: 'R', text: '我喜欢动手组装、修理电子产品或手工物件', reverse: false },
+    { dimension: 'R', text: '我更愿意做有具体实物产出的实操类任务', reverse: false },
+    { dimension: 'R', text: '我擅长拆解和解决机械、设备类的实际问题', reverse: false },
+    { dimension: 'R', text: '我偏好户外活动多于室内伏案工作', reverse: false },
+    { dimension: 'R', text: '我享受使用工具完成实际工作的过程', reverse: false },
+    { dimension: 'R', text: '我对动植物养护、手工制作等活动感兴趣', reverse: false },
+    { dimension: 'R', text: '我不喜欢长时间坐在电脑前处理文字工作', reverse: false },
+    { dimension: 'R', text: '我能熟练使用各种维修工具和仪器设备', reverse: false },
+    // R 反向题
+    { dimension: 'R', text: '我更喜欢思考抽象问题而不是动手操作', reverse: true },
+    { dimension: 'R', text: '我倾向于用软件模拟而不是实际搭建', reverse: true },
+    // R 技术类专业
+    { dimension: 'R', text: '我享受debug和修复bug的过程', reverse: false, majorCategory: 'tech' },
+    { dimension: 'R', text: '我愿意花时间搭建开发环境、配置工具链', reverse: false, majorCategory: 'tech' },
+    // R 设计类专业
+    { dimension: 'R', text: '我喜欢绘制草图、制作实体模型', reverse: false, majorCategory: 'design' },
+
+    // I 研究型 - 通用
+    { dimension: 'I', text: '我喜欢探索事物背后的原理，做逻辑分析与推导', reverse: false },
+    { dimension: 'I', text: '我乐于查阅文献、研究学术问题与新兴技术', reverse: false },
+    { dimension: 'I', text: '遇到难题时我习惯先收集数据再得出结论', reverse: false },
+    { dimension: 'I', text: '我对科学实验、数据分析类工作有浓厚兴趣', reverse: false },
+    { dimension: 'I', text: '我享受解决复杂问题带来的成就感', reverse: false },
+    { dimension: 'I', text: '我愿意深入研究一个领域直到成为专家', reverse: false },
+    { dimension: 'I', text: '我习惯用数学或统计方法验证我的想法', reverse: false },
+    { dimension: 'I', text: '我对学术论文和技术文档有较强的阅读理解能力', reverse: false },
+    // I 反向题
+    { dimension: 'I', text: '我更关注how而不是why', reverse: true },
+    { dimension: 'I', text: '我很少追根究底，差不多就行', reverse: true },
+    // I 学术类专业
+    { dimension: 'I', text: '我愿意为发表论文投入大量时间精力', reverse: false, majorCategory: 'science' },
+
+    // A 艺术型 - 通用
+    { dimension: 'A', text: '我喜欢通过创意设计、文字或艺术形式表达想法', reverse: false },
+    { dimension: 'A', text: '我更愿意做有创造性、不按固定流程的工作', reverse: false },
+    { dimension: 'A', text: '我对审美、排版、视觉呈现比较敏感', reverse: false },
+    { dimension: 'A', text: '我经常产生独特的想法并想付诸实践', reverse: false },
+    { dimension: 'A', text: '我享受艺术创作和灵感迸发的过程', reverse: false },
+    { dimension: 'A', text: '我善于用非传统方式解决问题', reverse: false },
+    { dimension: 'A', text: '我对方程式和程序代码没有美感要求', reverse: false },
+    { dimension: 'A', text: '我喜欢独立工作而不是按指令完成任务', reverse: false },
+    // A 反向题
+    { dimension: 'A', text: '我更喜欢有明确步骤的工作任务', reverse: true },
+    { dimension: 'A', text: '我更注重结果而不是过程的美感', reverse: true },
+    // A 设计类专业
+    { dimension: 'A', text: '我能接受为追求完美效果而反复修改作品', reverse: false, majorCategory: 'design' },
+
+    // S 社会型 - 通用
+    { dimension: 'S', text: '我乐于倾听和帮助他人解决学习或生活中的问题', reverse: false },
+    { dimension: 'S', text: '我喜欢参与志愿服务、社群运营类的活动', reverse: false },
+    { dimension: 'S', text: '我擅长和不同的人沟通协作，愿意从事服务类工作', reverse: false },
+    { dimension: 'S', text: '我享受教导和传授知识给他人的过程', reverse: false },
+    { dimension: 'S', text: '我关心社会问题，愿意为公共利益出力', reverse: false },
+    { dimension: 'S', text: '我擅长调解冲突、维护团队和谐', reverse: false },
+    { dimension: 'S', text: '我更喜欢与人互动而不是独自工作', reverse: false },
+    { dimension: 'S', text: '我愿意倾听他人的倾诉并给予支持', reverse: false },
+    // S 反向题
+    { dimension: 'S', text: '我更喜欢独立完成工作而不是团队协作', reverse: true },
+    { dimension: 'S', text: '我不太擅长处理复杂的人际关系', reverse: true },
+    // S 教育/心理类专业
+    { dimension: 'S', text: '我能够耐心倾听并理解他人的情绪和需求', reverse: false, majorCategory: 'social' },
+
+    // E 企业型 - 通用
+    { dimension: 'E', text: '我喜欢带领团队完成任务，承担组织与决策工作', reverse: false },
+    { dimension: 'E', text: '我对商业运营、市场推广、创业类话题感兴趣', reverse: false },
+    { dimension: 'E', text: '我愿意挑战有业绩目标、能快速获得回报的工作', reverse: false },
+    { dimension: 'E', text: '我善于说服他人接受我的观点和建议', reverse: false },
+    { dimension: 'E', text: '我享受竞争和冒险带来的刺激感', reverse: false },
+    { dimension: 'E', text: '我对权力和影响力有较强的渴望', reverse: false },
+    { dimension: 'E', text: '我善于发现商机并付诸行动', reverse: false },
+    { dimension: 'E', text: '我愿意承担管理职责，带领团队达成目标', reverse: false },
+    // E 反向题
+    { dimension: 'E', text: '我更倾向于稳定的工作环境而不愿冒险', reverse: true },
+    { dimension: 'E', text: '我更愿意做执行者而不是决策者', reverse: true },
+    // E 商科类专业
+    { dimension: 'E', text: '我愿意为创业梦想承担风险', reverse: false, majorCategory: 'business' },
+
+    // C 常规型 - 通用
+    { dimension: 'C', text: '我喜欢按规范流程做事，确保细节准确无误', reverse: false },
+    { dimension: 'C', text: '我擅长整理资料、数据统计与事务性工作', reverse: false },
+    { dimension: 'C', text: '我更偏好稳定、规则清晰的工作环境', reverse: false },
+    { dimension: 'C', text: '我习惯按照计划严格执行任务', reverse: false },
+    { dimension: 'C', text: '我注重工作的准确性和完整性', reverse: false },
+    { dimension: 'C', text: '我喜欢处理数字、报表、数据核对工作', reverse: false },
+    { dimension: 'C', text: '我习惯将工作安排得井井有条', reverse: false },
+    { dimension: 'C', text: '我愿意遵守规章制度而不是打破规则', reverse: false },
+    // C 反向题
+    { dimension: 'C', text: '我更喜欢灵活自由的工作方式', reverse: true },
+    { dimension: 'C', text: '我经常打破常规寻找新方法', reverse: true },
+    // C 医疗/法律类专业
+    { dimension: 'C', text: '我愿意严格遵守职业规范和操作流程', reverse: false, majorCategory: 'medical' },
+    { dimension: 'C', text: '我注重文件的规范性和程序的合规性', reverse: false, majorCategory: 'law' }
 ];
+
+// 方向权重配置：影响不同维度的题目数量和推荐权重
+var directionWeightConfig = {
+    job: { R: 1.2, I: 0.9, A: 1.0, S: 0.8, E: 1.3, C: 0.9 },
+    graduate: { R: 0.8, I: 1.4, A: 0.9, S: 0.8, E: 0.7, C: 1.2 },
+    public: { R: 0.7, I: 0.8, A: 0.7, S: 1.3, E: 1.0, C: 1.5 },
+    undecided: { R: 1.0, I: 1.0, A: 1.0, S: 1.0, E: 1.0, C: 1.0 }
+};
+
+// 根据专业和方向选择题目
+function selectQuestions(major, directions) {
+    var category = majorCategoryMap[major] || 'general';
+    var totalNeeded = 20;
+    var perDimension = Math.floor(totalNeeded / 6); // 每维度约3-4题
+
+    // 计算方向权重
+    var weights = { R: 1, I: 1, A: 1, S: 1, E: 1, C: 1 };
+    directions.forEach(function(dir) {
+        var dirWeights = directionWeightConfig[dir] || directionWeightConfig.undecided;
+        for (var d in dirWeights) {
+            weights[d] = weights[d] * dirWeights[d];
+        }
+    });
+
+    // 筛选题目：优先选专业适配题，再选通用题
+    var selected = [];
+    var usedIds = new Set();
+
+    // 计算每个维度需要的题目数（根据权重调整）
+    var dimCounts = {};
+    var dimensions = ['R', 'I', 'A', 'S', 'E', 'C'];
+    var totalWeight = Object.values(weights).reduce(function(a, b) { return a + b; }, 0);
+
+    dimensions.forEach(function(dim) {
+        dimCounts[dim] = Math.max(2, Math.round(perDimension * weights[dim] / totalWeight * 6));
+    });
+
+    // 微调确保总数为20
+    var sum = Object.values(dimCounts).reduce(function(a, b) { return a + b; }, 0);
+    if (sum < totalNeeded) {
+        dimCounts['I'] += totalNeeded - sum; // 研究型多补
+    } else if (sum > totalNeeded) {
+        dimCounts['C'] -= sum - totalNeeded; // 常规型少补
+    }
+
+    // 选择题目
+    dimensions.forEach(function(dim) {
+        var count = dimCounts[dim] || 3;
+        // 优先选择专业适配题
+        var categoryQuestions = questionBank.filter(function(q) {
+            return q.dimension === dim &&
+                   (q.majorCategory === category || !q.majorCategory) &&
+                   !usedIds.has(q.text);
+        });
+        // 再选通用题
+        var generalQuestions = questionBank.filter(function(q) {
+            return q.dimension === dim &&
+                   !q.majorCategory &&
+                   !usedIds.has(q.text);
+        });
+
+        var pool = [...categoryQuestions, ...generalQuestions];
+        // 打乱顺序
+        pool.sort(function() { return Math.random() - 0.5; });
+
+        for (var i = 0; i < Math.min(count, pool.length); i++) {
+            selected.push(pool[i]);
+            usedIds.add(pool[i].text);
+        }
+    });
+
+    // 最终打乱所有题目
+    selected.sort(function() { return Math.random() - 0.5; });
+
+    // 确保正好20题
+    return selected.slice(0, totalNeeded);
+}
+
+// 计算最终得分（处理反向题）
+function calculateScore(answer, question) {
+    if (answer === null) return null;
+    // 反向题：5分→1分, 4分→2分, 3分不变, 2分→4分, 1分→5分
+    return question.reverse ? 6 - answer : answer;
+}
 
 // 50个常见大学专业列表
 var majorList = [
@@ -353,18 +532,91 @@ function nav(p){
 }
 
 function initTest(){
- var saved=localStorage.getItem('testAnswers');
- answers=saved?JSON.parse(saved):new Array(20).fill(null);
+ // 获取用户信息，根据专业和方向选择题目
+ var userInfo=JSON.parse(localStorage.getItem('userInfo')||'{}');
+ var major=userInfo.major||'';
+ var directions=userInfo.directions||[];
+ selectedQuestions=selectQuestions(major,directions);
+
+ var savedAnswers=localStorage.getItem('testAnswers');
+ var savedQ=localStorage.getItem('testQuestions');
+ if(savedAnswers && savedQ){
+  var parsedQ=JSON.parse(savedQ);
+  // 验证题目是否一致
+  if(JSON.stringify(parsedQ.map(function(q){return q.text;}))===JSON.stringify(selectedQuestions.map(function(q){return q.text;}))) {
+   answers=JSON.parse(savedAnswers);
+  }else{
+   answers=new Array(20).fill(null);
+   localStorage.removeItem('testAnswers');
+   localStorage.removeItem('testQuestions');
+  }
+ }else{
+  answers=new Array(20).fill(null);
+ }
  currentQuestion=0;
+ initProgressTrack();
  showQuestion();
 }
 
+function initProgressTrack(){
+ var track=document.getElementById('progress-track');
+ if(!track) return;
+ track.innerHTML='';
+ var total=selectedQuestions.length;
+ for(var i=0;i<total;i++){
+  var node=document.createElement('div');
+  node.className='progress-node';
+  node.id='pnode-'+i;
+  node.setAttribute('data-index',i);
+  node.textContent=i+1;
+  node.addEventListener('click',function(){
+   var idx=parseInt(this.getAttribute('data-index'));
+   if(idx!==currentQuestion){
+    currentQuestion=idx;
+    showQuestion();
+   }
+  });
+  if(i===0) node.classList.add('current');
+  track.appendChild(node);
+  if(i<total-1){
+   var line=document.createElement('div');
+   line.className='progress-line';
+   line.id='pline-'+i;
+   track.appendChild(line);
+  }
+ }
+}
+
+function updateProgressTrack(current){
+ var total=selectedQuestions.length;
+ for(var i=0;i<total;i++){
+  var node=document.getElementById('pnode-'+i);
+  if(!node) continue;
+  node.classList.remove('completed','completed-unanswered','current');
+  if(i<current){
+   // 已过的题目：已答题绿色，未答题灰色
+   if(answers[i]!==null){
+    node.classList.add('completed');
+   }else{
+    node.classList.add('completed-unanswered');
+   }
+  }else if(i===current){
+   node.classList.add('current');
+  }
+  var line=document.getElementById('pline-'+i);
+  if(line){
+   if(i<current) line.classList.add('completed');
+   else line.classList.remove('completed');
+  }
+ }
+}
+
 function showQuestion(){
- var q=questions[currentQuestion];
+ var q=selectedQuestions[currentQuestion];
  document.getElementById('question-number').textContent=currentQuestion+1;
  document.getElementById('question-text').textContent=q.text;
- document.getElementById('progress-text').textContent=(currentQuestion+1)+' / 20';
- document.getElementById('progress-fill').style.width=((currentQuestion+1)/20*100)+'%';
+ document.getElementById('progress-text').textContent=(currentQuestion+1)+' / '+selectedQuestions.length;
+ updateProgressTrack(currentQuestion);
 
  // 重置所有选项状态
  var options=document.querySelectorAll('.option');
@@ -395,7 +647,7 @@ function prevQuestion(){
 
 function nextQuestion(){
  saveAnswer();
- if(currentQuestion<19){
+ if(currentQuestion<selectedQuestions.length-1){
  currentQuestion++;
  showQuestion();
  }else{
@@ -408,10 +660,12 @@ function saveAnswer(){
  if(selected){
  answers[currentQuestion]=parseInt(selected.value);
  localStorage.setItem('testAnswers',JSON.stringify(answers));
+ localStorage.setItem('testQuestions',JSON.stringify(selectedQuestions));
  // 更新选项样式
  var options=document.querySelectorAll('.option');
  options.forEach(function(opt){opt.classList.remove('selected')});
  selected.closest('.option').classList.add('selected');
+ updateProgressTrack(currentQuestion);
  }
 }
 
@@ -429,10 +683,11 @@ function submitTest(){
 
 function calculateScores(){
  var scores={R:0,I:0,A:0,S:0,E:0,C:0};
- questions.forEach(function(q,index){
+ selectedQuestions.forEach(function(q,index){
  var answer=answers[index];
  if(answer!==null){
- scores[q.dimension]+=answer;
+ // 处理反向题
+ scores[q.dimension]+=calculateScore(answer,q);
  }
  });
  localStorage.setItem('testScores',JSON.stringify(scores));
@@ -514,6 +769,7 @@ function initSkillSelect(major, directions){
  }
  // 收集所有选中方向对应的技能（去重）
  var skillSet = {};
+ var directionSkillMap = {};
  directions = directions || [];
  if(directions.length === 0){
   // 还没选方向，显示提示
@@ -526,6 +782,7 @@ function initSkillSelect(major, directions){
  directions.forEach(function(dir){
   var skills = skillMap[dir];
   if(skills){
+   directionSkillMap[dir] = skills;
    skills.forEach(function(s){ skillSet[s] = true; });
   }
  });
@@ -544,11 +801,22 @@ function initSkillSelect(major, directions){
   hint.textContent = '根据「'+dirNames.join('+')+'」方向，对应所需核心技能：';
  }
  pills.innerHTML = '';
- allSkills.forEach(function(s){
-  var label = document.createElement('label');
-  label.className = 'skill-pill';
-  label.innerHTML = '<input type="checkbox" name="skill" value="'+s+'"><span>'+s+'</span>';
-  pills.appendChild(label);
+ // 按方向分组渲染技能
+ directions.forEach(function(dir){
+  var skills = directionSkillMap[dir];
+  if(!skills || skills.length === 0) return;
+  // 分组标题
+  var header = document.createElement('div');
+  header.className = 'skill-group-header';
+  header.textContent = dirLabels[dir] + '方向';
+  pills.appendChild(header);
+  // 该方向的技能
+  skills.forEach(function(s){
+   var label = document.createElement('label');
+   label.className = 'skill-pill';
+   label.innerHTML = '<input type="checkbox" name="skill" value="'+s+'"><span>'+s+'</span>';
+   pills.appendChild(label);
+  });
  });
  document.getElementById('error-skills').textContent = '';
  document.getElementById('skill-other').value = '';
@@ -587,74 +855,131 @@ function submitInfo(e){
 }
 
 function initResultPage(){
+ // 加载题目和得分
+ var savedQ=localStorage.getItem('testQuestions');
+ if(savedQ){
+  selectedQuestions=JSON.parse(savedQ);
+ }else{
+  selectedQuestions=questionBank.slice(0,20);
+ }
+
  var scores=JSON.parse(localStorage.getItem('testScores')||'{"R":0,"I":0,"A":0,"S":0,"E":0,"C":0}');
  var userInfo=JSON.parse(localStorage.getItem('userInfo')||'{}');
+ var directions=userInfo.directions||[];
+
+ // 计算方向适配度，调整显示
  var dimensions=['R','I','A','S','E','C'];
  dimensions.forEach(function(d){
- document.getElementById('disp-'+d).textContent=scores[d]||0;
+  var baseScore=scores[d]||0;
+  // 根据方向权重调整显示分数
+  var weight=1;
+  directions.forEach(function(dir){
+   weight*=directionWeightConfig[dir]?.[d]||1;
+  });
+  var adjustedScore=Math.round(baseScore*weight*10)/10;
+  document.getElementById('disp-'+d).textContent=adjustedScore;
  });
- drawRadarChart(scores);
+
+ drawRadarChart(scores,directions);
  generateRoutes(scores,userInfo);
  generateAbilities(scores);
  generateTasks(userInfo.grade||'freshman');
 }
 
-function drawRadarChart(scores){
+function drawRadarChart(scores,directions){
  var canvas=document.getElementById('radar-canvas');
  var ctx=canvas.getContext('2d');
  var centerX=canvas.width/2;
  var centerY=canvas.height/2;
  var radius=Math.min(centerX,centerY)-40;
  var dimensions=['R','I','A','S','E','C'];
- var maxScore=20;
+ // 动态最大分数：每维度题目数 × 5
+ var dimCounts={R:0,I:0,A:0,S:0,E:0,C:0};
+ selectedQuestions.forEach(function(q){dimCounts[q.dimension]=(dimCounts[q.dimension]||0)+1;});
+ var maxScore=Math.max(...Object.values(dimCounts).map(function(c){return c*5;}));
  ctx.clearRect(0,0,canvas.width,canvas.height);
- ctx.beginPath();
- for(var i=0;i<=3;i++){
- var r=radius*(i/3);
+
+ // 绘制背景网格 - 圆形
+ for(var i=1;i<=3;i++){
+  var r=radius*(i/3);
+  ctx.beginPath();
+  ctx.arc(centerX,centerY,r,0,Math.PI*2);
+  ctx.strokeStyle='#e4e7ed';
+  ctx.lineWidth=1;
+  ctx.stroke();
+ }
+
+ // 绘制轴线
+ for(var j=0;j<6;j++){
+  var angle=(Math.PI/2)+(j*2*Math.PI/6);
+  ctx.beginPath();
+  ctx.moveTo(centerX,centerY);
+  ctx.lineTo(centerX+radius*Math.cos(angle),centerY-radius*Math.sin(angle));
+  ctx.strokeStyle='#e4e7ed';
+  ctx.lineWidth=1;
+  ctx.stroke();
+ }
+
+ // 计算调整后的分数
+ var adjustedScores={};
+ dimensions.forEach(function(d){
+  var baseScore=scores[d]||0;
+  var weight=1;
+  if(directions){
+   directions.forEach(function(dir){
+    weight*=directionWeightConfig[dir]?.[d]||1;
+   });
+  }
+  adjustedScores[d]=baseScore*weight;
+ });
+
+ // 绘制数据区域 - 渐变填充
+ var gradient=ctx.createRadialGradient(centerX,centerY,0,centerX,centerY,radius);
+ gradient.addColorStop(0,'rgba(74,144,226,0.4)');
+ gradient.addColorStop(1,'rgba(74,144,226,0.1)');
  ctx.beginPath();
  for(var j=0;j<6;j++){
- var angle=(Math.PI/2)+(j*2*Math.PI/6);
- var x=centerX+r*Math.cos(angle);
- var y=centerY-r*Math.sin(angle);
- if(j===0)ctx.moveTo(x,y);
- else ctx.lineTo(x,y);
+  var angle=(Math.PI/2)+(j*2*Math.PI/6);
+  var value=(adjustedScores[dimensions[j]]||0)/maxScore;
+  var x=centerX+value*radius*Math.cos(angle);
+  var y=centerY-value*radius*Math.sin(angle);
+  if(j===0)ctx.moveTo(x,y);
+  else ctx.lineTo(x,y);
  }
  ctx.closePath();
- ctx.strokeStyle='#e4e7ed';
- ctx.stroke();
- }
- for(var j=0;j<6;j++){
- var angle=(Math.PI/2)+(j*2*Math.PI/6);
- ctx.beginPath();
- ctx.moveTo(centerX,centerY);
- ctx.lineTo(centerX+radius*Math.cos(angle),centerY-radius*Math.sin(angle));
- ctx.strokeStyle='#e4e7ed';
- ctx.stroke();
- }
- ctx.beginPath();
- for(var j=0;j<6;j++){
- var angle=(Math.PI/2)+(j*2*Math.PI/6);
- var value=(scores[dimensions[j]]||0)/maxScore;
- var x=centerX+value*radius*Math.cos(angle);
- var y=centerY-value*radius*Math.sin(angle);
- if(j===0)ctx.moveTo(x,y);
- else ctx.lineTo(x,y);
- }
- ctx.closePath();
- ctx.fillStyle='rgba(74,144,226,0.3)';
+ ctx.fillStyle=gradient;
  ctx.fill();
  ctx.strokeStyle='#4A90E2';
- ctx.lineWidth=2;
+ ctx.lineWidth=2.5;
  ctx.stroke();
- ctx.fillStyle='#606266';
- ctx.font='12px sans-serif';
+
+ // 数据点
+ for(var j=0;j<6;j++){
+  var angle=(Math.PI/2)+(j*2*Math.PI/6);
+  var value=(adjustedScores[dimensions[j]]||0)/maxScore;
+  var x=centerX+value*radius*Math.cos(angle);
+  var y=centerY-value*radius*Math.sin(angle);
+  ctx.beginPath();
+  ctx.arc(x,y,4,0,Math.PI*2);
+  ctx.fillStyle='#4A90E2';
+  ctx.fill();
+  ctx.strokeStyle='white';
+  ctx.lineWidth=2;
+  ctx.stroke();
+ }
+
+ // 标签
+ ctx.fillStyle='#303133';
+ ctx.font='bold 14px sans-serif';
  ctx.textAlign='center';
  for(var j=0;j<6;j++){
- var angle=(Math.PI/2)+(j*2*Math.PI/6);
- var labelRadius=radius+25;
- var x=centerX+labelRadius*Math.cos(angle);
- var y=centerY-labelRadius*Math.sin(angle);
- ctx.fillText(dimensions[j],x,y+4);
+  var angle=(Math.PI/2)+(j*2*Math.PI/6);
+  var labelRadius=radius+28;
+  var x=centerX+labelRadius*Math.cos(angle);
+  var y=centerY-labelRadius*Math.sin(angle);
+  // 显示维度+分数
+  var label=dimensions[j]+':'+Math.round(adjustedScores[dimensions[j]]||0);
+  ctx.fillText(label,x,y+5);
  }
 }
 
@@ -766,7 +1091,9 @@ function generateTasks(grade) {
  
  tasks.forEach(function(task,index){
  var isCompleted = progress[task] || false;
- tasksList.innerHTML+='<div class="task-item'+(isCompleted?' completed':'')+'"><input type="checkbox" class="task-checkbox"'+(isCompleted?' checked':'')+' onclick="toggleTask(\''+escape(task)+'\', this)"><div class="task-content"><span class="task-priority">优先级'+(index+1)+'</span><p class="task-text">'+task+'</p></div></div>';
+ var priorityClass = index === 0 ? 'priority-high' : (index <= 2 ? 'priority-medium' : 'priority-low');
+ var priorityLabel = index === 0 ? '高优先' : (index <= 2 ? '中优先' : '低优先');
+ tasksList.innerHTML+='<div class="task-item '+priorityClass+(isCompleted?' completed':'')+'"><input type="checkbox" class="task-checkbox"'+(isCompleted?' checked':'')+' onclick="toggleTask(\''+escape(task)+'\', this)"><div class="task-content"><span class="task-priority '+priorityClass+'">'+priorityLabel+'</span><p class="task-text">'+task+'</p></div></div>';
  });
 }
 

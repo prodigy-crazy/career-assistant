@@ -80,22 +80,34 @@
                         </div>
                         <div class="form-group">
                             <label>意向方向 <span class="required">*</span></label>
-                            <div class="checkbox-group" id="direction-group">
-                                <label class="checkbox-item">
+                            <div class="direction-cards" id="direction-cards">
+                                <label class="direction-card" data-value="job">
                                     <input type="checkbox" name="direction" value="job" onchange="onDirectionChange()">
-                                    <span>就业</span>
+                                    <div class="direction-icon">💼</div>
+                                    <div class="direction-name">就业</div>
+                                    <div class="direction-desc">实战技能导向</div>
+                                    <div class="direction-check">✓</div>
                                 </label>
-                                <label class="checkbox-item">
+                                <label class="direction-card" data-value="graduate">
                                     <input type="checkbox" name="direction" value="graduate" onchange="onDirectionChange()">
-                                    <span>考研</span>
+                                    <div class="direction-icon">📚</div>
+                                    <div class="direction-name">考研</div>
+                                    <div class="direction-desc">深造升学路线</div>
+                                    <div class="direction-check">✓</div>
                                 </label>
-                                <label class="checkbox-item">
+                                <label class="direction-card" data-value="public">
                                     <input type="checkbox" name="direction" value="public" onchange="onDirectionChange()">
-                                    <span>考公</span>
+                                    <div class="direction-icon">🏛️</div>
+                                    <div class="direction-name">考公</div>
+                                    <div class="direction-desc">体制内稳定</div>
+                                    <div class="direction-check">✓</div>
                                 </label>
-                                <label class="checkbox-item">
+                                <label class="direction-card" data-value="undecided">
                                     <input type="checkbox" name="direction" value="undecided" onchange="onDirectionChange()">
-                                    <span>暂未确定</span>
+                                    <div class="direction-icon">❓</div>
+                                    <div class="direction-name">暂未确定</div>
+                                    <div class="direction-desc">待探索方向</div>
+                                    <div class="direction-check">✓</div>
                                 </label>
                             </div>
                             <span class="error-message" id="error-direction"></span>
@@ -120,9 +132,7 @@
                 <div class="test-container">
                     <div class="test-header">
                         <h2>职业测评</h2>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progress-fill"></div>
-                        </div>
+                        <div class="progress-track" id="progress-track"></div>
                         <span class="progress-text" id="progress-text">1 / 20</span>
                     </div>
                     <div class="question-container" id="question-container">
