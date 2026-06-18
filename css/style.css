@@ -1170,3 +1170,62 @@ body {
     color: var(--text-light);
     font-size: 0.9rem;
 }
+
+/* ========================================
+   技能多选 Pills
+   ======================================== */
+.skill-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.skill-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    user-select: none;
+    background: var(--bg-white);
+}
+
+.skill-pill:hover {
+    border-color: var(--primary);
+    background: #e8f1fb;
+}
+
+.skill-pill:has(input:checked) {
+    background: #e8f1fb;
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.skill-pill input[type="checkbox"] {
+    display: none;
+}
+
+.skill-other {
+    margin-top: 4px;
+}
+
+.skill-other input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+}
+
+.skill-other input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74,144,226,0.1);
+}

@@ -37,6 +37,60 @@ var majorList = [
     '哲学','社会学','统计学','物流管理','旅游管理'
 ];
 
+// 专业-技能映射（每专业3-5项核心技能）
+var majorSkillMap = {
+    '计算机科学与技术':['编程(Python/Java/C++)','数据结构与算法','数据库管理','计算机网络','操作系统'],
+    '软件工程':['面向对象编程','软件测试','版本控制(Git)','敏捷开发','需求分析'],
+    '数据科学与大数据技术':['数据清洗','机器学习','统计分析','SQL','数据可视化'],
+    '人工智能':['深度学习','自然语言处理','Python','数学基础','TensorFlow/PyTorch'],
+    '电子信息工程':['电路设计','嵌入式开发','信号处理','通信原理','PCB设计'],
+    '通信工程':['通信原理','网络协议','信号处理','无线通信','光纤通信'],
+    '电气工程及其自动化':['PLC编程','电路设计','电机控制','供配电','传感器技术'],
+    '自动化':['控制理论','PLC','传感器技术','机器人技术','嵌入式系统'],
+    '机械设计制造及其自动化':['CAD制图','机械设计','材料力学','数控编程','SolidWorks'],
+    '土木工程':['结构力学','AutoCAD','工程造价','施工管理','测量学'],
+    '建筑学':['建筑设计','SketchUp','空间规划','建筑史','BIM建模'],
+    '城乡规划':['城市规划','GIS','交通规划','环境设计','AutoCAD'],
+    '金融学':['财务分析','投资管理','风险控制','Excel高级应用','CFA基础'],
+    '会计学':['财务报表','税务筹划','审计','Excel','会计准则'],
+    '工商管理':['项目管理','数据分析','沟通协调','商业策划','PPT演示'],
+    '市场营销':['市场调研','品牌策划','数据分析','文案撰写','新媒体运营'],
+    '人力资源管理':['招聘面试','绩效管理','劳动法','沟通培训','HR系统'],
+    '国际经济与贸易':['英语商务','外贸流程','报关报检','跨境支付','贸易谈判'],
+    '经济学':['宏观经济学','微观经济学','计量分析','Stata/SPSS','政策研究'],
+    '财务管理':['财务分析','预算管理','Excel','资金管理','税法基础'],
+    '法学':['法律检索','文书写作','案例分析','辩论技巧','法规解读'],
+    '社会工作':['个案工作','社区服务','心理咨询','社会调查','活动策划'],
+    '行政管理':['公文写作','会议组织','档案管理','办公软件','沟通协调'],
+    '汉语言文学':['文案写作','文学鉴赏','编辑排版','新媒体运营','古文阅读'],
+    '新闻学':['新闻采写','视频剪辑','新媒体运营','采访技巧','内容策划'],
+    '广告学':['创意策划','文案撰写','PS/AI设计','品牌策划','视频剪辑'],
+    '英语':['英语口语','翻译','跨文化沟通','商务英语','写作'],
+    '日语':['日语口语','日语翻译','日本文化','商务日语','JLPT备考'],
+    '数学与应用数学':['数学建模','MATLAB','逻辑推理','统计分析','算法设计'],
+    '应用物理学':['实验设计','MATLAB','数据分析','仪器操作','物理仿真'],
+    '化学':['实验操作','仪器分析','化学合成','实验室安全','数据处理'],
+    '生物科学':['实验操作','PCR技术','细胞培养','显微技术','数据分析'],
+    '环境工程':['环境监测','水处理','固废处理','环评报告','AutoCAD'],
+    '临床医学':['临床诊断','医患沟通','病历书写','急救技能','影像判读'],
+    '护理学':['基础护理','急救技能','无菌操作','医患沟通','病例记录'],
+    '药学':['药物分析','药理学','制剂制备','GMP规范','仪器操作'],
+    '心理学':['心理咨询','量表测评','SPSS','实验设计','沟通技巧'],
+    '教育学':['教学设计','课堂管理','PPT制作','教育心理学','课程开发'],
+    '学前教育':['幼儿活动设计','绘本教学','手工制作','音乐律动','保育技能'],
+    '体育教育':['运动训练','赛事裁判','体能教学','运动解剖','急救技能'],
+    '美术学':['手绘基础','色彩理论','素描','油画/国画','艺术史'],
+    '视觉传达设计':['平面设计','PS/AI','版式设计','品牌设计','插画'],
+    '数字媒体艺术':['视频剪辑','3D建模','动画制作','UI设计','摄影'],
+    '音乐学':['乐理知识','乐器演奏','视唱练耳','音乐史','作曲编曲'],
+    '历史学':['文献检索','史料分析','写作表达','批判思维','考古基础'],
+    '哲学':['逻辑推理','文本分析','批判思维','论证写作','跨学科思考'],
+    '社会学':['社会调查','SPSS','数据分析','问卷设计','田野研究'],
+    '统计学':['SPSS/R','Python','数据建模','假设检验','可视化'],
+    '物流管理':['供应链管理','仓储管理','物流系统','ERP','成本控制'],
+    '旅游管理':['酒店运营','景区规划','导游技能','旅游英语','接待礼仪']
+};
+
 function nav(p){
  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active')});
  document.querySelectorAll('.nav-link').forEach(function(x){x.classList.remove('active')});
@@ -160,6 +214,7 @@ function initSearchSelect(){
     document.getElementById('error-major').textContent = '';
     select.classList.remove('open');
     renderOptions(searchInput.value);
+    initSkillSelect(m);
    });
    dropdown.appendChild(div);
   });
@@ -195,17 +250,47 @@ function initSearchSelect(){
  renderOptions('');
 }
 
+function initSkillSelect(major){
+ var group = document.getElementById('skills-group');
+ var pills = document.getElementById('skill-pills');
+ var skills = majorSkillMap[major];
+ if(!skills){
+  group.style.display = 'none';
+  pills.innerHTML = '';
+  return;
+ }
+ group.style.display = 'block';
+ pills.innerHTML = '';
+ skills.forEach(function(s){
+  var label = document.createElement('label');
+  label.className = 'skill-pill';
+  label.innerHTML = '<input type="checkbox" name="skill" value="'+s+'"><span>'+s+'</span>';
+  pills.appendChild(label);
+ });
+ document.getElementById('error-skills').textContent = '';
+ document.getElementById('skill-other').value = '';
+}
+
 function submitInfo(e){
  e.preventDefault();
  var major=document.getElementById('major').value.trim();
  var grade=document.getElementById('grade').value;
- var skills=document.getElementById('skills').value.trim();
  var directions=Array.from(document.querySelectorAll('input[name="direction"]:checked')).map(function(x){return x.value});
+ var selectedSkills=Array.from(document.querySelectorAll('input[name="skill"]:checked')).map(function(x){return x.value});
+ var otherSkills=document.getElementById('skill-other').value.trim();
+ if(otherSkills){
+  otherSkills.split(/[,，]/).forEach(function(s){ var t=s.trim(); if(t)selectedSkills.push(t); });
+ }
+ var skills=selectedSkills.join('、');
  var valid=true;
  document.getElementById('error-major').textContent='';
  document.getElementById('error-grade').textContent='';
+ document.getElementById('error-skills').textContent='';
+ document.getElementById('error-direction').textContent='';
  if(!major){document.getElementById('error-major').textContent='请选择专业';valid=false;}
  if(!grade){document.getElementById('error-grade').textContent='请选择年级';valid=false;}
+ if(directions.length===0){document.getElementById('error-direction').textContent='请至少选择一个意向方向';valid=false;}
+ if(!skills && majorSkillMap[major]){document.getElementById('error-skills').textContent='请至少选择一项已掌握技能';valid=false;}
  if(!valid)return;
  var userInfo={major:major,grade:grade,skills:skills,directions:directions};
  localStorage.setItem('userInfo',JSON.stringify(userInfo));
