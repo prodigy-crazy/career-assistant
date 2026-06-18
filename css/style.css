@@ -126,7 +126,7 @@ body {
 }
 
 /* ========================================
-   首页样式
+   首页样式 - 桌面端默认
    ======================================== */
 .hero {
     position: relative;
@@ -134,9 +134,13 @@ body {
     padding: 4rem 2rem;
     background: linear-gradient(135deg, #4A90E2 0%, #6BA3E0 30%, #67C23A 100%);
     color: white;
-    border-radius: 12px;
-    margin-bottom: 2rem;
+    border-radius: 16px;
+    margin: 1rem 0 2rem;
     overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* 动态背景装饰 */
@@ -150,18 +154,18 @@ body {
 }
 
 .hero::before {
-    width: 300px;
-    height: 300px;
-    top: -100px;
-    right: -50px;
+    width: 400px;
+    height: 400px;
+    top: -150px;
+    right: -80px;
     animation-delay: 0s;
 }
 
 .hero::after {
-    width: 200px;
-    height: 200px;
-    bottom: -60px;
-    left: -30px;
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    left: -60px;
     animation-delay: -4s;
 }
 
@@ -183,15 +187,17 @@ body {
 }
 
 .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     margin-bottom: 1rem;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    line-height: 1.3;
 }
 
 .hero .slogan {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     opacity: 0.95;
     margin-bottom: 2rem;
+    line-height: 1.6;
 }
 
 /* 阶梯成长图形 */
@@ -200,7 +206,7 @@ body {
     justify-content: center;
     align-items: flex-end;
     gap: 0.5rem;
-    margin: 3rem 0;
+    margin: 2.5rem 0;
     padding: 2rem;
     flex-wrap: wrap;
 }
@@ -212,24 +218,24 @@ body {
 }
 
 .ladder-step {
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     background: rgba(255,255,255,0.2);
     border: 2px solid rgba(255,255,255,0.5);
-    border-radius: 12px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: bold;
     backdrop-filter: blur(4px);
     transition: all 0.3s;
 }
 
-.ladder-item:nth-child(1) .ladder-step { height: 40px; }
-.ladder-item:nth-child(3) .ladder-step { height: 60px; }
-.ladder-item:nth-child(5) .ladder-step { height: 80px; }
-.ladder-item:nth-child(7) .ladder-step { height: 100px; }
+.ladder-item:nth-child(1) .ladder-step { height: 44px; }
+.ladder-item:nth-child(3) .ladder-step { height: 68px; }
+.ladder-item:nth-child(5) .ladder-step { height: 92px; }
+.ladder-item:nth-child(7) .ladder-step { height: 116px; }
 
 .ladder-item:hover .ladder-step {
     background: rgba(255,255,255,0.35);
@@ -238,27 +244,27 @@ body {
 }
 
 .ladder-label {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     opacity: 0.9;
     margin-top: 0.5rem;
 }
 
 .ladder-arrow {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     opacity: 0.7;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 }
 
 .ladder-future {
-    height: 120px;
-    width: 60px;
+    height: 140px;
+    width: 70px;
     background: rgba(255,255,255,0.08);
     border: 2px dashed rgba(255,255,255,0.4);
-    border-radius: 12px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     opacity: 0.85;
     font-weight: 500;
     letter-spacing: 2px;
@@ -275,10 +281,17 @@ body {
 }
 
 .footer-note {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     opacity: 0.7;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
     letter-spacing: 0.5px;
+}
+
+.btn-large {
+    min-width: 220px;
+    height: 56px;
+    font-size: 1.1rem;
+    padding: 0 40px;
 }
 
 /* ========================================
@@ -325,13 +338,6 @@ body {
 
 .btn-secondary:active {
     transform: scale(0.98);
-}
-
-.btn-large {
-    min-width: 200px;
-    height: 56px;
-    font-size: 1.1rem;
-    padding: 0 40px;
 }
 
 .btn-back {
@@ -893,8 +899,8 @@ body {
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
     }
 
     .nav-links {
@@ -903,52 +909,65 @@ body {
     }
 
     .main-content {
-        padding: 1rem;
+        padding: 0.5rem;
     }
 
     .hero {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
+        margin: 0.25rem;
     }
 
     .hero h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
 
     .hero .slogan {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
     }
 
     .growth-ladder {
-        gap: 0.25rem;
-        padding: 1rem;
+        gap: 0.15rem;
+        padding: 0.75rem 0.25rem;
+        margin: 1rem 0;
     }
 
     .ladder-step {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
     }
 
-    .ladder-item:nth-child(1) .ladder-step { height: 30px; }
-    .ladder-item:nth-child(3) .ladder-step { height: 45px; }
-    .ladder-item:nth-child(5) .ladder-step { height: 60px; }
-    .ladder-item:nth-child(7) .ladder-step { height: 75px; }
+    .ladder-item:nth-child(1) .ladder-step { height: 28px; }
+    .ladder-item:nth-child(3) .ladder-step { height: 42px; }
+    .ladder-item:nth-child(5) .ladder-step { height: 56px; }
+    .ladder-item:nth-child(7) .ladder-step { height: 70px; }
 
     .ladder-future {
-        height: 90px;
-        width: 50px;
+        height: 84px;
+        width: 46px;
+        font-size: 0.7rem;
+    }
+
+    .ladder-arrow {
+        font-size: 0.9rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .ladder-label {
         font-size: 0.75rem;
     }
 
     .btn-large {
-        min-width: 180px;
-        height: 48px;
+        min-width: 160px;
+        height: 46px;
         font-size: 1rem;
-        padding: 0 24px;
+        padding: 0 28px;
     }
 
     .footer-note {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
+        margin-top: 0.75rem;
     }
 
     .form-container {
@@ -1000,57 +1019,65 @@ body {
     }
 
     .hero {
-        padding: 1.5rem 0.75rem;
+        padding: 1.25rem 0.75rem;
+        margin: 0.15rem;
     }
 
     .hero h1 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
+        margin-bottom: 0.5rem;
     }
 
     .hero .slogan {
         font-size: 0.85rem;
+        margin-bottom: 0.75rem;
     }
 
     .growth-ladder {
-        gap: 0.15rem;
-        padding: 0.5rem;
+        gap: 0.1rem;
+        padding: 0.5rem 0.15rem;
+        margin: 0.75rem 0;
     }
 
     .ladder-step {
-        width: 32px;
-        height: 32px;
-        font-size: 0.85rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+        border-radius: 8px;
     }
 
-    .ladder-item:nth-child(1) .ladder-step { height: 24px; }
-    .ladder-item:nth-child(3) .ladder-step { height: 36px; }
-    .ladder-item:nth-child(5) .ladder-step { height: 48px; }
-    .ladder-item:nth-child(7) .ladder-step { height: 60px; }
+    .ladder-item:nth-child(1) .ladder-step { height: 22px; }
+    .ladder-item:nth-child(3) .ladder-step { height: 34px; }
+    .ladder-item:nth-child(5) .ladder-step { height: 46px; }
+    .ladder-item:nth-child(7) .ladder-step { height: 58px; }
 
     .ladder-future {
-        height: 72px;
-        width: 40px;
+        height: 70px;
+        width: 38px;
         font-size: 0.65rem;
+        border-radius: 8px;
     }
 
     .ladder-arrow {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
     }
 
     .ladder-label {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
 
     .btn-large {
-        min-width: 160px;
-        height: 44px;
+        min-width: 140px;
+        height: 42px;
         font-size: 0.9rem;
-        padding: 0 20px;
+        padding: 0 24px;
+        border-radius: 21px;
     }
 
     .footer-note {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+        margin-top: 0.5rem;
     }
 
     .form-container {
