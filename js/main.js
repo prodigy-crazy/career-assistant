@@ -593,18 +593,22 @@ function updateProgressTrack(current){
   var node=document.getElementById('pnode-'+i);
   if(!node) continue;
   node.classList.remove('completed','completed-unanswered','current');
-  if(i<current){
-   // 已过的题目：已答题绿色，未答题灰色
-   if(answers[i]!==null){
-    node.classList.add('completed');
-   }else{
-    node.classList.add('completed-unanswered');
-   }
-  }else if(i===current){
+
+  if(i===current){
+   // 当前题目：绿色放大发光
    node.classList.add('current');
+  }else if(answers[i]!==null){
+   // 已答题：绿色（无论是否在当前题目之前）
+   node.classList.add('completed');
+  }else if(i<current){
+   // 已过但未答：灰色
+   node.classList.add('completed-unanswered');
   }
+  // i > current 且未答：保持默认灰色，不处理
+
   var line=document.getElementById('pline-'+i);
   if(line){
+   // 连线：只有当前题目之前的才显示绿色
    if(i<current) line.classList.add('completed');
    else line.classList.remove('completed');
   }
