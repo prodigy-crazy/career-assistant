@@ -1181,6 +1181,12 @@ body {
     margin-bottom: 12px;
 }
 
+.skills-hint {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
 .skill-pill {
     display: flex;
     align-items: center;
