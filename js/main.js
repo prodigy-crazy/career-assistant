@@ -23,6 +23,20 @@ var questions = [
  { dimension: 'C', text: '我更偏好稳定、规则清晰的工作环境' }
 ];
 
+// 50个常见大学专业列表
+var majorList = [
+    '计算机科学与技术','软件工程','数据科学与大数据技术','人工智能','电子信息工程',
+    '通信工程','电气工程及其自动化','自动化','机械设计制造及其自动化','土木工程',
+    '建筑学','城乡规划','金融学','会计学','工商管理',
+    '市场营销','人力资源管理','国际经济与贸易','经济学','财务管理',
+    '法学','社会工作','行政管理','汉语言文学','新闻学',
+    '广告学','英语','日语','数学与应用数学','应用物理学',
+    '化学','生物科学','环境工程','临床医学','护理学',
+    '药学','心理学','教育学','学前教育','体育教育',
+    '美术学','视觉传达设计','数字媒体艺术','音乐学','历史学',
+    '哲学','社会学','统计学','物流管理','旅游管理'
+];
+
 function nav(p){
  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active')});
  document.querySelectorAll('.nav-link').forEach(function(x){x.classList.remove('active')});
@@ -119,6 +133,68 @@ function calculateScores(){
  localStorage.setItem('testScores',JSON.stringify(scores));
 }
 
+function initSearchSelect(){
+ var select = document.getElementById('major-select');
+ var searchInput = document.getElementById('major-search');
+ var dropdown = document.getElementById('major-dropdown');
+ var hiddenInput = document.getElementById('major');
+
+ // 渲染选项列表
+ function renderOptions(filter){
+  var keyword = (filter || '').toLowerCase();
+  dropdown.innerHTML = '';
+  var filtered = majorList.filter(function(m){ return m.toLowerCase().indexOf(keyword) !== -1; });
+  if(filtered.length === 0){
+   dropdown.innerHTML = '<div class="search-select-no-result">无匹配专业</div>';
+   return;
+  }
+  filtered.forEach(function(m){
+   var div = document.createElement('div');
+   div.className = 'search-select-option';
+   if(m === hiddenInput.value) div.classList.add('selected');
+   div.textContent = m;
+   div.addEventListener('mousedown', function(e){
+    e.preventDefault();
+    hiddenInput.value = m;
+    searchInput.value = m;
+    document.getElementById('error-major').textContent = '';
+    select.classList.remove('open');
+    renderOptions(searchInput.value);
+   });
+   dropdown.appendChild(div);
+  });
+ }
+
+ // 输入搜索
+ searchInput.addEventListener('input', function(){
+  select.classList.add('open');
+  renderOptions(this.value);
+ });
+
+ // 点击输入框打开下拉
+ searchInput.addEventListener('focus', function(){
+  select.classList.add('open');
+  renderOptions('');
+ });
+
+ // 点击外部关闭
+ document.addEventListener('click', function(e){
+  if(!select.contains(e.target)){
+   select.classList.remove('open');
+   // 恢复已选值显示
+   if(hiddenInput.value){
+    searchInput.value = hiddenInput.value;
+   }else{
+    searchInput.value = '';
+    searchInput.placeholder = '请选择或搜索专业';
+   }
+  }
+ });
+
+ // 初始渲染
+ renderOptions('');
+}
+
 function submitInfo(e){
  e.preventDefault();
  var major=document.getElementById('major').value.trim();
@@ -128,7 +204,7 @@ function submitInfo(e){
  var valid=true;
  document.getElementById('error-major').textContent='';
  document.getElementById('error-grade').textContent='';
- if(!major){document.getElementById('error-major').textContent='请输入你的专业';valid=false;}
+ if(!major){document.getElementById('error-major').textContent='请选择专业';valid=false;}
  if(!grade){document.getElementById('error-grade').textContent='请选择年级';valid=false;}
  if(!valid)return;
  var userInfo={major:major,grade:grade,skills:skills,directions:directions};
@@ -294,6 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
     }
+    initSearchSelect();
 });
 
 // ========================================

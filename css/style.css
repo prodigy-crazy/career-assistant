@@ -1069,3 +1069,104 @@ body {
 .page.active {
     animation: fadeIn 0.3s ease forwards;
 }
+
+/* ========================================
+   可搜索下拉选择器
+   ======================================== */
+.search-select {
+    position: relative;
+    width: 100%;
+}
+
+.search-select-trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-select-input {
+    width: 100%;
+    padding: 12px 32px 12px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: var(--bg-white);
+    cursor: pointer;
+}
+
+.search-select-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74,144,226,0.1);
+}
+
+.search-select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: transform 0.2s;
+}
+
+.search-select.open .search-select-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.search-select-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.search-select.open .search-select-dropdown {
+    display: block;
+}
+
+.search-select-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-select-dropdown::-webkit-scrollbar-thumb {
+    background: #dcdfe6;
+    border-radius: 3px;
+}
+
+.search-select-option {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    transition: background 0.15s;
+}
+
+.search-select-option:hover {
+    background: #e8f1fb;
+    color: var(--primary);
+}
+
+.search-select-option.selected {
+    background: #e8f1fb;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.search-select-no-result {
+    padding: 12px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}

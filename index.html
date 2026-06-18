@@ -57,7 +57,14 @@
                     <form id="info-form" onsubmit="submitInfo(event)">
                         <div class="form-group">
                             <label>所在专业 <span class="required">*</span></label>
-                            <input type="text" id="major" placeholder="请输入你的专业">
+                            <div class="search-select" id="major-select">
+                                <div class="search-select-trigger" id="major-trigger">
+                                    <input type="text" class="search-select-input" id="major-search" placeholder="请选择或搜索专业" autocomplete="off">
+                                    <span class="search-select-arrow">▾</span>
+                                </div>
+                                <div class="search-select-dropdown" id="major-dropdown"></div>
+                                <input type="hidden" id="major" value="">
+                            </div>
                             <span class="error-message" id="error-major"></span>
                         </div>
                         <div class="form-group">
