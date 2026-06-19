@@ -861,6 +861,77 @@ body {
     line-height: 1.6;
 }
 
+/* 能力差距分析增强样式 */
+.ability-item.gap-high {
+    border-left: 4px solid #f56c6c;
+    background: linear-gradient(135deg, #fff5f5, var(--bg-light));
+}
+
+.ability-item.gap-medium {
+    border-left: 4px solid #e6a23c;
+    background: linear-gradient(135deg, #fffbf0, var(--bg-light));
+}
+
+.ability-item.gap-low {
+    border-left: 4px solid #67c23a;
+    background: linear-gradient(135deg, #f0f9ff, var(--bg-light));
+}
+
+.ability-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ability-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.ability-status.gap-high {
+    background: linear-gradient(135deg, #f56c6c, #e04040);
+    color: white;
+}
+
+.ability-status.gap-medium {
+    background: linear-gradient(135deg, #e6a23c, #d8911a);
+    color: white;
+}
+
+.ability-status.gap-low {
+    background: linear-gradient(135deg, #67c23a, #5daf34);
+    color: white;
+}
+
+.gap-detail {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.gap-suggestion {
+    background: rgba(74, 144, 226, 0.1);
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+
+.suggestion-label {
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.suggestion-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 /* 任务清单 */
 .tasks-list {
     display: flex;
@@ -1610,23 +1681,21 @@ body {
         padding: 0.4rem 0.8rem;
         font-size: 0.85rem;
     }
+}
 
-    .plan-phase-num {
-        width: 24px;
-        height: 24px;
-        font-size: 0.8rem;
+/* 能力差距分析响应式 */
+@media (max-width: 768px) {
+    .ability-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .plan-phase-title {
-        font-size: 0.85rem;
+    .ability-status {
+        margin-top: 0.25rem;
     }
 
-    .plan-task-text {
-        font-size: 0.85rem;
-    }
-
-    .plan-tip-text {
-        font-size: 0.8rem;
+    .gap-suggestion {
+        padding: 0.5rem;
     }
 }
 
@@ -1693,6 +1762,278 @@ body {
 
 .dark-theme .skill-group-header {
     border-bottom-color: var(--border);
+}
+
+/* 暗黑模式下所有卡片和容器的文字颜色 */
+.dark-theme .ability-item,
+.dark-theme .ability-content h4,
+.dark-theme .ability-status,
+.dark-theme .gap-detail,
+.dark-theme .gap-suggestion,
+.dark-theme .suggestion-label,
+.dark-theme .suggestion-text {
+    color: var(--text-primary);
+}
+
+.dark-theme .ability-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dark-theme .ability-num {
+    background: var(--primary);
+    color: white;
+}
+
+.dark-theme .ability-header h4 {
+    color: var(--text-primary);
+}
+
+.dark-theme .gap-suggestion {
+    background: rgba(74,144,226,0.15);
+}
+
+.dark-theme .suggestion-label {
+    color: var(--primary);
+}
+
+/* 暗黑模式下路线卡片文字 */
+.dark-theme .route-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dark-theme .route-card-title {
+    color: var(--text-primary);
+}
+
+.dark-theme .route-card-detail {
+    color: var(--text-secondary);
+}
+
+.dark-theme .route-salary {
+    background: rgba(74,144,226,0.15);
+}
+
+.dark-theme .salary-label {
+    color: var(--text-secondary);
+}
+
+.dark-theme .salary-value {
+    color: var(--primary);
+}
+
+/* 暗黑模式下规划弹窗 */
+.dark-theme .plan-modal-content {
+    background: var(--bg-white);
+    color: var(--text-primary);
+}
+
+.dark-theme .plan-modal-title {
+    color: var(--text-primary);
+}
+
+.dark-theme .plan-section-header {
+    color: var(--text-primary);
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+.dark-theme .plan-grade-tag {
+    background: var(--primary);
+    color: white;
+}
+
+.dark-theme .plan-status-text {
+    color: var(--text-secondary);
+}
+
+.dark-theme .plan-ability-item {
+    color: var(--text-secondary);
+}
+
+.dark-theme .plan-phase-header {
+    background: rgba(74,144,226,0.15);
+}
+
+.dark-theme .plan-phase-num {
+    background: var(--primary);
+    color: white;
+}
+
+.dark-theme .plan-phase-title {
+    color: var(--text-primary);
+}
+
+.dark-theme .plan-task-item {
+    color: var(--text-secondary);
+}
+
+.dark-theme .plan-tip-box {
+    background: rgba(74,144,226,0.1);
+}
+
+.dark-theme .plan-tip-text {
+    color: var(--text-secondary);
+}
+
+.dark-theme .plan-modal-close {
+    color: var(--text-secondary);
+}
+
+.dark-theme .plan-modal-close:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* 暗黑模式下结果页面 */
+.dark-theme .result-page h2,
+.dark-theme .result-module h3 {
+    color: var(--text-primary);
+}
+
+.dark-theme .result-module {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.dark-theme .score-display {
+    background: rgba(255,255,255,0.05);
+}
+
+.dark-theme .score-item {
+    color: var(--text-primary);
+}
+
+.dark-theme .btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.dark-theme .btn-secondary:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+.dark-theme .route-plan-btn {
+    background: linear-gradient(135deg, var(--primary), #357abd);
+}
+
+.dark-theme .route-plan-btn:hover {
+    background: linear-gradient(135deg, #357abd, #2a5f8f);
+}
+
+.dark-theme .btn-back {
+    color: var(--text-secondary);
+}
+
+.dark-theme .btn-back:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* 暗黑模式下雷达图 */
+.dark-theme .radar-container {
+    background: rgba(255,255,255,0.03);
+}
+
+/* 暗黑模式下导航栏 */
+.dark-theme nav {
+    background: var(--bg-white);
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+.dark-theme nav a {
+    color: var(--text-secondary);
+}
+
+.dark-theme nav a:hover,
+.dark-theme nav a.active {
+    color: var(--primary);
+}
+
+.dark-theme .theme-toggle {
+    color: var(--text-secondary);
+}
+
+/* 暗黑模式下页脚 */
+.dark-theme .footer {
+    background: var(--bg-white);
+    border-top-color: rgba(255,255,255,0.1);
+    color: var(--text-secondary);
+}
+
+/* 暗黑模式下表单元素 */
+.dark-theme input[type="text"],
+.dark-theme input[type="email"],
+.dark-theme input[type="tel"],
+.dark-theme select,
+.dark-theme textarea {
+    background: var(--bg-white);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+.dark-theme input[type="text"]:focus,
+.dark-theme input[type="email"]:focus,
+.dark-theme input[type="tel"]:focus,
+.dark-theme select:focus,
+.dark-theme textarea:focus {
+    border-color: var(--primary);
+    outline-color: rgba(74,144,226,0.3);
+}
+
+.dark-theme select option {
+    background: var(--bg-white);
+    color: var(--text-primary);
+}
+
+/* 暗黑模式下路线分类标题 */
+.dark-theme .route-category-header {
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+.dark-theme .route-category-icon {
+    color: var(--primary);
+}
+
+.dark-theme .route-category-name {
+    color: var(--text-primary);
+}
+
+.dark-theme .route-category {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 暗黑模式下复选框和单选框 */
+.dark-theme input[type="checkbox"],
+.dark-theme input[type="radio"] {
+    accent-color: var(--primary);
+}
+
+/* 暗黑模式下标签和徽章 */
+.dark-theme .tag {
+    background: rgba(74,144,226,0.15);
+    color: var(--primary);
+}
+
+/* 暗黑模式下链接 */
+.dark-theme a {
+    color: var(--primary);
+}
+
+.dark-theme a:hover {
+    color: #6ba3e0;
+}
+
+/* 暗黑模式下测评选项 */
+.dark-theme .options {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.dark-theme .question-text {
+    color: var(--text-primary);
 }
 
 .dark-theme .task-item {

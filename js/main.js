@@ -1016,8 +1016,7 @@ function initResultPage(){
 
  drawRadarChart(scores,directions);
  generateRoutes(scores,userInfo);
- generateAbilities(scores);
- generateTasks(userInfo.grade||'freshman');
+ generateAbilities(scores,userInfo);
 }
 
 function drawRadarChart(scores,directions){
@@ -1577,8 +1576,777 @@ var majorDirectionRoutesMap = {
       {title:'自媒体/博主',detail:'个人IP打造，流量变现',salary:'不固定，上限高'},
       {title:'广告/公关公司',detail:'奥美/蓝色光标',salary:'10-20万/年'}
     ]
+  },
+  '市场营销':{
+    job:[
+      {title:'市场策划/品牌营销',detail:'品牌管理、市场推广、活动策划，大厂/快消',salary:'12-25万/年'},
+      {title:'数字营销',detail:'SEM/SEO、信息流广告、社交媒体营销',salary:'15-28万/年'},
+      {title:'产品经理',detail:'互联网产品策划，需市场洞察和用户思维',salary:'15-30万/年'},
+      {title:'销售/BD',detail:'商务拓展、客户关系，业绩导向',salary:'底薪+提成，上不封顶'},
+      {title:'市场研究',detail:'消费者研究、竞争分析、数据洞察',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'工商管理硕士（MBA）',detail:'市场营销方向，名校MBA',salary:'毕业5年薪资翻倍'},
+      {title:'学术硕士',detail:'市场营销/消费者行为，学硕3年',salary:'补贴800-2000/月'},
+      {title:'传播学方向',detail:'广告/公关/品牌传播',salary:'互联网营销需求大'}
+    ],
+    public:[
+      {title:'市场监督管理局',detail:'工商管理、质量监督',salary:'年薪10-18万'},
+      {title:'商务局',detail:'招商引资、贸易促进',salary:'年薪10-18万'},
+      {title:'选调生',detail:'管理岗储备干部',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（Marketing）',detail:'美国/欧洲MBA Marketing方向',salary:'留学费用40-80万'},
+      {title:'营销咨询',detail:'品牌咨询、营销策略',salary:'15-30万/年'},
+      {title:'自媒体创业',detail:'个人IP、内容创业',salary:'风险高上限高'}
+    ]
+  },
+  '数学与应用数学':{
+    job:[
+      {title:'量化分析师',detail:'量化投资、风险建模，需数学+编程',salary:'base+提成20-80万'},
+      {title:'数据分析师/科学家',detail:'SQL/Python/R，数据建模',salary:'15-35万/年'},
+      {title:'算法工程师',detail:'机器学习/深度学习，需数学功底',salary:'25-60万/年'},
+      {title:'保险精算师',detail:'精算建模、风险评估，需精算证',salary:'20-50万/年'},
+      {title:'教师/培训',detail:'初高中数学教师，培训讲师',salary:'10-20万/年（带编更高）'}
+    ],
+    graduate:[
+      {title:'数学硕士',detail:'基础数学/应用数学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'统计学硕士',detail:'数据科学/金融统计',salary:'补贴1200-2500/月'},
+      {title:'计算机方向',detail:'CS/AI，读博或进大厂算法岗',salary:'大厂算法岗薪资顶尖'}
+    ],
+    public:[
+      {title:'统计局',detail:'政府统计岗位',salary:'年薪10-18万'},
+      {title:'税务局',detail:'税务计算、稽查',salary:'年薪10-18万'},
+      {title:'银保监',detail:'金融监管，需统计/数学背景',salary:'年薪15-25万'}
+    ],
+    other:[
+      {title:'留学（金融数学/统计）',detail:'美国金数/英国统计，热门留学方向',salary:'留学费用30-60万'},
+      {title:'FinTech创业',detail:'金融科技创业',salary:'风险高回报高'},
+      {title:'数学竞赛培训',detail:'奥赛教练、培训讲师',salary:'15-35万/年'}
+    ]
+  },
+  '新闻学':{
+    job:[
+      {title:'记者/编辑',detail:'传统媒体/新媒体，文字功底扎实',salary:'8-18万/年'},
+      {title:'新媒体运营',detail:'公众号、短视频运营，大厂薪资高',salary:'12-25万/年'},
+      {title:'内容策划',detail:'内容矩阵、选题策划',salary:'12-22万/年'},
+      {title:'公关/品牌',detail:'企业公关、媒体关系',salary:'10-20万/年'},
+      {title:'影视编剧',detail:'剧本创作，创意导向',salary:'不固定，上限高'}
+    ],
+    graduate:[
+      {title:'新闻传播学硕士',detail:'新闻学/传播学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'MJC（新闻专硕）',detail:'新闻专硕2年，就业导向',salary:'补贴1200-2500/月'},
+      {title:'广播电视方向',detail:'广电、新媒体技术',salary:'融媒体需求大'}
+    ],
+    public:[
+      {title:'宣传部',detail:'政府宣传部门',salary:'年薪10-18万'},
+      {title:'电视台/报社',detail:'事业编制，稳定',salary:'年薪8-15万'},
+      {title:'央企国企宣传',detail:'企业文化、宣传部门',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（传媒）',detail:'美国/英国传媒硕士',salary:'留学费用25-50万'},
+      {title:'自媒体创业',detail:'个人IP打造',salary:'风险高上限高'},
+      {title:'MCN机构',detail:'网红孵化、内容运营',salary:'底薪+提成'}
+    ]
+  },
+  '护理学':{
+    job:[
+      {title:'临床护士',detail:'各级医院临床护理，三甲医院竞争激烈',salary:'年薪10-18万（编制内）'},
+      {title:'护理管理',detail:'护士长、护理部主任',salary:'主管护师后15-25万'},
+      {title:'医疗美容',detail:'医美机构护士，环境好薪资高',salary:'12-22万/年'},
+      {title:'口腔护士',detail:'口腔诊所，工作相对轻松',salary:'8-15万/年'},
+      {title:'健康管理',detail:'高端健康管理机构',salary:'12-20万/年'}
+    ],
+    graduate:[
+      {title:'护理学硕士',detail:'护理教育/管理方向，学硕3年',salary:'补贴800-2000/月'},
+      {title:'护理专硕',detail:'临床护理方向',salary:'补贴1200-2500/月'},
+      {title:'护理学博士',detail:'护理教育/科研，读博或高校',salary:'博士安家费+科研启动费'}
+    ],
+    public:[
+      {title:'医院事业编',detail:'公立医院编制，稳定性强',salary:'年薪10-18万'},
+      {title:'卫生局/疾控',detail:'卫生行政管理',salary:'年薪10-18万'},
+      {title:'血站/急救中心',detail:'事业编',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（护理）',detail:'美国/澳洲护士，移民方向',salary:'海外护士薪资高'},
+      {title:'医疗翻译',detail:'医疗陪同翻译',salary:'日薪500-2000'},
+      {title:'健康管理创业',detail:'陪诊、居家护理',salary:'市场需求增长'}
+    ]
+  },
+  '视觉传达设计':{
+    job:[
+      {title:'品牌设计师',detail:'VI系统、logo、包装设计',salary:'12-25万/年'},
+      {title:'UI/UX设计师',detail:'App/Web界面设计，大厂需求大',salary:'15-30万/年'},
+      {title:'平面设计师',detail:'海报、广告、宣传物料',salary:'10-20万/年'},
+      {title:'插画师',detail:'商业插画、原画设计',salary:'12-25万/年'},
+      {title:'包装设计师',detail:'产品包装、品牌包装',salary:'10-22万/年'}
+    ],
+    graduate:[
+      {title:'设计学硕士',detail:'视觉传达方向，学硕3年',salary:'补贴800-2000/月'},
+      {title:'艺术设计专硕',detail:'专硕2年，作品集导向',salary:'补贴1200-2500/月'},
+      {title:'数字媒体方向',detail:'交互设计、新媒体艺术',salary:'互联网需求大'}
+    ],
+    public:[
+      {title:'设计院',detail:'国有设计院，稳定',salary:'年薪10-18万'},
+      {title:'文化局/博物馆',detail:'文创设计',salary:'年薪8-15万'},
+      {title:'学校美术教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'}
+    ],
+    other:[
+      {title:'留学（艺术设计）',detail:'美国/英国艺术学院',salary:'留学费用30-70万'},
+      {title:'独立设计师',detail:'个人工作室，接项目',salary:'不固定，上限高'},
+      {title:'设计电商',detail:'设计素材网站、模板销售',salary:'被动收入型'}
+    ]
+  },
+  '学前教育':{
+    job:[
+      {title:'幼儿教师（幼儿园）',detail:'学前教育，需教师资格证',salary:'年薪8-15万（带编更高）'},
+      {title:'幼教产品经理',detail:'幼儿教育App/产品',salary:'12-22万/年'},
+      {title:'儿童康复师',detail:'特殊儿童康复训练',salary:'12-22万/年'},
+      {title:'亲子活动策划',detail:'早教中心、亲子活动',salary:'10-18万/年'},
+      {title:'儿童出版/编辑',detail:'绘本、儿童读物编辑',salary:'8-15万/年'}
+    ],
+    graduate:[
+      {title:'教育学硕士',detail:'学前教育方向，学硕3年',salary:'补贴800-2000/月'},
+      {title:'学前教育专硕',detail:'专硕2年，实践导向',salary:'补贴1200-2500/月'},
+      {title:'儿童发展方向',detail:'儿童心理学、发展教育',salary:'学术/实践皆可'}
+    ],
+    public:[
+      {title:'幼儿园（事业编）',detail:'公立幼儿园教师',salary:'年薪8-15万'},
+      {title:'教育局',detail:'学前教育管理',salary:'年薪10-18万'},
+      {title:'少年宫/妇女儿童中心',detail:'事业单位',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（学前教育）',detail:'英国/澳洲幼教，移民方向',salary:'留学费用20-40万'},
+      {title:'幼教创业',detail:'幼儿园/早教中心',salaritype:'需投资，但回报稳定'},
+      {title:'儿童内容创业',detail:'绘本、动画、自媒体',salary:'内容创业型'}
+    ]
+  },
+  '通信工程':{
+    job:[
+      {title:'通信协议工程师',detail:'5G/LTE/蓝牙协议开发',salary:'15-30万/年'},
+      {title:'网络优化工程师',detail:'通信网络优化、运维',salary:'12-22万/年'},
+      {title:'嵌入式工程师',detail:'通信设备嵌入式开发',salary:'15-28万/年'},
+      {title:'硬件工程师',detail:'通信硬件设计、射频',salary:'12-25万/年'},
+      {title:'光网络工程师',detail:'光纤通信网络',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'信息与通信工程硕士',detail:'学硕3年，通信/信号处理',salary:'补贴800-2000/月'},
+      {title:'电子信息专硕',detail:'专硕2年，就业导向',salary:'补贴1200-3000/月'},
+      {title:'5G/6G研究方向',detail:'下一代通信技术',salary:'科研院所需求大'}
+    ],
+    public:[
+      {title:'运营商',detail:'移动/电信/联通，技术岗',salary:'年薪10-20万'},
+      {title:'军工院所',detail:'航天/电子对抗',salary:'年薪12-25万+福利'},
+      {title:'铁路通信',detail:'高铁/地铁通信维护',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（通信）',detail:'美国/欧洲通信工程',salary:'留学费用30-60万'},
+      {title:'智能硬件',detail:'物联网设备',salary:'15-28万/年'},
+      {title:'车联网',detail:'V2X通信',salary:'15-30万/年'}
+    ]
+  },
+  '统计学':{
+    job:[
+      {title:'数据分析师',detail:'SQL/Hive/Python，数据提取分析',salary:'15-30万/年'},
+      {title:'数据工程师',detail:'ETL、数据仓库',salary:'18-32万/年'},
+      {title:'保险精算师',detail:'精算建模，需考精算师证',salary:'20-50万/年'},
+      {title:'生物统计师',detail:'药企/CRO，临床试验统计',salary:'15-28万/年'},
+      {title:'市场研究',detail:'消费者研究、数据洞察',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'统计学硕士',detail:'数理统计/应用统计，学硕3年',salary:'补贴800-2000/月'},
+      {title:'数据科学硕士',detail:'DS方向，热门',salary:'补贴1500-3000/月'},
+      {title:'生物统计方向',detail:'公共卫生、药企需求大',salary:'北美生物统计就业好'}
+    ],
+    public:[
+      {title:'统计局',detail:'政府统计岗位',salary:'年薪10-18万'},
+      {title:'银保监',detail:'金融监管统计',salary:'年薪15-25万'},
+      {title:'卫健委',detail:'卫生统计、疾控',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（统计/生统）',detail:'美国生物统计名校，移民方向',salary:'留学费用30-60万'},
+      {title:'金融科技',detail:'量化投资、风控建模',salary:'20-60万/年'},
+      {title:'市场调研公司',detail:'咨询型公司',salary:'12-22万/年'}
+    ]
+  },
+  '电气工程及其自动化':{
+    job:[
+      {title:'电气工程师',detail:'电力系统设计、PLC控制，大厂/国企',salary:'12-25万/年'},
+      {title:'自动化工程师',detail:'工业自动化、SCADA系统',salary:'12-25万/年'},
+      {title:'电力电子工程师',detail:'电源设计、逆变器、新能源',salary:'15-30万/年'},
+      {title:'国家电网/南方电网',detail:'电网调度、运维，稳定',salary:'年薪12-20万'},
+      {title:'电机设计工程师',detail:'电机设计、电磁仿真',salary:'12-25万/年'}
+    ],
+    graduate:[
+      {title:'电气工程硕士',detail:'电力系统/电力电子，学硕3年',salary:'补贴800-2000/月'},
+      {title:'控制科学与工程',detail:'控制理论、自动化',salary:'补贴1200-3000/月'},
+      {title:'新能源方向',detail:'储能、氢能、光伏',salary:'新能源行业需求大'}
+    ],
+    public:[
+      {title:'国家电网/南方电网',detail:'央企，稳定，校园招聘',salary:'年薪12-20万'},
+      {title:'电力设计院',detail:'电力规划设计院',salary:'年薪12-22万'},
+      {title:'军工院所',detail:'航空航天、船舶',salary:'年薪12-25万+福利'}
+    ],
+    other:[
+      {title:'留学（德国/美国）',detail:'德国TU9/美国名校电气工程',salary:'留学费用20-60万'},
+      {title:'新能源企业',detail:'宁德时代、比亚迪',salary:'15-30万/年'},
+      {title:'智能制造',detail:'工厂自动化改造',salary:'12-25万/年'}
+    ]
+  },
+  '城乡规划':{
+    job:[
+      {title:'城市规划师',detail:'城市规划设计、总规详规',salary:'12-25万/年'},
+      {title:'建筑设计师',detail:'建筑设计、施工图',salary:'12-25万/年'},
+      {title:'景观设计师',detail:'园林景观、绿化设计',salary:'10-22万/年'},
+      {title:'土地规划师',detail:'土地利用规划、用地审批',salary:'10-20万/年'},
+      {title:'交通规划师',detail:'交通系统规划',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'城乡规划学硕士',detail:'城市规划/设计，学硕3年',salary:'补贴800-2000/月'},
+      {title:'城市规划专硕',detail:'专硕2年，实践导向',salary:'补贴1200-2500/月'},
+      {title:'城市设计方向',detail:'城市更新、存量规划',salary:'新兴热点方向'}
+    ],
+    public:[
+      {title:'自然资源局',detail:'规划管理、土地利用',salary:'年薪10-18万'},
+      {title:'住建局',detail:'城市建设管理',salary:'年薪10-18万'},
+      {title:'规划设计院',detail:'国有设计院，稳定',salary:'年薪12-22万'}
+    ],
+    other:[
+      {title:'留学（城市规划）',detail:'美国/英国城市规划',salary:'留学费用30-60万'},
+      {title:'房地产公司',detail:'前期策划、规划设计',salary:'15-28万/年'},
+      {title:'GIS开发',detail:'城市规划信息化',salary:'15-28万/年'}
+    ]
+  },
+  '广告学':{
+    job:[
+      {title:'广告策划/文案',detail:'广告创意、文案撰写',salary:'10-20万/年'},
+      {title:'品牌设计师',detail:'品牌VI、包装设计',salary:'12-25万/年'},
+      {title:'媒介策划',detail:'媒体投放、效果分析',salary:'12-22万/年'},
+      {title:'AE（客户执行）',detail:'客户服务、项目对接',salary:'10-18万/年'},
+      {title:'新媒体运营',detail:'社交媒体、内容营销',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'传播学硕士',detail:'广告学/传播学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'MJC新闻传播专硕',detail:'专硕2年，实践导向',salary:'补贴1200-2500/月'},
+      {title:'数字营销方向',detail:'效果广告、信息流',salary:'互联网营销需求大'}
+    ],
+    public:[
+      {title:'市场监督管理局',detail:'广告监管执法',salary:'年薪10-18万'},
+      {title:'宣传部',detail:'政府宣传部门',salary:'年薪10-18万'},
+      {title:'央企国企品牌部',detail:'企业文化宣传',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（广告传媒）',detail:'美国/英国广告硕士',salary:'留学费用25-50万'},
+      {title:'MCN机构',detail:'网红孵化、内容运营',salary:'底薪+提成'},
+      {title:'广告创业工作室',detail:'创意热店',salary:'创业型，收入不固定'}
+    ]
+  },
+  '美术学':{
+    job:[
+      {title:'美术教师',detail:'中小学/培训机构，需教师证',salary:'8-18万/年（带编更高）'},
+      {title:'艺术策展人',detail:'美术馆、画廊策展',salary:'10-20万/年'},
+      {title:'美术编辑',detail:'出版社、期刊编辑',salary:'8-15万/年'},
+      {title:'文物修复',detail:'博物馆、文物修复',salary:'8-15万/年'},
+      {title:'画廊/拍卖行',detail:'艺术市场、鉴定',salary:'10-20万/年'}
+    ],
+    graduate:[
+      {title:'美术学硕士',detail:'美术史论/美术教育，学硕3年',salary:'补贴800-2000/月'},
+      {title:'艺术硕士（MFA）',detail:'美术创作，专硕2-3年',salary:'补贴1200-2500/月'},
+      {title:'文物与博物馆方向',detail:'博物馆学、文物保护',salary:'学术/实践皆可'}
+    ],
+    public:[
+      {title:'美术馆/博物馆',detail:'事业编，展览策划',salary:'年薪8-15万'},
+      {title:'文化局',detail:'文化管理',salary:'年薪10-18万'},
+      {title:'学校美术教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'}
+    ],
+    other:[
+      {title:'留学（艺术史）',detail:'英国/美国艺术史',salary:'留学费用25-50万'},
+      {title:'艺术评论家',detail:'撰稿、评论',salary:'不固定'},
+      {title:'画廊创业',detail:'艺术品交易',salary:'创业型'}
+    ]
+  },
+  '数字媒体艺术':{
+    job:[
+      {title:'影视后期',detail:'AE/PR/C4D，视频特效',salary:'12-25万/年'},
+      {title:'三维建模师',detail:'3D建模、渲染',salary:'12-25万/年'},
+      {title:'游戏美术',detail:'原画、场景、角色',salary:'15-30万/年'},
+      {title:'UI设计师',detail:'App/Web界面设计',salary:'15-28万/年'},
+      {title:'动画师',detail:'2D/3D动画',salary:'12-25万/年'}
+    ],
+    graduate:[
+      {title:'数字媒体艺术硕士',detail:'新媒体艺术/交互设计',salary:'补贴800-2000/月'},
+      {title:'艺术设计专硕',detail:'专硕2年，作品集导向',salary:'补贴1200-2500/月'},
+      {title:'游戏设计方向',detail:'游戏设计、交互叙事',salary:'游戏行业需求大'}
+    ],
+    public:[
+      {title:'电视台/融媒体',detail:'影视制作',salary:'年薪10-18万'},
+      {title:'学校美术/设计教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'},
+      {title:'文化馆/少年宫',detail:'艺术教育',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（游戏/动画）',detail:'美国/日本游戏设计',salary:'留学费用30-60万'},
+      {title:'短视频/自媒体',detail:'内容创作',salary:'不固定，上限高'},
+      {title:'独立艺术家',detail:'个人创作',salary:'不固定'}
+    ]
+  },
+  '人力资源管理':{
+    job:[
+      {title:'HR专员/HRBP',detail:'招聘、培训、绩效',salary:'10-20万/年'},
+      {title:'猎头顾问',detail:'高端人才招聘',salary:'底薪+提成20-50万/年'},
+      {title:'薪酬福利专员',detail:'薪酬设计、社保公积金',salary:'10-18万/年'},
+      {title:'HR产品经理',detail:'HR软件/SaaS产品',salary:'15-28万/年'},
+      {title:'企业文化专员',detail:'员工关系、文化建设',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'工商管理硕士（MBA）',detail:'人力资源方向',salary:'名校MBA回报高'},
+      {title:'人力资源管理硕士',detail:'学硕3年，学术路线',salary:'补贴800-2000/月'},
+      {title:'劳动经济学',detail:'劳动关系、人才政策',salary:'学术/实践皆可'}
+    ],
+    public:[
+      {title:'人社局',detail:'人力资源管理',salary:'年薪10-18万'},
+      {title:'组织部',detail:'干部管理',salary:'年薪10-18万'},
+      {title:'央企国企HR',detail:'人力资源部',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（HR）',detail:'美国/英国HR硕士',salary:'留学费用25-50万'},
+      {title:'管理咨询',detail:'人力咨询公司',salary:'15-30万/年'},
+      {title:'HR科技创业',detail:'HR SaaS',salary:'创业型'}
+    ]
+  },
+  '国际经济与贸易':{
+    job:[
+      {title:'外贸业务员',detail:'进出口业务，跟单',salary:'底薪+提成8-20万/年'},
+      {title:'跨境电商运营',detail:'亚马逊/阿里国际站',salary:'10-22万/年'},
+      {title:'报关员/货代',detail:'报关、货运代理',salary:'8-15万/年'},
+      {title:'银行国际业务',detail:'国际结算、信用证',salary:'12-22万/年'},
+      {title:'商务专员',detail:'商务谈判、合同管理',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'国际贸易学硕士',detail:'学硕3年，学术路线',salary:'补贴800-2000/月'},
+      {title:'国际商务硕士',detail:'专硕2年，实践导向',salary:'补贴1200-2500/月'},
+      {title:'金融方向',detail:'国际金融、跨境金融',salary:'复合背景薪资高'}
+    ],
+    public:[
+      {title:'商务部/海关',detail:'外贸管理、关税',salary:'年薪10-18万'},
+      {title:'税务局',detail:'进出口税务',salary:'年薪10-18万'},
+      {title:'贸促会',detail:'贸易促进',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（国际商务）',detail:'美国/欧洲IB硕士',salary:'留学费用30-60万'},
+      {title:'跨境创业',detail:'跨境电商创业',salary:'创业型'},
+      {title:'海外市场拓展',detail:'驻外工作',salary:'驻外补贴高'}
+    ]
+  },
+  '经济学':{
+    job:[
+      {title:'银行管培生',detail:'国有大行/股份行管培',salary:'12-22万/年'},
+      {title:'证券分析师',detail:'宏观研究、行业研究',salary:'base+奖金20-50万'},
+      {title:'咨询顾问',detail:'管理咨询、战略咨询',salary:'15-30万/年'},
+      {title:'银行客户经理',detail:'对公/零售业务',salary:'底薪+提成'},
+      {title:'数据分析师',detail:'经济数据分析',salary:'15-28万/年'}
+    ],
+    graduate:[
+      {title:'经济学硕士',detail:'理论经济学/应用经济学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'金融学硕士',detail:'金融方向，热门',salary:'补贴1200-3000/月'},
+      {title:'数量经济学',detail:'计量经济模型',salary:'学术/金融皆可'}
+    ],
+    public:[
+      {title:'发改委',detail:'宏观政策研究',salary:'年薪10-18万'},
+      {title:'统计局',detail:'经济统计',salary:'年薪10-18万'},
+      {title:'财政部',detail:'财政政策',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（经济学）',detail:'美国/英国经济学硕士',salary:'留学费用30-60万'},
+      {title:'VC/PE',detail:'股权投资',salary:'base+carry'},
+      {title:'经济研究机构',detail:'智库、研究员',salary:'15-30万/年'}
+    ]
+  },
+  '财务管理':{
+    job:[
+      {title:'企业财务',detail:'总账、成本、财务分析',salary:'10-20万/年'},
+      {title:'四大会计师事务所',detail:'审计/税务，晋升快',salary:'起薪12-18万'},
+      {title:'银行',detail:'柜员→客户经理→支行',salary:'8-18万/年'},
+      {title:'投行/券商',detail:'IBD，学历门槛高',salary:'base+奖金20-80万'},
+      {title:'风控合规',detail:'企业风险控制',salary:'12-25万/年'}
+    ],
+    graduate:[
+      {title:'会计学硕士',detail:'财务会计，学硕3年',salary:'补贴800-2000/月'},
+      {title:'会计专硕（MPAcc）',detail:'专硕2年，就业导向',salary:'补贴1500-3000/月'},
+      {title:'财务管理方向',detail:'公司金融、资本运营',salary:'金融方向薪资高'}
+    ],
+    public:[
+      {title:'税务局',detail:'税务稽查',salary:'年薪10-18万'},
+      {title:'审计局',detail:'政府审计',salary:'年薪10-18万'},
+      {title:'财政局',detail:'财政管理',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'CPA注册会计师',detail:'财务最高证书',salary:'持证后30-80万/年'},
+      {title:'CFA金融分析师',detail:'投资领域证书',salary:'持证后薪资涨幅大'},
+      {title:'留学（金融/会计）',detail:'美国/英国金融硕士',salary:'留学费用30-60万'}
+    ]
+  },
+  '物流管理':{
+    job:[
+      {title:'物流专员/主管',detail:'仓储、运输管理',salary:'8-18万/年'},
+      {title:'供应链管理',detail:'采购、库存优化',salary:'12-22万/年'},
+      {title:'跨境物流',detail:'国际货运、报关',salary:'10-20万/年'},
+      {title:'京东/顺丰/菜鸟',detail:'电商/快递巨头',salary:'12-25万/年'},
+      {title:'物流系统开发',detail:'WMS/TMS系统',salary:'15-28万/年'}
+    ],
+    graduate:[
+      {title:'物流管理硕士',detail:'供应链管理，学硕3年',salary:'补贴800-2000/月'},
+      {title:'MBA供应链方向',detail:'管理+物流',salary:'名校MBA回报高'},
+      {title:'运筹学方向',detail:'优化算法、智能物流',salary:'科技+物流方向热'}
+    ],
+    public:[
+      {title:'交通运输局',detail:'物流管理',salary:'年薪10-18万'},
+      {title:'商务局',detail:'商贸物流',salary:'年薪10-18万'},
+      {title:'邮政管理局',detail:'快递监管',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（供应链）',detail:'美国/欧洲SCM硕士',salary:'留学费用25-50万'},
+      {title:'物流创业',detail:'同城配送、仓储自动化',salary:'创业型'},
+      {title:'物流咨询',detail:'方案设计',salary:'15-30万/年'}
+    ]
+  },
+  '旅游管理':{
+    job:[
+      {title:'酒店管理',detail:'前台、客房、餐饮管理',salary:'8-18万/年'},
+      {title:'导游/领队',detail:'旅行社，需导游证',salary:'底薪+提成'},
+      {title:'旅游产品经理',detail:'旅游线路设计',salary:'10-20万/年'},
+      {title:'OTA运营',detail:'携程/飞猪运营',salary:'12-22万/年'},
+      {title:'景区管理',detail:'主题公园、景区运营',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'旅游管理硕士',detail:'旅游规划/酒店管理，学硕3年',salary:'补贴800-2000/月'},
+      {title:'MBA旅游方向',detail:'管理+旅游',salary:'名校MBA回报高'},
+      {title:'会展经济方向',detail:'会展策划、管理',salary:'新兴方向'}
+    ],
+    public:[
+      {title:'文旅局',detail:'旅游管理',salary:'年薪10-18万'},
+      {title:'景区管理单位',detail:'事业编',salary:'年薪8-15万'},
+      {title:'文化局',detail:'文化管理',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（旅游酒店管理）',detail:'瑞士/美国酒店管理',salary:'留学费用20-50万'},
+      {title:'民宿/文旅创业',detail:'乡村旅游、文旅项目',salary:'创业型'},
+      {title:'旅游博主',detail:'内容创业',salary:'不固定，上限高'}
+    ]
+  },
+  '社会工作':{
+    job:[
+      {title:'社工机构',detail:'社区服务、公益项目',salary:'8-15万/年'},
+      {title:'民政系统',detail:'社会救助、福利',salary:'8-15万/年'},
+      {title:'企业CSR',detail:'企业社会责任',salary:'10-18万/年'},
+      {title:'心理咨询师',detail:'需经验积累',salary:'100-500/小时'},
+      {title:'基金会',detail:'公益项目管理',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'社会工作硕士',detail:'MSW，2年制',salary:'补贴800-2000/月'},
+      {title:'社会学硕士',detail:'学硕3年，学术路线',salary:'补贴800-2000/月'},
+      {title:'社会政策方向',detail:'政策研究',salary:'学术/实践皆可'}
+    ],
+    public:[
+      {title:'民政局',detail:'社会救助、养老',salary:'年薪10-18万'},
+      {title:'街道办/居委会',detail:'基层社会服务',salary:'年薪8-15万'},
+      {title:'残联/妇联',detail:'特殊群体服务',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（社会工作）',detail:'美国/加拿大社工',salary:'留学费用25-50万'},
+      {title:'公益创业',detail:'社会企业',salary:'创业型'},
+      {title:'国际组织',detail:'UN/NGO',salary:'国际薪酬'}
+    ]
+  },
+  '行政管理':{
+    job:[
+      {title:'行政专员/主管',detail:'日常行政、后勤',salary:'8-15万/年'},
+      {title:'HR专员',detail:'招聘、培训',salary:'10-18万/年'},
+      {title:'秘书/总助',detail:'高管秘书',salary:'10-20万/年'},
+      {title:'政府机关',detail:'参公编制',salary:'年薪10-18万'},
+      {title:'企业培训',detail:'培训专员',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'行政管理硕士',detail:'学硕3年，学术路线',salary:'补贴800-2000/月'},
+      {title:'MPA公共管理',detail:'在职/全日制',salary:'MPA学费10-20万'},
+      {title:'公共政策方向',detail:'政策分析',salary:'学术/政府皆可'}
+    ],
+    public:[
+      {title:'公务员',detail:'政府机关',salary:'年薪10-18万'},
+      {title:'事业单位',detail:'高校、医院行政',salary:'年薪8-15万'},
+      {title:'选调生',detail:'储备干部',salary:'年薪8-15万+晋升'}
+    ],
+    other:[
+      {title:'留学（公共管理）',detail:'美国/欧洲MPA',salary:'留学费用30-60万'},
+      {title:'管理咨询',detail:'战略/运营',salary:'15-30万/年'},
+      {title:'企业行政管理',detail:'高管助理',salary:'15-25万/年'}
+    ]
+  },
+  '社会学':{
+    job:[
+      {title:'市场研究',detail:'消费者研究、用户研究',salary:'12-22万/年'},
+      {title:'社会调查员',detail:'问卷设计、数据分析',salary:'10-18万/年'},
+      {title:'HR专员',detail:'招聘、培训',salary:'10-18万/年'},
+      {title:'NGO/公益',detail:'项目管理',salary:'8-15万/年'},
+      {title:'记者/编辑',detail:'社会新闻',salary:'10-20万/年'}
+    ],
+    graduate:[
+      {title:'社会学硕士',detail:'学硕3年，学术路线',salary:'补贴800-2000/月'},
+      {title:'社会工作硕士',detail:'MSW，2年',salary:'补贴800-2000/月'},
+      {title:'人口学方向',detail:'人口研究',salary:'学术/政府需求大'}
+    ],
+    public:[
+      {title:'统计局',detail:'人口统计',salary:'年薪10-18万'},
+      {title:'民政局',detail:'社会管理',salary:'年薪10-18万'},
+      {title:'政策研究室',detail:'政策研究',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（社会学）',detail:'美国/欧洲社会学',salary:'留学费用25-50万'},
+      {title:'市场调研公司',detail:'咨询型',salary:'12-22万/年'},
+      {title:'智库研究员',detail:'政策研究',salary:'15-30万/年'}
+    ]
+  },
+  '音乐学':{
+    job:[
+      {title:'音乐教师',detail:'中小学/培训机构',salary:'8-18万/年（带编更高）'},
+      {title:'音乐经纪人',detail:'艺人经纪、演出',salary:'底薪+提成'},
+      {title:'音乐制作人',detail:'编曲、录音',salary:'10-25万/年'},
+      {title:'乐器演奏',detail:'乐团、交响乐',salary:'8-20万/年'},
+      {title:'音乐编辑',detail:'音乐平台编辑',salary:'8-15万/年'}
+    ],
+    graduate:[
+      {title:'音乐学硕士',detail:'音乐理论/教育，学硕3年',salary:'补贴800-2000/月'},
+      {title:'音乐表演硕士',detail:'声乐/器乐表演',salary:'补贴1200-2500/月'},
+      {title:'音乐教育方向',detail:'音乐教育',salary:'教育方向稳定'}
+    ],
+    public:[
+      {title:'学校音乐教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'},
+      {title:'文化馆/少年宫',detail:'群众音乐',salary:'年薪8-15万'},
+      {title:'乐团/剧院',detail:'事业编',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（音乐）',detail:'美国/欧洲音乐学院',salary:'留学费用30-80万'},
+      {title:'独立音乐人',detail:'原创音乐',salary:'不固定'},
+      {title:'音乐培训创业',detail:'培训机构',salary:'创业型'}
+    ]
+  },
+  '历史学':{
+    job:[
+      {title:'历史教师',detail:'中学教师，需教师证',salary:'8-18万/年（带编更高）'},
+      {title:'博物馆/文物',detail:'策展、修复、研究',salary:'8-15万/年'},
+      {title:'档案馆',detail:'档案管理',salary:'8-15万/年'},
+      {title:'出版社编辑',detail:'历史类图书',salary:'8-15万/年'},
+      {title:'文化遗产保护',detail:'文物管理',salary:'8-15万/年'}
+    ],
+    graduate:[
+      {title:'历史学硕士',detail:'中国古代史/世界史，学硕3年',salary:'补贴800-2000/月'},
+      {title:'学科历史（教育专硕）',detail:'历史教学',salary:'补贴1200-2500/月'},
+      {title:'考古学方向',detail:'考古发掘',salary:'学术/实践皆可'}
+    ],
+    public:[
+      {title:'学校历史教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'},
+      {title:'博物馆/文物局',detail:'事业编',salary:'年薪8-15万'},
+      {title:'文旅局',detail:'文化管理',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（历史）',detail:'美国/欧洲历史',salary:'留学费用25-50万'},
+      {title:'历史纪录片',detail:'策划、撰稿',salary:'10-20万/年'},
+      {title:'自媒体/历史博主',detail:'内容创业',salary:'不固定'}
+    ]
+  },
+  '哲学':{
+    job:[
+      {title:'教师',detail:'高校/中学，需博士学位',salary:'年薪10-20万+科研'},
+      {title:'出版社编辑',detail:'人文社科类',salary:'8-15万/年'},
+      {title:'企业文化',detail:'价值观建设',salary:'10-18万/年'},
+      {title:'政府机关',detail:'文字材料',salary:'年薪10-18万'},
+      {title:'咨询顾问',detail:'逻辑思维训练',salary:'15-25万/年'}
+    ],
+    graduate:[
+      {title:'哲学硕士',detail:'马哲/中哲/西哲，学硕3年',salary:'补贴800-2000/月'},
+      {title:'逻辑学方向',detail:'逻辑论证',salary:'学术/AI方向可'},
+      {title:'宗教学方向',detail:'宗教研究',salary:'学术/文化机构'}
+    ],
+    public:[
+      {title:'党校',detail:'理论研究',salary:'年薪10-18万'},
+      {title:'宣传部',detail:'理论宣传',salary:'年薪10-18万'},
+      {title:'高校思政',detail:'思政教师',salary:'年薪10-20万'}
+    ],
+    other:[
+      {title:'留学（哲学）',detail:'美国/欧洲哲学',salary:'留学费用25-50万'},
+      {title:'智库研究员',detail:'政策研究',salary:'15-30万/年'},
+      {title:'写作/自媒体',detail:'内容创作',salary:'不固定'}
+    ]
+  },
+  '日语':{
+    job:[
+      {title:'日语翻译',detail:'口译/笔译，需N1证书',salary:'10-25万/年'},
+      {title:'对日IT',detail:'赴日IT、涉日项目',salary:'12-25万/年'},
+      {title:'日企行政/营业',detail:'日资企业',salary:'10-18万/年'},
+      {title:'日语教师',detail:'机构/赴日',salary:'10-20万/年'},
+      {title:'跨境电商运营',detail:'日本市场',salary:'10-20万/年'}
+    ],
+    graduate:[
+      {title:'日语语言文学硕士',detail:'学硕3年，文学/文化',salary:'补贴800-2000/月'},
+      {title:'日语笔译/口译硕士',detail:'MTI，2年',salary:'补贴1200-2500/月'},
+      {title:'日本研究方向',detail:'日本文化/社会',salary:'学术/外事'}
+    ],
+    public:[
+      {title:'外交部',detail:'日语翻译/外交',salary:'年薪15-25万'},
+      {title:'海关日语岗',detail:'检验检疫',salary:'年薪10-18万'},
+      {title:'日语教师（编制）',detail:'中学日语',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（日本）',detail:'日本修士/研究生',salary:'留学费用10-30万（国公立）'},
+      {title:'赴日工作',detail:'IT/服务',salary:'年薪15-30万日元'},
+      {title:'日语培训创业',detail:'机构/个人',salary:'创业型'}
+    ]
+  },
+  '应用物理学':{
+    job:[
+      {title:'半导体/芯片',detail:'IC设计/工艺',salary:'15-30万/年'},
+      {title:'光学工程师',detail:'光学设计、光通信',salary:'15-28万/年'},
+      {title:'材料工程师',detail:'新材料研发',salary:'12-25万/年'},
+      {title:'物理教师',detail:'初高中教师',salary:'8-18万/年（带编）'},
+      {title:'医疗器械',detail:'物理医疗设备',salary:'12-22万/年'}
+    ],
+    graduate:[
+      {title:'物理学硕士',detail:'理论物理/应用物理，学硕3年',salary:'补贴800-2000/月'},
+      {title:'微电子方向',detail:'集成电路',salary:'芯片行业薪资高'},
+      {title:'光学方向',detail:'光学工程',salary:'光通信/激光'}
+    ],
+    public:[
+      {title:'科研院所',detail:'中科院物理所等',salary:'年薪12-22万'},
+      {title:'军工院所',detail:'航空航天',salary:'年薪12-25万+福利'},
+      {title:'学校物理教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'}
+    ],
+    other:[
+      {title:'留学（物理）',detail:'美国/欧洲物理博士',salary:'全额奖学金多'},
+      {title:'半导体创业',detail:'芯片设计',salary:'创业型'},
+      {title:'数据科学',detail:'金融量化',salary:'20-50万/年'}
+    ]
+  },
+  '化学':{
+    job:[
+      {title:'化工工程师',detail:'化工工艺、设计',salary:'12-22万/年'},
+      {title:'质检/研发',detail:'质量检测、产品研发',salary:'10-20万/年'},
+      {title:'医药代表',detail:'药企销售',salary:'底薪+提成'},
+      {title:'化妆品研发',detail:'配方研发',salary:'12-22万/年'},
+      {title:'环境检测',detail:'第三方检测',salary:'10-18万/年'}
+    ],
+    graduate:[
+      {title:'化学硕士',detail:'有机/无机/分析化学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'化学工程硕士',detail:'化工方向',salary:'补贴1200-3000/月'},
+      {title:'药物化学方向',detail:'新药研发',salary:'药企需求大'}
+    ],
+    public:[
+      {title:'质检院/药检院',detail:'事业编，检测',salary:'年薪8-15万'},
+      {title:'环保局',detail:'环境监测',salary:'年薪10-18万'},
+      {title:'学校化学教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'}
+    ],
+    other:[
+      {title:'留学（化学）',detail:'美国/欧洲化学硕士',salary:'留学费用25-50万'},
+      {title:'化妆品创业',detail:'配方研发',salary:'创业型'},
+      {title:'第三方检测',detail:'检测机构',salary:'10-18万/年'}
+    ]
+  },
+  '生物科学':{
+    job:[
+      {title:'生物教师',detail:'初高中教师，需教师证',salary:'8-18万/年（带编）'},
+      {title:'医药代表',detail:'药企销售',salary:'底薪+提成'},
+      {title:'技术支持',detail:'生物公司售前售后',salary:'10-18万/年'},
+      {title:'检测员',detail:'医院/第三方检测',salary:'8-15万/年'},
+      {title:'实验员',detail:'科研助理',salary:'8-15万/年'}
+    ],
+    graduate:[
+      {title:'生物学硕士',detail:'植物/动物/微生物，学硕3年',salary:'补贴800-2000/月'},
+      {title:'生物与医药专硕',detail:'生物医药方向',salary:'补贴1200-2500/月'},
+      {title:'生物信息学',detail:'CS+Bio，交叉学科',salary:'IT+生物，薪资高'}
+    ],
+    public:[
+      {title:'学校生物教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'},
+      {title:'疾控中心',detail:'卫生检测',salary:'年薪8-15万'},
+      {title:'环保局',detail:'生态监测',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（生物）',detail:'美国/欧洲生物硕士/博士',salary:'博士全额奖学金多'},
+      {title:'生物科技创业',detail:' Biotech创业',salary:'创业型'},
+      {title:'农业/环保创业',detail:'生态农业',salary:'创业型'}
+    ]
+  },
+  '环境工程':{
+    job:[
+      {title:'环保工程师',detail:'废水/废气处理',salary:'10-20万/年'},
+      {title:'环评工程师',detail:'环境影响评价',salary:'12-22万/年'},
+      {title:'EHS专员',detail:'环境健康安全',salary:'10-18万/年'},
+      {title:'水处理工程师',detail:'市政/工业水处理',salary:'10-20万/年'},
+      {title:'环境监测',detail:'第三方检测',salary:'8-15万/年'}
+    ],
+    graduate:[
+      {title:'环境工程硕士',detail:'学硕3年，水/气/固废',salary:'补贴800-2000/月'},
+      {title:'环境科学硕士',detail:'环境科学方向',salary:'补贴800-2000/月'},
+      {title:'新能源方向',detail:'碳中和、新能源',salary:'政策导向，需求大'}
+    ],
+    public:[
+      {title:'环保局',detail:'环境管理',salary:'年薪10-18万'},
+      {title:'环境监测站',detail:'事业编',salary:'年薪8-15万'},
+      {title:'住建局',detail:'市政管理',salary:'年薪10-18万'}
+    ],
+    other:[
+      {title:'留学（环境）',detail:'美国/欧洲环境工程',salary:'留学费用25-50万'},
+      {title:'环保咨询',detail:'为企业做环评',salary:'12-22万/年'},
+      {title:'环保创业',detail:'污水处理、节能',salary:'政策扶持，朝阳'}
+    ]
+  },
+  '药学':{
+    job:[
+      {title:'医药代表',detail:'药企销售',salary:'底薪+提成10-30万/年'},
+      {title:'临床监查员CRA',detail:'临床试验',salary:'12-22万/年'},
+      {title:'药店/执业药师',detail:'药店营业员/药师',salary:'8-18万/年'},
+      {title:'质量QA/QC',detail:'药品质量',salary:'10-18万/年'},
+      {title:'药物研发',detail:'药企研发岗',salary:'12-25万/年'}
+    ],
+    graduate:[
+      {title:'药学硕士',detail:'药物化学/药剂学，学硕3年',salary:'补贴800-2000/月'},
+      {title:'药学专硕',detail:'临床药学/工业药学',salary:'补贴1200-2500/月'},
+      {title:'临床药学方向',detail:'医院临床药师',salary:'医院稳定'}
+    ],
+    public:[
+      {title:'药监局',detail:'药品监管',salary:'年薪10-18万'},
+      {title:'医院药师',detail:'事业编',salary:'年薪10-18万'},
+      {title:'疾控中心',detail:'疫苗管理',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（药学）',detail:'美国/英国药学硕士',salary:'留学费用25-50万'},
+      {title:'DTP药房',detail:'特药药房',salary:'10-18万/年'},
+      {title:'医药咨询',detail:'行业研究',salary:'15-28万/年'}
+    ]
+  },
+  '体育教育':{
+    job:[
+      {title:'体育教师',detail:'中小学体育教师',salary:'8-18万/年（带编）'},
+      {title:'健身教练',detail:'健身房/工作室',salary:'底薪+提成'},
+      {title:'体育经纪人',detail:'运动员经纪',salary:'底薪+提成'},
+      {title:'户外拓展',detail:'团建活动',salary:'10-18万/年'},
+      {title:'裁判/教练',detail:'体育局/俱乐部',salary:'8-20万/年'}
+    ],
+    graduate:[
+      {title:'体育学硕士',detail:'体育教育/运动训练，学硕3年',salary:'补贴800-2000/月'},
+      {title:'体育教学专硕',detail:'专硕2年',salary:'补贴1200-2500/月'},
+      {title:'运动康复方向',detail:'康复治疗',salary:'医疗+体育'}
+    ],
+    public:[
+      {title:'学校体育教师',detail:'需教师资格证',salary:'年薪8-15万（带编）'},
+      {title:'体育局',detail:'体育管理',salary:'年薪10-18万'},
+      {title:'体育总会',detail:'赛事管理',salary:'年薪8-15万'}
+    ],
+    other:[
+      {title:'留学（体育管理）',detail:'美国/欧洲体育管理',salary:'留学费用25-50万'},
+      {title:'体育创业',detail:'健身房/工作室',salary:'创业型'},
+      {title:'体育自媒体',detail:'内容创业',salary:'不固定'}
+    ]
   }
 };
+
 
 // 默认专业路线映射（适用于未在上述列表中的专业）
 var defaultDirectionRoutes = {
@@ -2031,7 +2799,559 @@ function closePlanModal() {
  }
 }
 
-function generateAbilities(scores){
+// ========================================
+// 能力差距分析功能（基于大数据）
+// ========================================
+
+// 大数据能力需求库（基于互联网公开数据：BOSS直聘、牛客网、CSDN等）
+var requiredAbilitiesData = {
+ // 技术类专业（计算机、软件、通信等）
+ tech: {
+ job: {
+ freshman: [
+ {ability:'编程语言基础',description:'目标岗位要求掌握至少一门编程语言（Python/Java/C++）',level:'high',suggestion:'选择一门语言深入学习，完成3-5个基础项目'},
+ {ability:'数据结构与算法',description:'面试必考内容，需掌握基本数据结构（数组、链表、树、图）',level:'high',suggestion:'系统学习数据结构，完成LeetCode简单题100道'},
+ {ability:'计算机网络基础',description:'了解TCP/IP协议栈、HTTP/HTTPS协议原理',level:'medium',suggestion:'学习《计算机网络》重点章节，刷相关面试题'},
+ {ability:'数学基础',description:'高数、线代、概率论是技术进阶的基石',level:'medium',suggestion:'巩固数学基础，为后续学习算法和机器学习做准备'},
+ {ability:'英语阅读能力',description:'能够阅读英文技术文档和论文',level:'medium',suggestion:'每天阅读一篇英文技术文章，积累专业词汇'}
+ ],
+ sophomore: [
+ {ability:'全栈开发能力',description:'掌握前端+后端基本开发技能，能独立完成小项目',level:'high',suggestion:'学习React/Vue前端框架+Node.js后端，完成完整项目'},
+ {ability:'数据库技能',description:'熟练使用MySQL/Redis/MongoDB等主流数据库',level:'high',suggestion:'完成数据库设计课程，学习Redis缓存和MongoDB应用'},
+ {ability:'Git版本控制',description:'熟练使用Git进行团队协作开发',level:'medium',suggestion:'参与开源项目，学习Gitflow工作流'},
+ {ability:'算法与数据结构进阶',description:'能够解决中等难度算法问题，满足校招要求',level:'high',suggestion:'系统刷题，完成《剑指Offer》所有题目'},
+ {ability:'Linux操作基础',description:'熟悉Linux命令行，能够在服务器环境开发',level:'medium',suggestion:'搭建个人Linux学习环境，熟悉常用命令'}
+ ],
+ junior: [
+ {ability:'系统设计能力',description:'能够设计高并发、高可用系统架构',level:'high',suggestion:'学习分布式系统设计，阅读《Designing Data-Intensive Applications》'},
+ {ability:'微服务架构',description:'掌握微服务设计理念和Spring Cloud等框架',level:'high',suggestion:'完成微服务项目，学习Docker和Kubernetes'},
+ {ability:'性能优化经验',description:'具备数据库优化、代码优化、缓存优化能力',level:'medium',suggestion:'学习性能分析工具，完成项目性能优化实战'},
+ {ability:'框架源码阅读',description:'能够阅读和理解主流框架源码',level:'medium',suggestion:'深入学习Spring、MyBatis等框架源码'},
+ {ability:'面试综合能力',description:'算法、项目、架构设计的综合面试表现',level:'high',suggestion:'参加模拟面试，整理项目亮点，准备STAR法则回答'}
+ ],
+ senior: [
+ {ability:'offer选择能力',description:'能够评估不同offer的技术成长、薪资、发展前景',level:'high',suggestion:'了解行业薪资水平，准备谈薪技巧'},
+ {ability:'职场快速适应',description:'完成学生到职场人的转变',level:'medium',suggestion:'学习职场沟通技巧，了解行业规范'},
+ {ability:'持续学习能力',description:'保持技术敏感度，跟上技术迭代',level:'medium',suggestion:'关注技术博客，建立个人知识体系'}
+ ]
+ },
+ graduate: {
+ freshman: [
+ {ability:'高等数学基础',description:'考研数学占比最大，需扎实掌握',level:'high',suggestion:'认真学习高数、线代、概率论，做课后习题'},
+ {ability:'英语能力',description:'考研英语需达到50-60分以上',level:'high',suggestion:'坚持背单词，做真题阅读，提升英语水平'},
+ {ability:'专业基础',description:'为目标专业考研打下基础',level:'medium',suggestion:'了解目标专业考试科目，开始基础学习'},
+ {ability:'学术研究兴趣',description:'培养对科研的兴趣和热情',level:'medium',suggestion:'参加学术讲座，阅读科研论文'},
+ {ability:'GPA保持',description:'考研复试需要良好的本科成绩',level:'medium',suggestion:'认真对待每门课程，保持85+均分'}
+ ],
+ sophomore: [
+ {ability:'考研科目深化',description:'确定目标院校后针对性复习',level:'high',suggestion:'收集目标院校真题和参考书目，制定复习计划'},
+ {ability:'科研经历',description:'复试需要科研经历增加竞争力',level:'high',suggestion:'联系导师参与科研项目，发表论文或专利'},
+ {ability:'英语强化',description:'为考研英语和未来研究生英语打基础',level:'high',suggestion:'系统学习考研英语，做历年真题'},
+ {ability:'专业课精通',description:'目标专业核心课程需达到精通程度',level:'medium',suggestion:'使用目标院校指定教材，深入学习'},
+ {ability:'数学建模能力',description:'理工科考研加分项',level:'medium',suggestion:'参加数学建模竞赛，提升问题解决能力'}
+ ],
+ junior: [
+ {ability:'考研系统复习',description:'数学、英语、政治、专业课全面复习',level:'high',suggestion:'制定详细复习计划，分阶段突破'},
+ {ability:'真题训练',description:'考研真题是复习的核心资料',level:'high',suggestion:'完成近10年真题，分析出题规律'},
+ {ability:'模拟考试',description:'定期模拟检验复习效果',level:'medium',suggestion:'每月参加模拟考试，调整复习策略'},
+ {ability:'复试准备',description:'提前准备复试科目和面试',level:'medium',suggestion:'了解复试流程，准备专业课和英语面试'},
+ {ability:'信息收集',description:'及时获取考研动态和院校信息',level:'medium',suggestion:'关注考研论坛和目标院校官网'}
+ ],
+ senior: [
+ {ability:'初试冲刺',description:'最后阶段的全面冲刺',level:'high',suggestion:'查漏补缺，保持良好心态'},
+ {ability:'复试准备',description:'初试通过后的复试准备',level:'high',suggestion:'联系导师，准备专业课和面试'},
+ {ability:'毕业论文',description:'本科毕业必须完成的任务',level:'medium',suggestion:'合理安排时间，确保顺利毕业'}
+ ]
+ },
+ public: {
+ freshman: [
+ {ability:'政治素养基础',description:'考公需要良好的政治素养',level:'high',suggestion:'关注时政新闻，学习政治理论'},
+ {ability:'申论基础',description:'申论是考公必考科目',level:'high',suggestion:'开始练习写作，关注社会热点'},
+ {ability:'行测入门',description:'了解行测考试内容和题型',level:'medium',suggestion:'购买教材，了解五大模块'},
+ {ability:'学生干部经历',description:'学生干部经历对考公有帮助',level:'medium',suggestion:'参加学生会或社团担任职务'},
+ {ability:'入党准备',description:'党员身份在考公中有优势',level:'medium',suggestion:'递交入党申请书，争取早日入党'}
+ ],
+ sophomore: [
+ {ability:'行测系统学习',description:'行测五大模块全面学习',level:'high',suggestion:'分模块系统学习，做专项练习'},
+ {ability:'申论写作提升',description:'申论需要长期积累和练习',level:'high',suggestion:'每周写一篇申论，积累素材'},
+ {ability:'时政积累',description:'行测和申论都需要时政知识',level:'medium',suggestion:'每天阅读人民日报、新闻联播'},
+ {ability:'党员身份',description:'争取成为党员增加竞争力',level:'medium',suggestion:'完成入党流程'},
+ {ability:'社会实践',description:'基层工作经历对考公有帮助',level:'medium',suggestion:'参加社会实践和志愿服务'}
+ ],
+ junior: [
+ {ability:'行测强化训练',description:'提升做题速度和准确率',level:'high',suggestion:'每天一套行测题，计时训练'},
+ {ability:'申论专项突破',description:'申论大作文需要专门训练',level:'high',suggestion:'背诵范文，练习写作框架'},
+ {ability:'真题实战',description:'历年真题是最佳练习材料',level:'high',suggestion:'完成近5年真题，分析错题'},
+ {ability:'选调生准备',description:'关注选调生考试信息',level:'medium',suggestion:'了解各省选调生政策和要求'},
+ {ability:'面试准备',description:'提前了解结构化面试',level:'medium',suggestion:'观看面试视频，练习答题'}
+ ],
+ senior: [
+ {ability:'国考冲刺',description:'国考是最大型考试机会',level:'high',suggestion:'全力冲刺国考，不要错过报名'},
+ {ability:'省考备考',description:'省考是主要上岸途径',level:'high',suggestion:'国考后立即投入省考复习'},
+ {ability:'面试技巧',description:'面试表现决定最终录取',level:'high',suggestion:'参加面试培训班，模拟练习'}
+ ]
+ }
+ },
+ // 商科类专业（金融、会计、管理等）
+ business: {
+ job: {
+ freshman: [
+ {ability:'财务基础',description:'初级会计职称是入门证书',level:'high',suggestion:'开始备考初级会计证'},
+ {ability:'Excel技能',description:'办公软件是职场必备技能',level:'high',suggestion:'系统学习Excel函数和数据透视表'},
+ {ability:'商业敏感度',description:'对商业现象有自己的思考',level:'medium',suggestion:'阅读商业案例，关注财经新闻'},
+ {ability:'英语能力',description:'外资企业和国际业务需要英语',level:'medium',suggestion:'提升英语水平，考取四六级'},
+ {ability:'表达能力',description:'清晰表达观点的能力',level:'medium',suggestion:'参加演讲比赛或社团活动'}
+ ],
+ sophomore: [
+ {ability:'专业证书',description:'ACCA、CFA等证书增加竞争力',level:'high',suggestion:'开始备考ACCA或 CFA一级'},
+ {ability:'实习经历',description:'相关实习是求职重要加分项',level:'high',suggestion:'寻找四大、券商、咨询公司实习'},
+ {ability:'行业研究',description:'能够撰写行业分析报告',level:'medium',suggestion:'学习行业研究方法论'},
+ {ability:'数据分析',description:'Python、SQL等数据分析工具',level:'high',suggestion:'学习Python数据分析'},
+ {ability:'Networking',description:'建立行业人脉关系',level:'medium',suggestion:'参加行业讲座和校友活动'}
+ ],
+ junior: [
+ {ability:'CPA/CFA备考',description:'注册会计师是财务最高证书',level:'high',suggestion:'开始备考CPA专业阶段'},
+ {ability:'商业案例分析',description:'case interview必备技能',level:'high',suggestion:'练习casebook，准备咨询类面试'},
+ {ability:'管理咨询基础',description:'了解咨询行业工作方法',level:'medium',suggestion:'学习PPT制作和商业演示'},
+ {ability:'投行知识',description:'投行是商科学生热门去向',level:'medium',suggestion:'了解投行业务和估值方法'}
+ ],
+ senior: [
+ {ability:'秋招准备',description:'四大的秋招是主要招聘渠道',level:'high',suggestion:'准备OT和面试'},
+ {ability:'职场技能',description:'职场沟通、项目管理等软技能',level:'medium',suggestion:'学习职场沟通技巧'}
+ ]
+ },
+ graduate: {
+ freshman: [
+ {ability:'学术写作基础',description:'商科论文需要规范写作',level:'high',suggestion:'学习学术论文写作规范'},
+ {ability:'数学基础',description:'计量经济学需要数学基础',level:'high',suggestion:'复习高数、线代、概率论'},
+ {ability:'英语能力',description:'英文文献阅读和写作',level:'high',suggestion:'提升英语水平'},
+ {ability:'专业基础',description:'宏微观经济学等基础课程',level:'medium',suggestion:'认真学习专业课'}
+ ],
+ sophomore: [
+ {ability:'科研方法',description:'掌握实证研究方法',level:'high',suggestion:'学习Stata、R等统计软件'},
+ {ability:'论文发表',description:'核心期刊论文是毕业要求',level:'high',suggestion:'开始撰写小论文'},
+ {ability:'导师合作',description:'与导师保持良好合作关系',level:'medium',suggestion:'积极参与导师课题'}
+ ],
+ junior: [
+ {ability:'毕业论文',description:'大论文是毕业关键',level:'high',suggestion:'开始毕业论文写作'},
+ {ability:'职业规划',description:'明确毕业后去向（读博/就业）',level:'medium',suggestion:'提前规划'}]
+ ,
+ senior: [{ability:'秋招/申博',description:'最终去向的准备',level:'high',suggestion:'根据规划准备'}]
+ },
+ public: {
+ freshman: [
+ {ability:'政治素养',description:'考公核心能力',level:'high',suggestion:'关注时政，学习政治理论'},
+ {ability:'申论基础',description:'申论写作能力',level:'high',suggestion:'开始练习申论写作'},
+ {ability:'学生干部',description:'增加报考优势',level:'medium',suggestion:'担任学生干部'}
+ ],
+ sophomore: [
+ {ability:'行测系统学习',description:'五大模块全面复习',level:'high',suggestion:'分模块系统学习'},
+ {ability:'党员身份',description:'党员是很多岗位要求',level:'high',suggestion:'争取入党'}
+ ],
+ junior: [
+ {ability:'真题训练',description:'历年真题练习',level:'high',suggestion:'刷近5年真题'},
+ {ability:'面试准备',description:'结构化面试技巧',level:'high',suggestion:'模拟练习'}
+ ],
+ senior: [{ability:'国考省考',description:'全力冲刺上岸',level:'high',suggestion:'把握每次考试机会'}]
+ }
+ },
+ // 设计类专业（建筑、规划、视觉传达等）
+ design: {
+ job: {
+ freshman: [
+ {ability:'手绘基础',description:'设计手绘表达是基础技能',level:'high',suggestion:'参加手绘培训班，打好基础'},
+ {ability:'软件技能',description:'PS、AI、CAD等设计软件',level:'high',suggestion:'系统学习设计软件'},
+ {ability:'美学基础',description:'色彩、构图、比例等美学素养',level:'medium',suggestion:'参观美术馆，提高审美'},
+ {ability:'速写能力',description:'快速表达设计想法',level:'medium',suggestion:'坚持每日速写练习'}
+ ],
+ sophomore: [
+ {ability:'作品集基础',description:'开始积累设计作品',level:'high',suggestion:'整理优秀作业，准备作品集'},
+ {ability:'专业软件进阶',description:'Rhino、SketchUp、3DMax等',level:'high',suggestion:'学习建模和渲染'},
+ {ability:'竞赛参与',description:'设计竞赛是提升和展示能力',level:'medium',suggestion:'参加专业设计竞赛'},
+ {ability:'实习经历',description:'设计公司实习经验',level:'medium',suggestion:'寻找设计公司实习'}
+ ],
+ junior: [
+ {ability:'作品集完善',description:'高质量作品集是求职核心',level:'high',suggestion:'打磨作品集，突出个人风格'},
+ {ability:'专业深化',description:'确定设计方向深入学习',level:'medium',suggestion:'选择建筑/室内/景观等方向'},
+ {ability:'行业实践',description:'实际项目经验',level:'medium',suggestion:'参与实际项目'}
+ ],
+ senior: [
+ {ability:'求职面试',description:'设计公司面试准备',level:'high',suggestion:'准备作品集和面试'},
+ {ability:'职业规划',description:'明确职业发展方向',level:'medium',suggestion:'了解行业前景'}
+ ]
+ },
+ graduate: {
+ freshman: [
+ {ability:'理论基础',description:'设计理论深化',level:'high',suggestion:'阅读设计理论书籍'},
+ {ability:'研究方法',description:'设计研究方法',level:'high',suggestion:'学习设计研究方法论'},
+ {ability:'手绘进阶',description:'快题设计能力',level:'medium',suggestion:'练习快题设计'}
+ ],
+ sophomore: [
+ {ability:'论文写作',description:'设计论文撰写',level:'high',suggestion:'开始撰写小论文'},
+ {ability:'作品创作',description:'毕业设计准备',level:'medium',suggestion:'确定研究方向'}
+ ],
+ junior: [
+ {ability:'毕业论文/设计',description:'研究生毕业核心',level:'high',suggestion:'全力完成毕业设计'},
+ {ability:'职业准备',description:'设计院或继续读博',level:'medium',suggestion:'根据规划准备'}
+ ],
+ senior: [{ability:'毕业答辩',description:'顺利毕业',level:'high',suggestion:'准备答辩'}]
+ },
+ public: {
+ freshman: [
+ {ability:'政治素养',description:'考公基础',level:'high',suggestion:'关注时政'},
+ {ability:'设计基础',description:'设计院也需要专业能力',level:'medium',suggestion:'保持专业学习'}
+ ],
+ sophomore: [
+ {ability:'行测申论',description:'考公科目学习',level:'high',suggestion:'系统学习'},
+ {ability:'党员身份',description:'增加竞争力',level:'medium',suggestion:'争取入党'}
+ ],
+ junior: [
+ {ability:'真题训练',description:'历年真题练习',level:'high',suggestion:'刷题训练'},
+ {ability:'专业考试',description:'设计院专业考试',level:'medium',suggestion:'准备专业考试'}
+ ],
+ senior: [{ability:'国考省考',description:'考公上岸',level:'high',suggestion:'全力备考'}]
+ }
+ },
+ // 法学类专业
+ law: {
+ job: {
+ freshman: [
+ {ability:'法律基础',description:'法理学、宪法等基础法',level:'high',suggestion:'扎实学习基础法律课程'},
+ {ability:'法律思维',description:'培养法律逻辑思维',level:'high',suggestion:'阅读法律案例'},
+ {ability:'文书写作',description:'法律文书写作基础',level:'medium',suggestion:'练习法律文书写作'}
+ ],
+ sophomore: [
+ {ability:'司考/法考备考',description:'法律职业资格证是入行门槛',level:'high',suggestion:'开始备考法考'},
+ {ability:'专业实习',description:'律所或法院实习',level:'high',suggestion:'寻找法律实习'},
+ {ability:'法学研究',description:'学术研究能力培养',level:'medium',suggestion:'参加法学研讨会'}
+ ],
+ junior: [
+ {ability:'法考冲刺',description:'通过法考是首要目标',level:'high',suggestion:'全力备考法考'},
+ {ability:'实务能力',description:'案例分析、法律检索等',level:'medium',suggestion:'提升实务技能'}
+ ],
+ senior: [
+ {ability:'律所求职',description:'律所是主要去向',level:'high',suggestion:'准备求职'},
+ {ability:'职业资格',description:'取得律师执业证',level:'high',suggestion:'完成实习拿执照'}
+ ]
+ },
+ graduate: {
+ freshman: [
+ {ability:'法学深化',description:'专业方向深入学习',level:'high',suggestion:'确定研究方向'},
+ {ability:'学术研究',description:'法学研究方法',level:'high',suggestion:'学习研究方法'},
+ {ability:'论文写作',description:'法学论文规范',level:'high',suggestion:'开始写论文'}
+ ],
+ sophomore: [
+ {ability:'论文发表',description:'核心期刊论文',level:'high',suggestion:'发表论文'},
+ {ability:'学术交流',description:'参加学术会议',level:'medium',suggestion:'积极交流'}
+ ],
+ junior: [
+ {ability:'毕业论文',description:'研究生毕业论文',level:'high',suggestion:'全力写作'},
+ {ability:'就业准备',description:'律所或继续读博',level:'medium',suggestion:'规划未来'}
+ ],
+ senior: [{ability:'毕业就业',description:'顺利毕业就业',level:'high',suggestion:'根据规划准备'}]
+ },
+ public: {
+ freshman: [
+ {ability:'政治素养',description:'考公基础',level:'high',suggestion:'学习政治理论'},
+ {ability:'法律应用',description:'法律在公务中的应用',level:'medium',suggestion:'关注法律应用'},
+ {ability:'行测申论',description:'考公基础',level:'high',suggestion:'开始学习'}
+ ],
+ sophomore: [
+ {ability:'法考备考',description:'法律资格证',level:'high',suggestion:'备考法考'},
+ {ability:'党员身份',description:'增加竞争力',level:'medium',suggestion:'争取入党'}
+ ],
+ junior: [
+ {ability:'真题训练',description:'行测申论练习',level:'high',suggestion:'系统刷题'},
+ {ability:'面试准备',description:'结构化面试',level:'high',suggestion:'模拟练习'}
+ ],
+ senior: [{ability:'国考省考',description:'考公上岸',level:'high',suggestion:'全力备考'}]
+ }
+ },
+ // 医学类专业
+ medical: {
+ job: {
+ freshman: [
+ {ability:'医学基础',description:'解剖、生理、生化等基础医学',level:'high',suggestion:'扎实学习基础医学课程'},
+ {ability:'英语能力',description:'医学英语和文献阅读',level:'high',suggestion:'学习医学英语'},
+ {ability:'科研兴趣',description:'培养医学研究兴趣',level:'medium',suggestion:'了解医学前沿'}
+ ],
+ sophomore: [
+ {ability:'临床基础',description:'诊断学、内外妇儿等',level:'high',suggestion:'认真学习临床课程'},
+ {ability:'执业医师基础',description:'为执业医师考试打基础',level:'high',suggestion:'了解考试内容'},
+ {ability:'科研经历',description:'科研经历对晋升重要',level:'medium',suggestion:'加入实验室'}
+ ],
+ junior: [
+ {ability:'临床实习',description:'医院各科室轮转',level:'high',suggestion:'认真实习'},
+ {ability:'执业医师备考',description:'通过执业医师考试',level:'high',suggestion:'备考执医'},
+ {ability:'专业方向',description:'确定细分专业方向',level:'medium',suggestion:'了解各科室'}
+ ],
+ senior: [
+ {ability:'住院医师规范化培训',description:'规培是成为医生的必经之路',level:'high',suggestion:'做好规培准备'},
+ {ability:'执业医师考试',description:'通过考试获得执业资格',level:'high',suggestion:'全力备考'}
+ ]
+ },
+ graduate: {
+ freshman: [
+ {ability:'科研能力',description:'医学研究方法',level:'high',suggestion:'学习科研方法'},
+ {ability:'英语能力',description:'医学文献阅读和写作',level:'high',suggestion:'提升英语'},
+ {ability:'专业深化',description:'细分专业深入学习',level:'medium',suggestion:'确定研究方向'}
+ ],
+ sophomore: [
+ {ability:'论文发表',description:'医学论文发表',level:'high',suggestion:'发表SCI论文'},
+ {ability:'临床技能',description:'临床实践能力',level:'medium',suggestion:'提升临床技能'}
+ ],
+ junior: [
+ {ability:'毕业论文',description:'医学研究生论文',level:'high',suggestion:'完成大论文'},
+ {ability:'职业规划',description:'继续读博或就业',level:'medium',suggestion:'提前规划'}
+ ],
+ senior: [{ability:'毕业就业',description:'医院或继续深造',level:'high',suggestion:'根据规划准备'}]
+ },
+ public: {
+ freshman: [
+ {ability:'政治素养',description:'卫健委等需要政治素养',level:'high',suggestion:'学习政治理论'},
+ {ability:'医学基础',description:'医学基础知识',level:'high',suggestion:'保持专业学习'},
+ {ability:'行测申论',description:'考公基础',level:'medium',suggestion:'开始学习'}
+ ],
+ sophomore: [
+ {ability:'医学专业考试',description:'卫生系统招聘考试',level:'high',suggestion:'了解考试内容'},
+ {ability:'党员身份',description:'增加竞争力',level:'medium',suggestion:'争取入党'}
+ ],
+ junior: [
+ {ability:'招聘考试准备',description:'医疗卫生系统招聘',level:'high',suggestion:'备考招聘考试'},
+ {ability:'面试准备',description:'医疗系统面试',level:'medium',suggestion:'准备面试'}
+ ],
+ senior: [{ability:'医疗卫生系统',description:'医院或卫健委等',level:'high',suggestion:'全力备考'}]
+ }
+ },
+ // 其他专业（通用）
+ default: {
+ job: {
+ freshman: [
+ {ability:'专业基础',description:'学好专业基础课程',level:'high',suggestion:'认真对待每门课程'},
+ {ability:'通用技能',description:'Office软件、英语等',level:'medium',suggestion:'提升通用技能'},
+ {ability:'职业探索',description:'了解行业和职业',level:'medium',suggestion:'参加职业讲座'}
+ ],
+ sophomore: [
+ {ability:'专业技能',description:'深入学习专业技能',level:'high',suggestion:'掌握专业核心技能'},
+ {ability:'实习经历',description:'相关实习经验',level:'high',suggestion:'寻找实习'},
+ {ability:'证书技能',description:'行业相关证书',level:'medium',suggestion:'考取相关证书'}
+ ],
+ junior: [
+ {ability:'求职准备',description:'秋招/春招准备',level:'high',suggestion:'准备求职材料'},
+ {ability:'专业深化',description:'专业方向深入',level:'medium',suggestion:'确定发展方向'}
+ ],
+ senior: [
+ {ability:'offer选择',description:'评估和选择offer',level:'high',suggestion:'理性选择'},
+ {ability:'职场适应',description:'从学生到职场人',level:'medium',suggestion:'做好心理准备'}
+ ]
+ },
+ graduate: {
+ freshman: [
+ {ability:'学术基础',description:'学术研究基础',level:'high',suggestion:'培养研究兴趣'},
+ {ability:'英语能力',description:'英语读写能力',level:'high',suggestion:'提升英语'},
+ {ability:'专业基础',description:'专业基础课程',level:'medium',suggestion:'学好专业课'}
+ ],
+ sophomore: [
+ {ability:'研究方向',description:'确定研究方向',level:'high',suggestion:'明确研究方向'},
+ {ability:'论文发表',description:'学术论文发表',level:'high',suggestion:'开始写论文'}
+ ],
+ junior: [
+ {ability:'毕业论文',description:'研究生毕业论文',level:'high',suggestion:'完成毕业设计'},
+ {ability:'职业规划',description:'读博或就业',level:'medium',suggestion:'提前规划'}
+ ],
+ senior: [{ability:'毕业就业',description:'顺利毕业就业',level:'high',suggestion:'根据规划准备'}]
+ },
+ public: {
+ freshman: [
+ {ability:'政治素养',description:'考公基础',level:'high',suggestion:'关注时政'},
+ {ability:'行测申论基础',description:'考公基础科目',level:'high',suggestion:'开始学习'},
+ {ability:'学生干部',description:'增加报考优势',level:'medium',suggestion:'担任职务'}
+ ],
+ sophomore: [
+ {ability:'行测系统学习',description:'五大模块学习',level:'high',suggestion:'系统学习'},
+ {ability:'党员身份',description:'增加竞争力',level:'medium',suggestion:'争取入党'}
+ ],
+ junior: [
+ {ability:'真题训练',description:'历年真题练习',level:'high',suggestion:'刷题训练'},
+ {ability:'面试准备',description:'面试技巧',level:'high',suggestion:'模拟练习'}
+ ],
+ senior: [{ability:'国考省考',description:'考公上岸',level:'high',suggestion:'全力备考'}]
+ }
+}
+};
+
+// 获取该年级该方向需要的能力
+function getRequiredAbilities(majorCategory, directions, grade) {
+ var categoryData = requiredAbilitiesData[majorCategory] || requiredAbilitiesData['default'];
+ var isUndecided = directions.length === 0 || directions.includes('undecided');
+ var abilities = [];
+ 
+ if (isUndecided) {
+ // 未确定方向：综合所有方向的能力需求
+ ['job', 'graduate', 'public'].forEach(function(dir) {
+ if (categoryData[dir] && categoryData[dir][grade]) {
+ abilities = abilities.concat(categoryData[dir][grade]);
+ }
+ });
+ // 去重
+ var seen = {};
+ abilities = abilities.filter(function(item) {
+ if (seen[item.ability]) return false;
+ seen[item.ability] = true;
+ return true;
+ });
+ } else {
+ // 确定方向：只获取该方向的能力需求
+ directions.forEach(function(dir) {
+ if (categoryData[dir] && categoryData[dir][grade]) {
+ abilities = abilities.concat(categoryData[dir][grade]);
+ }
+ });
+ // 如果该方向该年级没有数据，使用默认值
+ if (abilities.length === 0 && categoryData['job'] && categoryData['job'][grade]) {
+ abilities = categoryData['job'][grade];
+ }
+ }
+ 
+ // 按level排序（high优先）
+ abilities.sort(function(a, b) {
+ var order = {high: 0, medium: 1, low: 2};
+ return order[a.level] - order[b.level];
+ });
+ 
+ return abilities.slice(0, 8); // 最多返回8项
+}
+
+// 评估用户当前能力（基于测评结果、专业和年级）
+function evaluateUserAbilities(scores, directions, major, grade) {
+ var abilities = {
+ technical: 0, // 技术能力
+ research: 0, // 研究能力
+ communication: 0, // 沟通能力
+ management: 0, // 管理能力
+ creativity: 0, // 创意能力
+ detail: 0 // 细致能力
+ };
+ 
+ // 获取专业类别
+ var majorCategory = majorCategoryMap[major] || 'tech';
+ 
+ // 根据专业类别评估基础能力
+ var baseAbilityMap = {
+ 'tech': {technical: 1, detail: 1},
+ 'business': {management: 1, communication: 1},
+ 'law': {detail: 1, research: 1},
+ 'medical': {detail: 1, research: 1},
+ 'design': {creativity: 1, technical: 1},
+ 'arts': {creativity: 1, communication: 1},
+ 'science': {research: 1, technical: 1},
+ 'social': {communication: 1, management: 1},
+ 'education': {communication: 1, detail: 1},
+ 'lang': {communication: 1, detail: 1},
+ 'media': {communication: 1, creativity: 1}
+ };
+ 
+ var baseAbilities = baseAbilityMap[majorCategory] || {};
+ for (var key in baseAbilities) {
+ abilities[key] += baseAbilities[key];
+ }
+ 
+ // 根据年级评估阶段性能力
+ var gradeAbilityMap = {
+ 'freshman': {detail: 1}, // 大一：基础扎实
+ 'sophomore': {technical: 1, communication: 1}, // 大二：技能+沟通
+ 'junior': {technical: 2, research: 1}, // 大三：专业+研究
+ 'senior': {technical: 2, management: 1, communication: 1} // 大四：综合能力
+ };
+ var gradeAbilities = gradeAbilityMap[grade] || gradeAbilityMap['freshman'];
+ for (var key in gradeAbilities) {
+ abilities[key] += gradeAbilities[key];
+ }
+ 
+ // 根据霍兰德测评结果评估能力优势
+ if (scores['R'] > 15) abilities.technical += 2;
+ if (scores['I'] > 15) abilities.research += 2;
+ if (scores['S'] > 15) abilities.communication += 2;
+ if (scores['E'] > 15) abilities.management += 2;
+ if (scores['A'] > 15) abilities.creativity += 2;
+ if (scores['C'] > 15) abilities.detail += 2;
+ 
+ // 能力得分归一化（最高不超过5分）
+ for (var key in abilities) {
+ abilities[key] = Math.min(abilities[key], 5);
+ }
+ 
+ return abilities;
+}
+
+// 分析能力差距
+function analyzeAbilityGaps(requiredAbilities, userAbilities) {
+ var gaps = [];
+ 
+ // 定义能力关键词对应的能力维度
+ var abilityKeywords = {
+ '编程':'technical', '算法':'technical', '代码':'technical', '数据库':'technical', 
+ '系统':'technical', '框架':'technical', 'Linux':'technical', '软件':'technical',
+ '学术':'research', '研究':'research', '论文':'research', '科研':'research', 
+ '数学':'research', '理论':'research', '学术写作':'research',
+ '实习':'communication', '沟通':'communication', '人际':'communication', 
+ '团队':'communication', '表达':'communication', 'Networking':'communication',
+ '管理':'management', '组织':'management', '规划':'management', 
+ '领导':'management', '协调':'management', '商业':'management',
+ '创意':'creativity', '设计':'creativity', '审美':'creativity', 
+ '创新':'creativity', '美学':'creativity', '手绘':'creativity',
+ '证书':'detail', '考试':'detail', '基础':'detail', '素养':'detail', 
+ '法律':'detail', '政治':'detail', '文书':'detail', '速写':'detail', 'Excel':'detail'
+ };
+ 
+ requiredAbilities.forEach(function(req) {
+ // 匹配能力维度
+ var matchedDim = 'technical';
+ for (var keyword in abilityKeywords) {
+ if (req.ability.indexOf(keyword) !== -1 || req.description.indexOf(keyword) !== -1) {
+ matchedDim = abilityKeywords[keyword];
+ break;
+ }
+ }
+ 
+ var userLevel = userAbilities[matchedDim] || 0;
+ var gapLevel = req.level;
+ 
+ // 调整差距级别
+ if (req.level === 'high' && userLevel < 2) {
+ gapLevel = 'high';
+ } else if (req.level === 'medium' && userLevel < 1) {
+ gapLevel = 'medium';
+ } else {
+ gapLevel = 'low';
+ }
+ 
+ // 计算差距分（用于排序）
+ var gapScore = 0;
+ if (gapLevel === 'high') gapScore = 100;
+ else if (gapLevel === 'medium') gapScore = 50;
+ else gapScore = 10;
+ 
+ gaps.push({
+ ability: req.ability,
+ description: req.description,
+ level: gapLevel,
+ suggestion: req.suggestion,
+ gapScore: gapScore,
+ matchedDim: matchedDim
+ });
+ });
+ 
+ // 按差距级别排序
+ gaps.sort(function(a, b) {
+ return b.gapScore - a.gapScore;
+ });
+ 
+ // 限制数量
+ return gaps.slice(0, 6);
+}
+
+function generateAbilities(scores, userInfo){
  var dimensions=['R','I','A','S','E','C'];
  var sorted=dimensions.slice().sort(function(a,b){return (scores[b]||0)-(scores[a]||0)});
  var top3=sorted.slice(0,3);
@@ -2045,12 +3365,52 @@ function generateAbilities(scores){
  };
  var abilitiesList=document.getElementById('abilities-list');
  abilitiesList.innerHTML='';
+ 
+ // 获取用户信息
+ var major = userInfo.major || '';
+ var grade = userInfo.grade || 'freshman';
+ var directions = userInfo.directions || [];
+ var majorCategory = majorCategoryMap[major] || 'tech';
+ 
+ // 获取该年级该方向需要的能力（基于大数据）
+ var requiredAbilities = getRequiredAbilities(majorCategory, directions, grade);
+ 
+ // 根据用户测评结果、专业和年级评估当前能力
+var userAbilities = evaluateUserAbilities(scores, directions, major, grade);
+ 
+ // 对比分析生成差距列表
+ var gaps = analyzeAbilityGaps(requiredAbilities, userAbilities);
+ 
+ // 渲染能力差距分析
+ if(gaps.length > 0){
+ gaps.forEach(function(gap, index){
+ var statusClass = gap.level === 'high' ? 'gap-high' : (gap.level === 'medium' ? 'gap-medium' : 'gap-low');
+ var statusLabel = gap.level === 'high' ? '急需提升' : (gap.level === 'medium' ? '需要加强' : '建议学习');
+ var statusIcon = gap.level === 'high' ? '🔴' : (gap.level === 'medium' ? '🟡' : '📚');
+ 
+ abilitiesList.innerHTML += '<div class="ability-item ' + statusClass + '">' +
+ '<span class="ability-num">' + (index + 1) + '</span>' +
+ '<div class="ability-content">' +
+ '<div class="ability-header">' +
+ '<h4>' + gap.ability + '</h4>' +
+ '<span class="ability-status ' + statusClass + '">' + statusIcon + ' ' + statusLabel + '</span>' +
+ '</div>' +
+ '<p class="gap-detail">' + gap.description + '</p>' +
+ '<div class="gap-suggestion">' +
+ '<span class="suggestion-label">📖 建议：</span>' +
+ '<span class="suggestion-text">' + gap.suggestion + '</span>' +
+ '</div>' +
+ '</div></div>';
+ });
+ } else {
+ // 如果没有明显差距，显示基于测评的优势能力
  top3.forEach(function(d,index){
  var items=abilitiesMap[d]||[];
  items.slice(0,1).forEach(function(item){
  abilitiesList.innerHTML+='<div class="ability-item"><span class="ability-num">'+(abilitiesList.children.length+1)+'</span><div class="ability-content"><h4>'+item.split('：')[0]+'</h4><p>'+item.split('：')[1]+'</p></div></div>';
  });
  });
+ }
 }
 
 function generateTasks(grade){
