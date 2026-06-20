@@ -205,6 +205,7 @@
                     <div class="result-actions">
                         <button class="btn-secondary" onclick="exportReport()">导出报告</button>
                         <button class="btn-secondary" onclick="exportPoster()">生成海报</button>
+                        <button class="btn-secondary btn-ai" onclick="openAIAssistant()">🤖 AI顾问</button>
                         <button class="btn-primary" onclick="restartAssessment()">重新测评</button>
                     </div>
                 </div>
@@ -214,6 +215,52 @@
         <footer class="footer">
             <p>大学生成长职途助手 © 2024 · <a href="showcase.html" style="color:#4A90E2;text-decoration:none;">创意展示页</a></p>
         </footer>
+
+        <!-- AI智能体对话框 -->
+        <div id="ai-assistant-modal" class="ai-assistant-modal" style="display:none;">
+            <div class="ai-assistant-overlay" onclick="closeAIAssistant()"></div>
+            <div class="ai-assistant-container">
+                <div class="ai-assistant-header">
+                    <div class="ai-assistant-title">
+                        <span class="ai-avatar">🤖</span>
+                        <div>
+                            <div class="ai-name">职途智能顾问</div>
+                            <div class="ai-status">在线 · 随时为您服务</div>
+                        </div>
+                    </div>
+                    <button class="ai-close" onclick="closeAIAssistant()">✕</button>
+                </div>
+                <div class="ai-assistant-messages" id="ai-messages">
+                    <div class="ai-message ai-message-welcome">
+                        <div class="ai-message-content">
+                            <p>👋 您好！我是您的职途智能顾问。</p>
+                            <p>根据您的测评结果，我可以帮您：</p>
+                            <ul>
+                                <li>📊 解读您的霍兰德测评结果</li>
+                                <li>🎯 分析您的职业兴趣和发展方向</li>
+                                <li>📝 制定个性化学习规划</li>
+                                <li>💡 解答职业发展相关问题</li>
+                            </ul>
+                            <p>请随时向我提问，我会尽力为您解答！</p>
+                        </div>
+                        <div class="ai-message-time">刚刚</div>
+                    </div>
+                </div>
+                <div class="ai-quick-questions">
+                    <div class="quick-questions-label">快捷问题：</div>
+                    <div class="quick-questions-list">
+                        <button class="quick-question-btn" onclick="sendQuickQuestion('我的测评结果是什么意思？')">测评结果解读</button>
+                        <button class="quick-question-btn" onclick="sendQuickQuestion('大一如何准备就业？')">大一就业准备</button>
+                        <button class="quick-question-btn" onclick="sendQuickQuestion('我适合什么职业？')">职业推荐</button>
+                        <button class="quick-question-btn" onclick="sendQuickQuestion('如何提升我的能力？')">能力提升</button>
+                    </div>
+                </div>
+                <div class="ai-assistant-input">
+                    <input type="text" id="ai-input" placeholder="请输入您的问题..." onkeypress="handleAIInput(event)">
+                    <button class="ai-send-btn" onclick="sendAIMessage()">发送</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="js/main.js"></script>
 </body>
