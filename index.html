@@ -228,7 +228,30 @@
                             <div class="ai-status">在线 · 随时为您服务</div>
                         </div>
                     </div>
-                    <button class="ai-close" onclick="closeAIAssistant()">✕</button>
+                    <div class="ai-header-actions">
+                        <button class="ai-settings" onclick="toggleAPISettings()" title="API设置">⚙️</button>
+                        <button class="ai-close" onclick="closeAIAssistant()">✕</button>
+                    </div>
+                </div>
+                <div id="ai-api-settings" class="ai-api-settings" style="display:none;">
+                    <div class="api-settings-header">
+                        <span>🔑 DeepSeek API配置</span>
+                        <button class="api-settings-close" onclick="toggleAPISettings()">✕</button>
+                    </div>
+                    <div class="api-settings-content">
+                        <div class="api-input-group">
+                            <label>API Key</label>
+                            <input type="password" id="deepseek-api-key" placeholder="请输入DeepSeek API Key">
+                        </div>
+                        <div class="api-hint">
+                            <p>💡 <a href="https://platform.deepseek.com/" target="_blank">获取DeepSeek API Key</a></p>
+                            <p>⚠️ 开启API后，智能体会调用DeepSeek进行更智能的问答</p>
+                        </div>
+                        <div class="api-settings-actions">
+                            <button class="api-save-btn" onclick="saveAPISettings()">保存</button>
+                            <button class="api-clear-btn" onclick="clearAPISettings()">清除</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="ai-assistant-messages" id="ai-messages">
                     <div class="ai-message ai-message-welcome">

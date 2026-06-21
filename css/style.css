@@ -2511,6 +2511,143 @@ body {
     transition: opacity 0.2s;
 }
 
+.ai-header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.ai-settings {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.ai-settings:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.ai-api-settings {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem;
+}
+
+.api-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.api-settings-close {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.3rem;
+}
+
+.api-input-group {
+    margin-bottom: 0.75rem;
+}
+
+.api-input-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.api-input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.api-input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.api-hint {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.api-hint a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.api-hint a:hover {
+    text-decoration: underline;
+}
+
+.api-settings-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.api-save-btn {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+}
+
+.api-save-btn:hover {
+    opacity: 0.9;
+}
+
+.api-clear-btn {
+    background: #e9ecef;
+    color: #666;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.api-clear-btn:hover {
+    background: #dee2e6;
+}
+
+.api-status {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #d4edda;
+    color: #155724;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.api-status-error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
 .ai-close:hover {
     opacity: 0.7;
 }
