@@ -3111,7 +3111,7 @@ function getMajorSpecificPlan(major, planKey, routeTitle, grade) {
   return gradePlanData[planKey] || gradePlanData['job'];
 }
 
-function generateRoutes(scores,userInfo){
+async function generateRoutes(scores,userInfo){
  // 保存用户信息用于规划展示
  currentUserInfoForPlan = userInfo;
  
@@ -3123,8 +3123,8 @@ function generateRoutes(scores,userInfo){
  var container=document.getElementById('routes-container');
  container.innerHTML='';
  
- // 获取该专业的发展路线数据
- var routeData=majorDirectionRoutesMap[major]||defaultDirectionRoutes;
+ // 从后端API获取该专业的发展路线数据
+ var routeData = await fetchRoutesFromBackend(major);
  
  // 年级标签映射
  var gradeLabels={freshman:'大一',sophomore:'大二',junior:'大三',senior:'大四'};
@@ -3132,10 +3132,10 @@ function generateRoutes(scores,userInfo){
  if(isUndecided){
  // 用户未确定方向：展示多条路线（就业+考研+考公+其它）
  var routeCategories=[
- {key:'job',name:'就业发展方向',icon:'💼',routes:routeData.job||[],planKey:'job'},
- {key:'graduate',name:'考研深造方向',icon:'📚',routes:routeData.graduate||[],planKey:'graduate'},
- {key:'public',name:'考公体制方向',icon:'🏛',routes:routeData.public||[],planKey:'public'},
- {key:'other',name:'其它发展路线',icon:'🌟',routes:routeData.other||[],planKey:'studyAbroad'}
+ {key:'job',name:'就业发展方向',icon:'💼',routes:routeData.job||[]},
+ {key:'graduate',name:'考研深造方向',icon:'📚',routes:routeData.graduate||[]},
+ {key:'public',name:'考公体制方向',icon:'🏛',routes:routeData.public||[]},
+ {key:'other',name:'其它发展路线',icon:'🌟',routes:routeData.other||[]}
  ];
  
  routeCategories.forEach(function(category){
@@ -3178,13 +3178,11 @@ function generateRoutes(scores,userInfo){
  } else {
  // 用户已确定方向：只展示该方向的发展路线
  var directionLabels={job:'就业发展',graduate:'考研深造',public:'考公体制',undecided:'暂未确定'};
- var planKeyMap={job:'job',graduate:'graduate',public:'public',other:'studyAbroad'};
  directions.forEach(function(dir){
  if(dir==='undecided') return;
  var dirRoutes=routeData[dir]||[];
  if(dirRoutes.length===0) return;
  
- var planKey=planKeyMap[dir]||'job';
  var dirLabel=directionLabels[dir]||dir;
  var categoryHtml='<div class="route-category"><div class="route-category-header"><span class="route-category-icon">'+(dir==='job'?'💼':dir==='graduate'?'📚':'🏛')+'</span><span class="route-category-name">'+dirLabel+'方向推荐路线</span></div><div class="route-list">';
  dirRoutes.forEach(function(route,index){
@@ -3221,6 +3219,25 @@ function generateRoutes(scores,userInfo){
  container.innerHTML+=categoryHtml;
  });
  }
+}
+
+async function fetchRoutesFromBackend(major) {
+ try {
+ var response = await fetch('https://career-assistant-api.vercel.app/api/routes/majors/name/' + encodeURIComponent(major));
+ if (response.ok) {
+ var routes = await response.json();
+ var routeData = { job: [], graduate: [], public: [], other: [] };
+ routes.forEach(function(route) {
+ if (routeData[route.direction]) {
+ routeData[route.direction].push(route);
+ }
+ });
+ return routeData;
+ }
+ } catch (error) {
+ console.error('Failed to fetch routes from backend:', error);
+ }
+ return majorDirectionRoutesMap[major] || defaultDirectionRoutes;
 }
 
 // 显示路线详细规划弹窗
@@ -4775,53 +4792,30 @@ async function getAIResponse(userMessage) {
 
 async function callDeepSeekAPI(userMessage, userInfo, scores) {
     try {
-        var userMajor = userInfo.major || '计算机科学与技术';
-        var userGrade = userInfo.grade || 'freshman';
-        var gradeLabels = { freshman: '大一', sophomore: '大二', junior: '大三', senior: '大四' };
-        
-        var systemPrompt = `你是一个专业的职业规划顾问，名字叫职途智能顾问。
-
-用户信息：
-- 专业：${userMajor}
-- 年级：${gradeLabels[userGrade]}
-- 霍兰德测评结果：R=${scores.R}, I=${scores.I}, A=${scores.A}, S=${scores.S}, E=${scores.E}, C=${scores.C}
-
-你的任务是根据用户的专业、年级和测评结果，提供专业的职业规划建议。
-
-请用中文回答，语气友好、专业，避免使用Markdown格式。
-回答要简洁明了，提供具体的建议和方案。`;
-
-        var messages = [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userMessage }
-        ];
-
-        var response = await fetch(DeepSeekConfig.apiUrl, {
+        var response = await fetch('https://career-assistant-api.vercel.app/api/chat', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + DeepSeekConfig.apiKey
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: DeepSeekConfig.model,
-                messages: messages,
-                max_tokens: 1024,
-                temperature: 0.7
+                message: userMessage,
+                user_info: userInfo,
+                scores: scores
             })
         });
 
         if (!response.ok) {
-            console.error('DeepSeek API error:', response.status, response.statusText);
+            console.error('Backend API error:', response.status, response.statusText);
             return null;
         }
 
         var data = await response.json();
-        if (data.choices && data.choices.length > 0) {
-            return data.choices[0].message.content;
+        if (data.response) {
+            return data.response;
         }
         return null;
     } catch (error) {
-        console.error('DeepSeek API call failed:', error);
+        console.error('Backend API call failed:', error);
         return null;
     }
 }
