@@ -1,4 +1,4 @@
-const captchaStore = {};
+const db = require('./db');
 
 function generateCaptcha(length = 4) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
@@ -10,34 +10,45 @@ function generateCaptcha(length = 4) {
 }
 
 function storeCaptcha(key, captcha) {
-  captchaStore[key] = {
-    code: captcha.toLowerCase(),
-    timestamp: Date.now(),
-    attempts: 0
-  };
-  setTimeout(() => {
-    delete captchaStore[key];
-  }, 5 * 60 * 1000);
+  db.run('INSERT OR REPLACE INTO captchas (username, code, timestamp, attempts) VALUES (?, ?, ?, ?)',
+    [key, captcha.toLowerCase(), Date.now(), 0],
+    function(err) {
+      if (err) console.error('Failed to store captcha:', err);
+    });
 }
 
 function validateCaptcha(key, inputCode) {
-  const stored = captchaStore[key];
-  if (!stored) {
-    return { valid: false, error: '验证码已过期' };
-  }
-  
-  stored.attempts++;
-  if (stored.attempts > 3) {
-    delete captchaStore[key];
-    return { valid: false, error: '验证次数过多，请重新获取' };
-  }
-  
-  if (inputCode.toLowerCase() !== stored.code) {
-    return { valid: false, error: '验证码错误' };
-  }
-  
-  delete captchaStore[key];
-  return { valid: true };
+  return new Promise((resolve) => {
+    db.get('SELECT * FROM captchas WHERE username = ?', [key], (err, row) => {
+      if (err) {
+        return resolve({ valid: false, error: '数据库错误' });
+      }
+      if (!row) {
+        return resolve({ valid: false, error: '验证码已过期，请重新获取' });
+      }
+      
+      const now = Date.now();
+      if (now - row.timestamp > 5 * 60 * 1000) {
+        db.run('DELETE FROM captchas WHERE username = ?', [key]);
+        return resolve({ valid: false, error: '验证码已过期，请重新获取' });
+      }
+      
+      const newAttempts = row.attempts + 1;
+      if (newAttempts > 3) {
+        db.run('DELETE FROM captchas WHERE username = ?', [key]);
+        return resolve({ valid: false, error: '验证次数过多，请重新获取' });
+      }
+      
+      db.run('UPDATE captchas SET attempts = ? WHERE username = ?', [newAttempts, key]);
+      
+      if (inputCode.toLowerCase() !== row.code) {
+        return resolve({ valid: false, error: '验证码错误' });
+      }
+      
+      db.run('DELETE FROM captchas WHERE username = ?', [key]);
+      return resolve({ valid: true });
+    });
+  });
 }
 
 module.exports = {

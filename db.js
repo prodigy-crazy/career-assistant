@@ -174,6 +174,14 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
   )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS captchas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    code TEXT,
+    timestamp INTEGER,
+    attempts INTEGER DEFAULT 0
+  )`);
 });
 
 module.exports = db;

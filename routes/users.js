@@ -27,7 +27,7 @@ router.get('/captcha', (req, res) => {
   });
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const { username, password, captcha } = req.body;
 
   if (!username || !password || !captcha) {
@@ -38,7 +38,7 @@ router.post('/register', (req, res) => {
     return res.status(400).json({ error: '用户名长度必须在3-20位之间' });
   }
 
-  const captchaResult = validateCaptcha(username, captcha);
+  const captchaResult = await validateCaptcha(username, captcha);
   if (!captchaResult.valid) {
     return res.status(400).json({ error: captchaResult.error });
   }
@@ -65,14 +65,14 @@ router.post('/register', (req, res) => {
   );
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password, captcha } = req.body;
 
   if (!username || !password || !captcha) {
     return res.status(400).json({ error: '用户名、密码和验证码不能为空' });
   }
 
-  const captchaResult = validateCaptcha(username, captcha);
+  const captchaResult = await validateCaptcha(username, captcha);
   if (!captchaResult.valid) {
     return res.status(400).json({ error: captchaResult.error });
   }
