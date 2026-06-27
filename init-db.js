@@ -524,7 +524,7 @@ const learningPlanData = {
 
 function initDatabase() {
   let completed = 0;
-  const total = allMajorsData.length + Object.keys(majorCategoryMap).length + questionBank.length + directionWeightConfig.length + 30 + 200 + 1 + 120 + 3;
+  const total = allMajorsData.length + (Object.keys(majorCategoryMap).length - allMajorsData.length) + Object.keys(majorCategoryMap).length + questionBank.length + directionWeightConfig.length + 30 + 200 + 1 + 120 + 3;
 
   allMajorsData.forEach(majorData => {
     db.run(
@@ -552,6 +552,36 @@ function initDatabase() {
         checkComplete();
       }
     );
+  });
+
+  const categoryNameMap = {
+    'tech': '理工科',
+    'business': '财经类',
+    'law': '法学类',
+    'social': '社会类',
+    'arts': '文学类',
+    'media': '传媒类',
+    'lang': '语言类',
+    'science': '理科类',
+    'medical': '医学类',
+    'design': '设计类',
+    'education': '教育类'
+  };
+
+  Object.keys(majorCategoryMap).forEach(majorName => {
+    const existingMajor = allMajorsData.find(m => m.name === majorName);
+    if (!existingMajor) {
+      const category = categoryNameMap[majorCategoryMap[majorName]] || majorCategoryMap[majorName];
+      db.run(
+        'INSERT OR IGNORE INTO majors (name, category, description) VALUES (?, ?, ?)',
+        [majorName, category, majorName + '专业发展路线'],
+        (err) => {
+          if (err) console.error('Error inserting major:', err);
+          completed++;
+          checkComplete();
+        }
+      );
+    }
   });
 
   function insertRoutes(majorId, routes) {
