@@ -28,3 +28,21 @@
 [36624:33768:0627/120722.351:WARNING:t_skinfilemap.cpp(67)] SGRenderLog:CheckUpdate finish: new version:2
 [36624:39672:0627/120723.791:WARNING:kernel_switch.cc(127)] [Engine] GetProductDataInfo failed for: input_cloud_request_rank_1
 [36624:39672:0627/120723.791:WARNING:kernel_switch.cc(127)] [Engine] GetProductDataInfo failed for: input_cloud_request_type_1
+[31968:32228:0627/171235.779:WARNING:data_router_sender.cpp(28)] [DataRouterSender] RegisterReceiver not supported on sender side, route=/sg_tool/./pingback_receiver
+[31968:32228:0627/171235.795:WARNING:t_skinfilemap.cpp(63)] SGRenderLog:CheckUpdate newMem.OpenMem Suc, szNewMem:Local\sgime_skin.v2.filemap.sogouime
+[31968:32228:0627/171235.795:WARNING:t_skinfilemap.cpp(65)] SGRenderLog:CheckUpdate finish: old version:1
+[31968:32228:0627/171235.795:WARNING:t_skinfilemap.cpp(67)] SGRenderLog:CheckUpdate finish: new version:2
+[31968:32228:0627/171235.811:WARNING:t_skinfilemap.cpp(63)] SGRenderLog:CheckUpdate newMem.OpenMem Suc, szNewMem:Local\sgime_skin.Dpi144.v2.filemap.sogouime
+[31968:32228:0627/171235.811:WARNING:t_skinfilemap.cpp(65)] SGRenderLog:CheckUpdate finish: old version:2
+[31968:32228:0627/171235.811:WARNING:t_skinfilemap.cpp(67)] SGRenderLog:CheckUpdate finish: new version:2
+[31968:13684:0627/171330.532:WARNING:kernel_switch.cc(127)] [Engine] GetProductDataInfo failed for: input_cloud_request_rank_1
+[31968:13684:0627/171330.532:WARNING:kernel_switch.cc(127)] [Engine] GetProductDataInfo failed for: input_cloud_request_type_1
+[4196:5980:0627/171543.132:WARNING:data_router_sender.cpp(28)] [DataRouterSender] RegisterReceiver not supported on sender side, route=/sg_tool/./pingback_receiver
+[4196:5980:0627/171543.149:WARNING:t_skinfilemap.cpp(63)] SGRenderLog:CheckUpdate newMem.OpenMem Suc, szNewMem:Local\sgime_skin.v2.filemap.sogouime
+[4196:5980:0627/171543.149:WARNING:t_skinfilemap.cpp(65)] SGRenderLog:CheckUpdate finish: old version:1
+[4196:5980:0627/171543.149:WARNING:t_skinfilemap.cpp(67)] SGRenderLog:CheckUpdate finish: new version:2
+[4196:5980:0627/171543.165:WARNING:t_skinfilemap.cpp(63)] SGRenderLog:CheckUpdate newMem.OpenMem Suc, szNewMem:Local\sgime_skin.Dpi144.v2.filemap.sogouime
+[4196:5980:0627/171543.165:WARNING:t_skinfilemap.cpp(65)] SGRenderLog:CheckUpdate finish: old version:2
+[4196:5980:0627/171543.165:WARNING:t_skinfilemap.cpp(67)] SGRenderLog:CheckUpdate finish: new version:2
+[4196:10552:0627/171546.006:WARNING:kernel_switch.cc(127)] [Engine] GetProductDataInfo failed for: input_cloud_request_rank_1
+[4196:10552:0627/171546.007:WARNING:kernel_switch.cc(127)] [Engine] GetProductDataInfo failed for: input_cloud_request_type_1
