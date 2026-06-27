@@ -1,0 +1,815 @@
+const db = require('./db');
+
+const allMajorsData = [
+  {
+    name: '计算机科学与技术',
+    category: '理工科',
+    routes: {
+      job: [
+        { title: '后端开发工程师', detail: 'Java/Go/Python技术栈，掌握Spring Boot/Django框架，精通MySQL/Redis/消息队列，大厂校招起薪15-30万/年', salary: '15-30万/年', requirement: '本科及以上学历，计算机相关专业；扎实的编程基础和算法功底；掌握至少一门后端语言（Java/Go/Python）；熟悉数据库和缓存技术；通过CET-4', promotion: '1-2年：初级工程师→中级工程师；3-5年：中级工程师→高级工程师/技术专家，可晋升为架构师或技术经理' },
+        { title: '前端开发工程师', detail: 'Vue/React/Angular任一框架深入，掌握TypeScript和前端工程化，一线城市的本科起薪10-25万/年', salary: '10-25万/年', requirement: '本科及以上学历，计算机或设计相关专业；精通HTML/CSS/JavaScript；熟练使用Vue/React/Angular任一框架；了解前端工程化和性能优化；有良好的审美和用户体验意识', promotion: '1-2年：初级前端→中级前端；3-5年：中级前端→高级前端/前端专家，可晋升为前端架构师或前端负责人' },
+        { title: '算法工程师', detail: '机器学习/深度学习/自然语言处理，需硕士学历为大厂门槛，硕士起薪25-60万/年', salary: '25-60万/年', requirement: '硕士及以上学历，计算机/数学/统计相关专业；扎实的机器学习/深度学习理论基础；精通Python/C++；熟悉TensorFlow/PyTorch框架；有顶会论文/竞赛获奖/项目经验者优先', promotion: '2-3年：算法工程师→高级算法工程师/算法专家；4-5年：可发展为算法总监/研究科学家/技术Fellow，跳槽可获高涨幅' },
+        { title: '测试开发工程师', detail: '自动化测试框架搭建、CI/CD流水线维护，质量保障方向起薪12-20万/年', salary: '12-20万/年', requirement: '本科及以上学历，计算机相关专业；掌握软件测试基础理论；熟悉Python/Java/Shell编程；了解CI/CD工具（Jenkins/GitLab CI）；有测试框架开发经验优先', promotion: '1-2年：测试工程师→高级测试工程师；3-4年：测试专家/测试架构师→测试经理/质量负责人，职业路径稳定' },
+        { title: 'DevOps工程师', detail: 'Kubernetes/Docker集群运维，Linux系统及Shell脚本，年薪18-35万', salary: '18-35万/年', requirement: '本科及以上学历，计算机相关专业；精通Linux系统管理和Shell脚本；掌握Docker/Kubernetes；熟悉CI/CD工具和云服务（AWS/阿里云）；了解监控和日志系统', promotion: '1-2年：DevOps工程师→高级DevOps/平台工程师；3-5年：可发展为SRE负责人/运维架构师/云架构师，薪资涨幅大' }
+      ],
+      graduate: [
+        { title: '学术硕士（学硕）', detail: '计算机科学与技术方向，研究型硕士学制3年，适合读博或进科研院所，需发表论文', salary: '补贴800-2000/月', requirement: '本科成绩优秀，有科研经历或竞赛获奖优先；通过考研初试和复试；英语水平良好（CET-6）', promotion: '硕士毕业后可进入大厂研发岗、高校任教或继续读博' },
+        { title: '专业硕士（专硕）', detail: '电子信息大类，就业导向，学制2-3年，导师项目实战丰富，秋招春招不耽误', salary: '补贴1200-3000/月', requirement: '本科计算机相关专业；通过考研；有项目实践经验优先', promotion: '毕业后可直接担任高级工程师或技术主管' },
+        { title: '跨专业考研', detail: '金融科技（计算机+金融）、生物信息（计算机+生物），复合型人才薪资溢价30-50%', salary: '学历提升后薪资增幅显著', requirement: '本科成绩良好；对跨专业方向有强烈兴趣；有相关领域基础或项目经验', promotion: '复合型人才薪资溢价30-50%' },
+        { title: 'AI/大数据方向', detail: '人工智能专硕火爆，985/211名额紧张，需提前准备项目经历和竞赛获奖', salary: '大厂核心岗位硕士占60%+', requirement: '本科计算机相关专业；有AI/大数据相关项目经验或竞赛获奖；考研成绩优秀', promotion: '大厂核心岗位硕士占60%+' }
+      ],
+      public: [
+        { title: '国家公务员（国考）', detail: '税务局、统计局、海关、银保监等计算机相关岗位，35岁前均可报考，竞争比1:50-200', salary: '年薪10-18万（视地区）', requirement: '本科及以上学历，符合公务员报考条件；通过公务员考试（行测+申论）；计算机相关专业', promotion: '科员→副主任科员→主任科员（按年限晋升），稳定福利好' },
+        { title: '选调生', detail: '985/211名校生优先，基层锻炼后晋升快，近年计算机专业需求增加', salary: '年薪8-15万+晋升空间', requirement: '本科及以上学历，985/211院校优先；通过选调生考试；党员/学生干部优先', promotion: '基层锻炼后晋升快，可进入省市机关' },
+        { title: '事业单位', detail: '高校、医院、研究院的信息化岗位，工作稳定，部分有编制，笔试+面试', salary: '年薪8-15万', requirement: '本科及以上学历；通过事业单位招聘考试；计算机相关专业', promotion: '初级→中级→高级工程师，工作稳定' },
+        { title: '公安机关（网警）', detail: '网络安全岗位，需计算机相关背景，专业技术性强，福利待遇较好', salary: '年薪12-20万', requirement: '本科及以上学历，计算机相关专业；通过公务员考试；体能达标', promotion: '科员→副科级→正科级，晋升需考核' }
+      ],
+      other: [
+        { title: '留学深造', detail: '美国CS硕士（Stanford/MIT/CMU）、英国AI方向，顶尖院校毕业后可留当地工作或回国进大厂', salary: '留学投入30-80万，回馈周期2-4年', requirement: '本科成绩优秀（GPA3.5+）；托福/雅思成绩优秀；GRE/GMAT成绩；有科研或项目经历', promotion: '顶尖院校毕业后可留当地工作或回国进大厂核心岗位' },
+        { title: '创业/自由职业', detail: '小程序开发、SaaS工具、AI应用创业，早期团队融资难但成功后回报高，适合有技术+商业嗅觉的学生', salary: '风险高但上限极高', requirement: '有核心技术或创新想法；具备团队管理能力；有启动资金或融资渠道', promotion: '创业者→公司CEO/技术合伙人，成功后回报高' },
+        { title: '产品经理', detail: '技术背景转产品有优势，需补充商业思维和沟通能力，大厂产品起薪15-30万', salary: '15-30万/年', requirement: '本科及以上学历，计算机相关专业优先；良好的沟通能力和逻辑思维；有产品实习或项目经验', promotion: '产品经理→高级产品经理（3年）→产品总监/创业者' }
+      ]
+    }
+  },
+  {
+    name: '软件工程',
+    category: '理工科',
+    routes: {
+      job: [
+        { title: 'Java开发工程师', detail: '掌握Spring Cloud微服务、分布式系统设计，大厂中级岗年薪30-50万', salary: '15-40万/年', requirement: '本科及以上学历，软件工程/计算机相关专业；精通Java语言和面向对象编程；熟悉Spring Boot/Spring Cloud框架；掌握MySQL/Redis数据库；有大型项目经验优先', promotion: '1-2年：初级Java→中级Java；3-5年：中级→高级Java/架构师，可发展为技术专家或项目经理' },
+        { title: '移动端开发工程师', detail: 'Android(Java/Kotlin)/iOS(Swift)，移动开发需求稳定，大厂起薪15-28万', salary: '15-28万/年', requirement: '本科及以上学历；精通Android(Java/Kotlin)或iOS(Swift)开发；熟悉移动端性能优化；了解主流框架（Jetpack/Firebase）；有上线App项目经验优先', promotion: '1-2年：初级移动开发→中级移动开发；3-5年：中级→高级/移动端技术负责人，可晋升为移动端架构师或项目经理' },
+        { title: '测试工程师', detail: '功能测试、自动化测试、性能测试，质量保障岗起薪10-18万', salary: '10-18万/年', requirement: '本科及以上学历，计算机相关专业；掌握软件测试理论和方法；熟悉测试工具（Selenium/JMeter）；了解自动化测试框架；具备良好的逻辑思维和细心耐心', promotion: '1-2年：初级测试→中级测试；3-5年：中级→高级测试/测试主管，可发展为测试经理或质量总监' },
+        { title: '实施工程师', detail: 'ERP、OA等企业软件实施，需出差但技术要求适中，职业路径稳定', salary: '8-15万/年', requirement: '本科及以上学历，计算机/管理相关专业；了解ERP/CRM/OA等企业软件；具备良好的沟通表达能力和问题解决能力；能适应出差；有SQL基础优先', promotion: '1-2年：实施工程师→高级实施；3-5年：可发展为项目经理/实施顾问/区域负责人，职业路径清晰稳定' },
+        { title: '技术支持工程师', detail: '售前售后技术支持，客户培训和技术文档编写，跳槽选择多', salary: '10-18万/年', requirement: '本科及以上学历，计算机相关专业；具备良好的技术基础和沟通能力；熟悉常见软件/硬件产品；能独立解决技术问题；良好的文档编写能力', promotion: '1-2年：技术支持→高级技术支持；3-5年：可发展为技术支持经理/售前顾问/产品经理，跨方向发展机会多' }
+      ],
+      graduate: [
+        { title: '软件工程学术硕士', detail: '软件工程理论、软件架构研究，学制3年，读博或进高校为佳', salary: '补贴800-2000/月', requirement: '本科成绩良好；通过考研；有项目实践经验', promotion: '进入大厂研发或高校任教' },
+        { title: '软件工程专业硕士', detail: '专硕就业导向，2年制，导师项目实战为主，秋招不耽误', salary: '补贴1200-3000/月', requirement: '本科软件工程相关专业；通过考研；有项目实践经验优先', promotion: '毕业后可直接担任高级工程师或技术主管' },
+        { title: '人工智能方向', detail: '机器学习应用、软件开发智能化，研究AI辅助编程等前沿方向', salary: '大厂算法岗硕士薪资高', requirement: '本科计算机相关专业；有AI相关项目经验；考研成绩优秀', promotion: '大厂算法岗硕士薪资高' }
+      ],
+      public: [
+        { title: '国家公务员', detail: '税务局、海关、统计局等，每年招录计算机类岗位', salary: '年薪10-18万', requirement: '本科及以上；通过公务员考试', promotion: '科员→副主任科员→主任科员（按年限晋升）' },
+        { title: '选调生', detail: '基层公务员储备干部，985/211优先，晋升机制透明', salary: '年薪8-15万', requirement: '本科及以上学历，985/211院校优先；党员/学生干部优先', promotion: '基层锻炼后晋升快' },
+        { title: '银保监/证监会', detail: '金融监管科技岗位，专业性强，竞争相对较小', salary: '年薪15-25万', requirement: '本科及以上学历，金融/计算机相关专业；通过公务员考试', promotion: '专业技术性强，晋升渠道清晰' }
+      ],
+      other: [
+        { title: '留学（英国/澳洲）', detail: '英国1年制硕士（CS/AI方向），澳洲留学后可申请工作签证，QS前100院校回国认可度高', salary: '留学费用25-60万', requirement: '本科成绩良好；雅思6.5+；有相关项目经验', promotion: 'QS前100院校回国认可度高' },
+        { title: 'IT培训讲师', detail: '技术培训机构讲师，传授Java/Python/前端等技能，薪资8-20万，需技术扎实+表达能力强', salary: '8-20万/年', requirement: '本科及以上学历，计算机相关专业；技术扎实；表达能力强；有教学经验优先', promotion: '讲师→高级讲师→教学负责人，优秀讲师薪资上不封顶' },
+        { title: '产品经理', detail: '软件专业转产品有优势，对接技术和业务，需补充商业和用户思维', salary: '15-30万/年', requirement: '本科及以上学历，计算机相关专业；良好的沟通能力和商业思维；有产品实习经验', promotion: '产品经理→高级产品经理（3年）→产品总监' }
+      ]
+    }
+  },
+  {
+    name: '金融学',
+    category: '财经类',
+    routes: {
+      job: [
+        { title: '银行管培生', detail: '国有大行（工农中建）校招，经过2年轮岗后定岗，稳定性强', salary: '年薪12-20万', requirement: '本科及以上学历，金融/经济/管理相关专业；具备良好的沟通能力和抗压能力；通过CET-4/6；有过银行实习或销售类实习经验优先', promotion: '2年轮岗后定岗：柜员/客户经理→支行客户经理/部门主管→支行行长/分行部门负责人，晋升需业绩+资源' },
+        { title: '证券分析师', detail: '研究所行业研究、宏观策略分析，需CPA/CFA加分，薪资与研究能力挂钩', salary: 'base+奖金20-50万', requirement: '硕士及以上学历，金融/经济/统计相关专业；具备扎实的财务分析和宏观经济研究能力；通过CPA/CFA考试优先；有券商研究所实习经验', promotion: '2-3年：分析师→高级分析师/首席分析师；4-5年：可晋升为研究总监/基金经理/首席经济学家，薪资与派点挂钩涨幅大' },
+        { title: '金融科技岗位', detail: 'FinTech、银行IT、支付系统开发，金融+技术复合人才需求旺盛', salary: '15-30万/年', requirement: '本科及以上学历，金融/计算机相关专业；掌握Java/Python等编程语言；了解金融业务逻辑（支付/贷款/理财）；有金融IT实习经验优先', promotion: '1-2年：初级FinTech工程师→中级；3-5年：可发展为金融IT项目经理/架构师，或转向产品经理，复合背景薪资溢价大' },
+        { title: '基金/信托', detail: '基金会计、风控合规、销售岗，985/211硕士进头部机构机会大', salary: '15-35万/年', requirement: '本科及以上学历，金融/会计/法律相关专业；通过基金从业资格考试；了解基金/信托业务流程；具备良好的数据分析能力；985/211硕士更有优势', promotion: '1-2年：基金会计/风控专员→高级专员；3-5年：可发展为基金经理/风控总监/销售总监，薪资与业绩挂钩' },
+        { title: '企业财务', detail: '上市公司财务管培，职业路径：专员→主管→经理→CFO', salary: '10-20万/年', requirement: '本科及以上学历，财务/会计/金融相关专业；通过初级/中级会计职称优先；熟悉财务软件和Excel；具备良好的数字敏感度和细心', promotion: '3年：专员→财务主管；5年：主管→财务经理；8-10年：经理→财务总监/CFO，职业路径清晰' }
+      ],
+      graduate: [
+        { title: '金融学硕士（学硕）', detail: '学术导向，学制3年，读博或进高校/研究机构', salary: '补贴800-2000/月', requirement: '本科成绩优秀；通过考研；数学基础扎实', promotion: '进入顶尖金融机构' },
+        { title: '金融专硕（MF）', detail: '就业导向，名校金专2年制，秋招头部机构，起薪20-40万', salary: '补贴2000-4000/月', requirement: '本科成绩良好；通过考研；名校竞争激烈', promotion: '秋招头部机构，起薪20-40万' },
+        { title: 'CFA/FRM方向', detail: '考研+考证双线， CFA Level II/III 通过后薪资大幅提升', salary: '持证后薪资涨幅50%+', requirement: '本科金融相关专业；考研准备；CFA/FRM考试准备', promotion: '持证后薪资涨幅50%+' }
+      ],
+      public: [
+        { title: '国家公务员', detail: '财政部、税务局、审计署、央行总部，竞争激烈但待遇优厚', salary: '年薪12-20万', requirement: '本科及以上；通过公务员考试', promotion: '稳定晋升，福利好' },
+        { title: '银保监/证监会', detail: '金融监管岗位，专业性强，需金融+法律复合背景', salary: '年薪15-25万', requirement: '本科及以上学历，金融/法律相关专业；通过公务员考试', promotion: '专业技术性强，晋升渠道清晰' },
+        { title: '选调生（财政系统）', detail: '地方财政、发改系统，发展前景好', salary: '年薪10-18万', requirement: '本科及以上学历；党员/学生干部优先', promotion: '基层锻炼后进入财政系统核心岗位' }
+      ],
+      other: [
+        { title: '留学（英美金融）', detail: '美国MFE（金融工程）、英国LSE/IC金融硕士，回国进外资投行/PE，留学投入50-100万', salary: '顶级机构年薪可达80万+', requirement: '本科成绩优秀；GRE/GMAT成绩；托福/雅思成绩', promotion: '顶级机构年薪可达80万+' },
+        { title: 'CPA考证+事务所', detail: '注册会计师，审计岗起薪低但晋升快，5年可升经理，薪资30-60万', salary: '30-60万/（5年经验）', requirement: '本科会计/金融相关专业；通过CPA考试；进入四大会计师事务所', promotion: '5年可升经理，薪资30-60万' },
+        { title: '创业（金融科技）', detail: '支付、理财、征信等FinTech创业，需要金融+技术+资源的复合能力', salary: '风险高回报高', requirement: '有金融业务理解；技术能力；融资能力', promotion: '风险高回报高' }
+      ]
+    }
+  },
+  {
+    name: '会计学',
+    category: '财经类',
+    routes: {
+      job: [
+        { title: '四大会计师事务所', detail: '审计/税务方向，ACCA优先，3年可升经理，5年可签字', salary: '起薪12-18万，5年经理30-50万', requirement: '本科及以上学历，会计/财务/金融相关专业；通过ACCA/CPA部分科目优先；具备良好的英语水平和逻辑分析能力；抗压能力强，能适应加班和出差', promotion: '2年：审计员→高级审计员；3年：高级审计员→审计经理；5年：审计经理→高级经理/合伙人，晋升透明清晰' },
+        { title: '企业财务', detail: '总账、成本、税务岗位，需CPA加持，三年可升主管', salary: '8-18万/年', requirement: '本科及以上学历，会计/财务相关专业；持有会计从业资格证/初级职称；熟悉财务软件（用友/金蝶）；了解会计准则和税务法规；细心谨慎', promotion: '2-3年：会计员→总账会计/主管；5年：主管→财务经理，积累CPA后薪资大幅提升' },
+        { title: '上市公司财务管培', detail: '财务管培生，轮岗后定岗，职业路径清晰', salary: '10-20万/年', requirement: '本科及以上学历，财务/会计/金融相关专业；具备良好的学习能力和沟通能力；通过CET-4/6；有财务相关实习经验优先', promotion: '轮岗后定岗：总账/成本/税务→财务主管→财务经理，5-8年可升财务总监/CFO' },
+        { title: '银行', detail: '柜员→客户经理→支行行长，国有行稳定但晋升需资源', salary: '8-15万/年', requirement: '本科及以上学历，金融/经济/会计相关专业；通过银行从业资格考试优先；具备良好的沟通能力和服务意识；形象气质佳', promotion: '柜员→客户经理（2-3年）→支行客户经理/网点负责人→支行行长，晋升需业绩和资源' },
+        { title: '内审/风控', detail: '企业内部审计、风险管理，需CIA/CPA证书', salary: '12-22万/年', requirement: '本科及以上学历，审计/财务/会计相关专业；通过CIA/CPA考试优先；熟悉企业内部审计流程和风险管理体系；具备良好的逻辑思维和独立思考能力', promotion: '2-3年：内审/风控专员→高级内审/风控；5年：内审/风控经理→审计总监/风控总监，职业稳定性高' }
+      ],
+      graduate: [
+        { title: '会计学硕士（学硕）', detail: '财务会计、管理会计研究，学制3年，读博或高校', salary: '补贴800-2000/月', requirement: '本科成绩优秀；通过考研', promotion: '读博或进高校任教' },
+        { title: '会计专硕（MPAcc）', detail: '就业导向，2年制，名校MPAcc竞争激烈', salary: '补贴1500-3000/月', requirement: '本科成绩良好；通过考研；名校竞争激烈', promotion: '进入四大/头部企业财务岗' },
+        { title: '审计学硕士', detail: '审计方向，审计署、央企内审需求大', salary: '补贴1200-2500/月', requirement: '本科成绩良好；通过考研', promotion: '审计署、央企内审需求大' }
+      ],
+      public: [
+        { title: '国家公务员（税务）', detail: '税务局稽查局，国考招录大户，工作稳定', salary: '年薪10-18万', requirement: '本科及以上；通过公务员考试', promotion: '科员→副主任科员→主任科员（按年限晋升）' },
+        { title: '审计署/特派办', detail: '中央审计机关，专业性强，晋升渠道清晰', salary: '年薪12-20万', requirement: '本科及以上学历，审计/会计相关专业；通过公务员考试', promotion: '专业技术性强，晋升渠道清晰' },
+        { title: '地方审计局', detail: '地方审计系统，基层锻炼后晋升', salary: '年薪8-15万', requirement: '本科及以上；通过公务员考试', promotion: '基层锻炼后晋升' }
+      ],
+      other: [
+        { title: 'CPA注册会计师', detail: '国内最高含金量财会证书，持证后年薪30-80万', salary: '30-80万/（持证后）', requirement: '本科会计相关专业；通过CPA考试（6门+综合）', promotion: '持证后年薪30-80万' },
+        { title: 'ACCA国际注册会计师', detail: '外企/外资金融机构认可，留学/移民加分', salary: '国际认可度高', requirement: '本科会计相关专业；通过ACCA考试（13门）', promotion: '外企/外资金融机构认可度高' },
+        { title: '留学（英国/澳洲）', detail: '英国会计与金融硕士，澳洲会计专业可移民，留学费用25-50万', salary: '回本周期3-5年', requirement: '本科成绩良好；雅思6.5+', promotion: '澳洲会计专业可移民' }
+      ]
+    }
+  },
+  {
+    name: '法学',
+    category: '法学类',
+    routes: {
+      job: [
+        { title: '律所（律师助理）', detail: '红圈所起薪2-3万/月，需过司考，3-5年成为初级律师', salary: '起薪20-40万/年（红圈所）', requirement: '本科及以上学历，法学专业；通过法律职业资格考试（A证）；法律基础知识扎实；良好的逻辑思维和表达能力；英语水平优秀优先', promotion: '律师助理→初级律师（3年）→高级律师/合伙人，晋升路径清晰，红圈所晋升透明' },
+        { title: '法务专员', detail: '企业合同审查、知识产权、合规管理，大型集团需求大', salary: '12-25万/年', requirement: '本科及以上学历，法学专业；通过法律职业资格考试；熟悉合同法/公司法/劳动法；具备良好的逻辑思维和沟通能力；有企业法务实习经验优先', promotion: '法务专员→法务主管（3年）→法务经理→法务总监/首席法务官，职业稳定性强' },
+        { title: '法律顾问', detail: '私人/企业法律服务，执业3年后可独立', salary: '15-30万/年', requirement: '本科及以上学历，法学专业；通过法律职业资格考试；具备扎实的法律知识和实践经验；良好的沟通能力和客户资源；执业3年后可申请独立', promotion: '执业3年后可独立开设个人律所；积累客户资源后可成立合伙制律所，薪资上不封顶' },
+        { title: '公证员', detail: '公证机构从业，需过司考+公证员资格证，工作稳定', salary: '10-18万/年', requirement: '本科及以上学历，法学专业；通过法律职业资格考试+公证员资格证；细心严谨，原则性强；良好的沟通能力和服务意识', promotion: '公证员→高级公证员（5年）→公证机构管理层，职业稳定，职称晋升清晰' },
+        { title: '考研/法硕辅导', detail: '司考/法硕培训机构讲师，知识变现', salary: '15-30万/年', requirement: '本科及以上学历，法学专业；通过法律职业资格考试；授课能力强，表达清晰；有培训行业实习或家教经验优先', promotion: '讲师→高级讲师/教研组长→培训项目负责人/校长，优秀讲师可获高额课时费或股份' }
+      ],
+      graduate: [
+        { title: '法学硕士（学硕）', detail: '法理学、民法、刑法等研究方向，学制3年，读博或高校', salary: '补贴800-2000/月', requirement: '本科成绩优秀；通过考研', promotion: '读博或进高校任教' },
+        { title: '法律硕士（JM）', detail: '非法本可跨考，2年制，就业导向，律所/法务认可', salary: '补贴1500-3000/月', requirement: '本科成绩良好；通过考研；非法本可跨考', promotion: '进入律所/法务岗位' },
+        { title: '法学博士', detail: '学术路线，发表C刊，高校任教，需耐得住寂寞', salary: '高校待遇稳定+课题收入', requirement: '硕士成绩优秀；发表C刊论文；通过考博', promotion: '进高校任教或科研院所' }
+      ],
+      public: [
+        { title: '法官/检察官', detail: '通过司法考试+公务员考试，入额后薪资显著提升', salary: '年薪15-30万+社会地位高', requirement: '本科及以上学历，法学专业；通过法律职业资格考试+公务员考试', promotion: '入额后薪资显著提升，晋升渠道清晰' },
+        { title: '公安机关', detail: '经侦、刑侦、法制岗位，专业对口', salary: '年薪12-22万', requirement: '本科及以上学历，法学专业；通过公务员考试；体能达标', promotion: '科员→副科级→正科级，晋升需考核' },
+        { title: '司法局/公证处', detail: '基层法律服务，稳定但晋升慢', salary: '年薪8-15万', requirement: '本科及以上学历，法学专业；通过公务员考试', promotion: '稳定但晋升慢' },
+        { title: '纪检监察', detail: '纪委监委，近年扩招，反腐工作需求大', salary: '年薪12-20万', requirement: '本科及以上学历；通过公务员考试；党员优先', promotion: '近年扩招，晋升机会多' }
+      ],
+      other: [
+        { title: '留学（美国LLM/T14）', detail: '美国LLM一年制，T14法学院回国进红圈所，留学费用40-60万', salary: '海归红圈所起薪高30%', requirement: '本科成绩优秀；托福成绩；LSAT成绩', promotion: '海归红圈所起薪高30%' },
+        { title: '企业合规师', detail: '新兴职业，ESG合规、数据合规，需求快速增长', salary: '20-40万/年', requirement: '本科及以上学历，法学/金融相关专业；了解合规领域；有企业合规经验优先', promotion: '新兴职业，需求快速增长' },
+        { title: '仲裁员', detail: '国际商事仲裁，需多年执业经验+境外背景', salary: '按案件提成，上不封顶', requirement: '本科及以上学历，法学专业；多年执业经验；境外背景优先', promotion: '按案件提成，上不封顶' }
+      ]
+    }
+  },
+  {
+    name: '临床医学',
+    category: '医学类',
+    routes: {
+      job: [
+        { title: '住院医师规范化培训', detail: '3年规培是必经历程，定科后成为住院医师', salary: '规培期3-8万/年', requirement: '本科及以上学历，临床医学专业；通过医师资格考试；完成实习轮转；具备良好的临床思维和沟通能力；身体素质好，能承受夜班压力', promotion: '规培生→住院医师（3年规培后）→主治医师（5年）→副主任医师→主任医师，职称晋升与年限+考试+论文挂钩' },
+        { title: '专科医生', detail: '5+3+3+年主治+副高+正高，熬资历的长期路线', salary: '主治后15-40万/年', requirement: '本科及以上学历，临床医学专业；完成规范化培训；通过主治医师考试；具备专科方向的知识和技能；良好的临床判断力和动手能力', promotion: '主治医师→副主任医师（5年+考试+论文）→主任医师→科室主任/副院长，熬资历路线，越老越吃香' },
+        { title: '医药代表', detail: '药企销售，收入与业绩挂钩，医学背景是优势', salary: '10-30万/年（看业绩）', requirement: '本科及以上学历，医学/药学/营销相关专业；具备良好的沟通能力和公关能力；了解医药行业和市场；有销售实习经验优先；能承受业绩压力', promotion: '医药代表→高级医药代表/地区经理（3年）→省区经理→大区总监，薪资与业绩强挂钩' },
+        { title: '医疗数据/AI', detail: '医疗信息化、医院HIS系统、AI辅助诊断', salary: '15-30万/年', requirement: '本科及以上学历，医学信息/计算机/生物医学工程相关专业；了解医疗信息化和HIS系统；掌握数据分析/机器学习技术；有医疗IT项目经验优先', promotion: '医疗IT工程师→项目经理/技术负责人（3年）→医疗信息化部门负责人，医疗+技术复合人才稀缺' },
+        { title: '医学编辑/出版', detail: '医学期刊、教科书编辑，需医学背景', salary: '10-18万/年', requirement: '本科及以上学历，医学/药学相关专业；扎实的医学基础知识；良好的文字编辑能力；细心严谨；有编辑类实习或写作经验优先', promotion: '医学编辑→高级编辑/编辑部主任（3-5年）→副总编辑/总编辑，医学出版行业稳定' }
+      ],
+      graduate: [
+        { title: '专业硕士（专硕）', detail: '5+3专硕，四证合一（学历+规培+执医+学位），就业导向', salary: '补贴1000-2000/月', requirement: '本科临床医学专业；通过考研；5+3专硕项目', promotion: '四证合一，毕业即有执业资格' },
+        { title: '学术硕士（学硕）', detail: '3年学硕+3年规培，读博或科研岗', salary: '补贴800-2000/月', requirement: '本科临床医学专业；通过考研；有科研潜力', promotion: '读博或进科研院所' },
+        { title: '博士（PhD/MD）', detail: '顶尖三甲医院必要条件，科研+临床双发展', salary: '博士安家费30-100万', requirement: '硕士成绩优秀；发表SCI论文；通过考博', promotion: '顶尖三甲医院必要条件' }
+      ],
+      public: [
+        { title: '医院事业编', detail: '公立医院编制，稳定性强，福利好', salary: '年薪12-25万（看职称）', requirement: '本科及以上学历，临床医学专业；通过医师资格考试；通过医院招聘考试', promotion: '职称晋升与年限+考试+论文挂钩' },
+        { title: '卫生局/疾控中心', detail: '行政管理/公共卫生，体制内', salary: '年薪10-18万', requirement: '本科及以上学历，医学相关专业；通过公务员考试', promotion: '稳定晋升' },
+        { title: '狱医', detail: '监狱卫生员，工作轻松，夜班少', salary: '年薪8-15万', requirement: '本科及以上学历，医学相关专业；通过公务员考试', promotion: '工作轻松，夜班少' }
+      ],
+      other: [
+        { title: '美国执业医师（USMLE）', detail: 'USMLE考试，通过后可申请美国住院医，难度极高', salary: '美国住院医年薪20-50万美元', requirement: '本科医学专业；通过USMLE Step1/2/3；英语口语流利', promotion: '美国住院医年薪20-50万美元' },
+        { title: '医学翻译', detail: '医疗器械注册翻译、医学论文翻译', salary: '日薪800-3000', requirement: '本科及以上学历，医学/英语相关专业；医学英语能力强；有翻译经验优先', promotion: '日薪800-3000' },
+        { title: '健康管理/高端私立', detail: '和睦家/卓正等高端私立，高薪资但需服务意识', salary: '15-35万/年', requirement: '本科及以上学历，临床医学专业；通过医师资格考试；具备良好的服务意识', promotion: '高端私立医院高薪资' }
+      ]
+    }
+  },
+  {
+    name: '英语',
+    category: '语言类',
+    routes: {
+      job: [
+        { title: '翻译（同声传译/笔译）', detail: '专业翻译需CATTI二级口译/笔译证书，自由译者收入可观', salary: '同传日薪5000-15000', requirement: '本科及以上学历，英语专业；通过CATTI二级口译/笔译证书；精通中英文互译；具备良好的记忆力和反应速度；同传需专业训练', promotion: '翻译→高级翻译（3年）→资深翻译/翻译总监；自由译者可成立翻译公司，薪资上不封顶' },
+        { title: '英语教师（机构）', detail: '新东方/好未来等，薪资与课时量挂钩，寒暑假旺季收入高', salary: '10-25万/年', requirement: '本科及以上学历，英语专业；通过TEM8或CET-6；具备良好的口语和授课能力；有教师资格证优先；喜欢与学生交流', promotion: '教师→高级教师/教研组长（3年）→校区教学负责人/校长，明星教师薪资上不封顶' },
+        { title: '外贸/跨境电商', detail: '英语作为工作语言，B2B/B2C平台运营，阿里巴巴国际站', salary: '8-18万/年+提成', requirement: '本科及以上学历，英语/国贸/商务相关专业；通过CET-6/4；熟悉外贸流程和B2B/B2C平台操作；良好的沟通和谈判能力；抗压能力强', promotion: '外贸业务员→高级外贸/外贸主管（3年）→外贸经理/总监，积累客户资源后薪资增幅大' },
+        { title: '海外运营/市场', detail: '字节跳动、TikTok等出海企业，海外社交媒体运营', salary: '15-30万/年', requirement: '本科及以上学历，英语/传媒/营销相关专业；英语可作为工作语言；有海外社交媒体运营经验优先；了解目标市场文化；创意和数据分析能力', promotion: '运营专员→高级运营/运营主管（2-3年）→运营经理/市场经理，TikTok等企业晋升快' },
+        { title: '空乘/航空', detail: '国际航线空乘，英文要求高，福利待遇好', salary: '15-30万/年（含飞行补贴）', requirement: '大专及以上学历；身高158cm以上；英语口语流利（国际航线要求）；形象气质佳；良好的服务意识和应急处理能力；通过航空公司面试', promotion: '乘务员→高级乘务员/乘务长（3-5年）→客舱经理/培训师，福利待遇好，退休后有保障' }
+      ],
+      graduate: [
+        { title: '英语语言文学硕士', detail: '文学/文化方向，学硕3年，读博或高校', salary: '补贴800-2000/月', requirement: '本科成绩优秀；通过考研', promotion: '读博或进高校任教' },
+        { title: '翻译硕士（MTI）', detail: '口译/笔译方向，专业性强，2年制', salary: '补贴1500-3000/月', requirement: '本科英语专业；通过考研；有翻译潜力', promotion: '进入专业翻译领域' },
+        { title: '英语教育硕士', detail: 'TESOL方向，回国可当老师或继续读博', salary: '补贴1200-2500/月', requirement: '本科英语专业；通过考研；有教育兴趣', promotion: '回国可当老师或继续读博' }
+      ],
+      public: [
+        { title: '海关（英语岗）', detail: '外语类专业国考有优势，检验检疫、稽查岗位', salary: '年薪10-18万', requirement: '本科及以上学历，英语专业；通过公务员考试', promotion: '科员→副主任科员→主任科员（按年限晋升）' },
+        { title: '外交部/商务部', detail: '高级翻译/外交官，需通过严格遴选，竞争激烈', salary: '驻外补贴高+晋升快', requirement: '本科及以上学历，英语专业；通过遴选考试；政治素质高', promotion: '驻外补贴高+晋升快' },
+        { title: '税务局（外语岗）', detail: '国际税务、出口退税审核', salary: '年薪10-18万', requirement: '本科及以上学历，英语/税务相关专业；通过公务员考试', promotion: '稳定晋升' }
+      ],
+      other: [
+        { title: '留学（TESOL/教育）', detail: '英国/澳洲TESOL硕士，1年制，回国可当老师或留学移民', salary: '留学费用20-40万', requirement: '本科成绩良好；雅思6.5+', promotion: '回国可当老师或留学移民' },
+        { title: '雅思/托福培训', detail: '机构名师或独立教师，高水平英语教师收入可观', salary: '20-50万/年', requirement: '本科及以上学历，英语专业；雅思/托福高分；授课能力强', promotion: '优秀教师收入可观' },
+        { title: '留学顾问', detail: '申请文书、选校咨询、面试培训，淡季需销售能力', salary: '底薪+提成10-25万/年', requirement: '本科及以上学历，英语/教育相关专业；熟悉留学申请流程；良好的沟通能力和销售能力', promotion: '底薪+提成，优秀顾问收入高' }
+      ]
+    }
+  },
+  {
+    name: '汉语言文学',
+    category: '文学类',
+    routes: {
+      job: [
+        { title: '出版社/编辑', detail: '图书编辑、期刊编辑，需文学素养和文字功底', salary: '8-15万/年', requirement: '本科及以上学历，汉语言文学/编辑出版相关专业；扎实的文字功底和文学素养；细心严谨；熟悉出版流程；有文字作品发表优先', promotion: '编辑→高级编辑/编辑部主任（3-5年）→副总编辑/总编辑，资深编辑薪资可观' },
+        { title: '新媒体运营/文案策划', detail: '公众号、短视频脚本、企业宣传，大厂薪资可观', salary: '10-20万/年', requirement: '本科及以上学历，新闻/中文/营销相关专业；扎实的文字功底和内容创作能力；熟悉新媒体平台运营规则；有爆款内容创作经验优先', promotion: '运营专员→高级运营/内容主管（2-3年）→运营经理/内容总监，优秀内容创作者薪资上不封顶' },
+        { title: '语文教师', detail: '初高中教师，需教师资格证，带薪寒暑假', salary: '10-18万/年（教师编更高）', requirement: '本科及以上学历，汉语言文学/教育学相关专业；持有教师资格证；普通话二甲以上；具备良好的授课能力和沟通能力；热爱教育事业', promotion: '教师→年级备课组长/教研组长（3年）→教务主任/副校长/校长，带编教师职称晋升：助教→讲师→副高→正高' },
+        { title: '广告/文案', detail: '广告公司文案策划，天马行空创意型工作', salary: '10-20万/年', requirement: '本科及以上学历，中文/广告/新闻相关专业；优秀的文字功底和创意能力；有广告文案作品集优先；脑洞大，思维活跃；能承受加班压力', promotion: '文案→高级文案/创意组长（3年）→创意总监/副总创意总监，优秀创意人薪资上不封顶' },
+        { title: '公务员（文职）', detail: '政府机关文字材料岗，稳定但需写作能力', salary: '年薪10-18万', requirement: '本科及以上学历，中文/法律/行政相关专业；通过国家公务员/省级公务员考试；具备良好的写作能力和政治素养；细心严谨，原则性强', promotion: '科员→副主任科员/主任科员（3-5年）→副科级/正科级，晋升需考核+年限+机遇' }
+      ],
+      graduate: [
+        { title: '古代文学/现当代文学硕士', detail: '学硕3年，读博或高校教师', salary: '补贴800-2000/月', requirement: '本科成绩优秀；通过考研；有学术潜力', promotion: '读博或进高校任教' },
+        { title: '学科语文（教育专硕）', detail: '2年制，就业导向，师范类院校招生多', salary: '补贴1500-3000/月', requirement: '本科汉语言文学/教育相关专业；通过考研；有教育兴趣', promotion: '进入中学语文教师岗位' },
+        { title: '创意写作MFA', detail: '创意写作硕士，培养作家/编剧人才', salary: '补贴1200-2500/月', requirement: '本科中文/创意写作相关专业；通过考研；有写作潜力', promotion: '成为作家/编剧' }
+      ],
+      public: [
+        { title: '中学语文教师（编制）', detail: '事业编，稳定且有社会地位，需教师资格证', salary: '年薪10-18万+寒暑假', requirement: '本科及以上学历，汉语言文学/教育相关专业；持有教师资格证；通过教师招聘考试', promotion: '职称晋升：助教→讲师→副高→正高' },
+        { title: '政府文职', detail: '党委、政府文字材料岗，写作能力是核心竞争力', salary: '年薪10-18万', requirement: '本科及以上学历，中文相关专业；通过公务员考试；写作能力强', promotion: '科员→副主任科员→主任科员（按年限晋升）' },
+        { title: '文化局/博物馆', detail: '文化遗产保护、文物管理，体制内文化岗', salary: '年薪8-15万', requirement: '本科及以上学历，中文/历史相关专业；通过公务员考试', promotion: '稳定晋升' }
+      ],
+      other: [
+        { title: '出版人/图书策划', detail: '图书选题策划、版权贸易，创业型工作', salary: '15-40万/年（创业型）', requirement: '本科及以上学历，出版/中文相关专业；熟悉出版行业；有市场洞察力', promotion: '创业型工作，成功后回报高' },
+        { title: '自由撰稿人/专栏作家', detail: '自媒体、内容创业，需长期内容积累', salary: '不固定，上限高', requirement: '本科及以上学历，中文相关专业；持续内容输出能力；有个人特色', promotion: '自媒体成功后收入上不封顶' },
+        { title: '留学（教育/传媒）', detail: '英国教育学、传媒硕士，回国进高校或媒体', salary: '留学费用20-45万', requirement: '本科成绩良好；雅思6.5+', promotion: '回国进高校或媒体' }
+      ]
+    }
+  },
+  {
+    name: '工商管理',
+    category: '管理类',
+    routes: {
+      job: [
+        { title: '管培生（快消/互联网）', detail: '宝洁/京东管培生，2年轮岗后定岗，晋升快', salary: '15-30万/年', requirement: '本科及以上学历，专业不限（商科优先）；良好的沟通能力和领导力潜质；有过学生会/社团/实习经历优先；较强的逻辑思维和解决问题的能力', promotion: '管培生→部门主管（2-3年）→部门经理/总监，顶尖快消/互联网管培晋升快，5-8年可到高层' },
+        { title: '市场营销/策划', detail: '品牌管理、市场推广、数字营销，大厂市场岗', salary: '12-25万/年', requirement: '本科及以上学历，市场营销/广告/传媒相关专业；良好的沟通能力和创意思维；了解市场营销理论和方法；有市场实习或项目经验优先', promotion: '市场专员→市场主管/品牌主管（2-3年）→市场经理/品牌总监，市场营销晋升与业绩挂钩' },
+        { title: '人力资源', detail: 'HR六大模块，需沟通能力和Office技能', salary: '10-20万/年', requirement: '本科及以上学历，人力资源/管理/心理相关专业；良好的沟通能力和组织协调能力；熟悉HR各模块；熟练使用Office软件；有HR实习经验优先', promotion: 'HR专员→HR主管（3年）→HR经理→HR总监，人力资源晋升路径清晰' },
+        { title: '管理咨询', detail: '麦肯锡/贝恩/波士顿，顶尖MBA学历背景', salary: '25-60万/年（顶尖咨询）', requirement: '硕士及以上学历（MBA优先）；顶尖院校背景；良好的逻辑思维和商业敏感度；出色的沟通和表达能力；英语流利；有过咨询实习优先', promotion: '分析师→咨询顾问（2年）→高级顾问→项目经理→合伙人，顶级咨询晋升透明，三年晋升一次' },
+        { title: '运营管理', detail: '电商运营、产品运营、内容运营', salary: '12-25万/年', requirement: '本科及以上学历，工商管理/电商/营销相关专业；良好的逻辑思维和数据敏感度；熟悉互联网运营模式；有电商/运营实习经验优先', promotion: '运营专员→高级运营/运营主管（2-3年）→运营经理/总监，运营晋升与数据指标挂钩' }
+      ],
+      graduate: [
+        { title: '工商管理硕士（MBA）', detail: '在职/全日制，名校MBA学费30-60万，回报需考量', salary: '毕业5年薪资翻倍', requirement: '本科毕业3年以上；GMAT/GRE成绩；工作经验；名校竞争激烈', promotion: '毕业5年薪资翻倍' },
+        { title: '管理学硕士（学硕）', detail: '学术方向，学制3年，读博或高校', salary: '补贴800-2000/月', requirement: '本科成绩优秀；通过考研', promotion: '读博或进高校任教' },
+        { title: '会计/法律硕士', detail: 'MBA转会计、法律，跳槽薪资涨幅大', salary: '复合背景薪资溢价', requirement: '本科工商管理相关专业；通过考研', promotion: '复合背景薪资溢价' }
+      ],
+      public: [
+        { title: '公务员（管理类）', detail: '工商、质检、食药监等，岗位多', salary: '年薪10-18万', requirement: '本科及以上；通过公务员考试', promotion: '科员→副主任科员→主任科员（按年限晋升）' },
+        { title: '选调生', detail: '管理岗储备干部，晋升机制透明', salary: '年薪8-15万+晋升空间', requirement: '本科及以上学历，985/211院校优先；党员/学生干部优先', promotion: '晋升机制透明' },
+        { title: '事业单位（管理岗）', detail: '高校、医院行政，稳定性强', salary: '年薪8-15万', requirement: '本科及以上；通过事业单位招聘考试', promotion: '稳定晋升' }
+      ],
+      other: [
+        { title: '留学（MBA）', detail: '美国/欧洲MBA，2年制，名校需GMAT700+，创业资源丰富', salary: '留学费用60-120万', requirement: '本科成绩良好；GMAT700+；工作经验；英语成绩', promotion: '创业资源丰富' },
+        { title: '创业', detail: '商业创业，创业管理方向，适合有商业嗅觉的学生', salary: '风险高回报高', requirement: '有商业想法；资金；团队管理能力', promotion: '风险高回报高' },
+        { title: 'PMP项目管理', detail: '项目管理认证，转管理岗位加分，跳槽认可度高', salary: '15-30万/年', requirement: '本科及以上学历；项目管理经验；通过PMP考试', promotion: '跳槽认可度高' }
+      ]
+    }
+  }
+];
+
+const majorCategoryMap = {
+    '计算机科学与技术':'tech','软件工程':'tech','数据科学与大数据技术':'tech',
+    '人工智能':'tech','电子信息工程':'tech','通信工程':'tech','电气工程及其自动化':'tech',
+    '自动化':'tech','机械设计制造及其自动化':'tech','土木工程':'tech','建筑学':'design',
+    '城乡规划':'design','金融学':'business','会计学':'business','工商管理':'business',
+    '市场营销':'business','人力资源管理':'business','国际经济与贸易':'business',
+    '经济学':'business','财务管理':'business','法学':'law','社会工作':'social',
+    '行政管理':'social','汉语言文学':'arts','新闻学':'media','广告学':'design',
+    '英语':'lang','日语':'lang','数学与应用数学':'science','应用物理学':'science',
+    '化学':'science','生物科学':'science','环境工程':'science','临床医学':'medical',
+    '护理学':'medical','药学':'medical','心理学':'social','教育学':'education',
+    '学前教育':'education','体育教育':'education','美术学':'design','视觉传达设计':'design',
+    '数字媒体艺术':'design','音乐学':'arts','历史学':'arts','哲学':'arts',
+    '社会学':'social','统计学':'science','物流管理':'business','旅游管理':'business'
+};
+
+const questionBank = [
+    { dimension: 'R', text: '我喜欢动手组装、修理电子产品或手工物件', reverse: false },
+    { dimension: 'R', text: '我更愿意做有具体实物产出的实操类任务', reverse: false },
+    { dimension: 'R', text: '我擅长拆解和解决机械、设备类的实际问题', reverse: false },
+    { dimension: 'R', text: '我偏好户外活动多于室内伏案工作', reverse: false },
+    { dimension: 'R', text: '我享受使用工具完成实际工作的过程', reverse: false },
+    { dimension: 'R', text: '我对动植物养护、手工制作等活动感兴趣', reverse: false, direction: 'job' },
+    { dimension: 'R', text: '我能熟练使用各种维修工具和仪器设备', reverse: false, direction: 'job' },
+    { dimension: 'R', text: '我喜欢自己动手解决生活中的小问题', reverse: false, direction: 'job' },
+    { dimension: 'R', text: '我享受建造或制作东西的过程', reverse: false, direction: 'graduate' },
+    { dimension: 'R', text: '我更喜欢用实际操作来学习新知识', reverse: false, direction: 'graduate' },
+    { dimension: 'R', text: '我注重实践操作能力的培养', reverse: false, direction: 'public' },
+    { dimension: 'R', text: '我更喜欢思考抽象问题而不是动手操作', reverse: true },
+    { dimension: 'R', text: '我倾向于用软件模拟而不是实际搭建', reverse: true },
+    { dimension: 'R', text: '我不喜欢任何体力劳动或手工操作', reverse: true },
+    { dimension: 'R', text: '我享受debug和修复bug的过程', reverse: false, majorCategory: 'tech', direction: 'job' },
+    { dimension: 'R', text: '我愿意花时间搭建开发环境、配置工具链', reverse: false, majorCategory: 'tech', direction: 'job' },
+    { dimension: 'R', text: '我喜欢自己组装电脑或配置硬件', reverse: false, majorCategory: 'tech' },
+    { dimension: 'R', text: '我喜欢绘制草图、制作实体模型', reverse: false, majorCategory: 'design' },
+
+    { dimension: 'I', text: '我喜欢探索事物背后的原理，做逻辑分析与推导', reverse: false },
+    { dimension: 'I', text: '我乐于查阅文献、研究学术问题与新兴技术', reverse: false },
+    { dimension: 'I', text: '遇到难题时我习惯先收集数据再得出结论', reverse: false },
+    { dimension: 'I', text: '我对科学实验、数据分析类工作有浓厚兴趣', reverse: false },
+    { dimension: 'I', text: '我享受解决复杂问题带来的成就感', reverse: false, direction: 'job' },
+    { dimension: 'I', text: '我愿意深入研究一个领域直到成为专家', reverse: false, direction: 'job' },
+    { dimension: 'I', text: '我习惯用数学或统计方法验证我的想法', reverse: false, direction: 'graduate' },
+    { dimension: 'I', text: '我对学术论文和技术文档有较强的阅读理解能力', reverse: false, direction: 'graduate' },
+    { dimension: 'I', text: '我喜欢提出假设并验证它', reverse: false, direction: 'graduate' },
+    { dimension: 'I', text: '我享受钻研难题直到找到答案', reverse: false, direction: 'graduate' },
+    { dimension: 'I', text: '我注重数据分析和逻辑推理能力', reverse: false, direction: 'public' },
+    { dimension: 'I', text: '我更关注how而不是why', reverse: true },
+    { dimension: 'I', text: '我很少追根究底，差不多就行', reverse: true },
+    { dimension: 'I', text: '我不喜欢复杂的理论和抽象概念', reverse: true },
+    { dimension: 'I', text: '我愿意为发表论文投入大量时间精力', reverse: false, majorCategory: 'science', direction: 'graduate' },
+    { dimension: 'I', text: '我对科研项目有强烈的兴趣', reverse: false, majorCategory: 'science', direction: 'graduate' },
+    { dimension: 'I', text: '我喜欢研究新技术和算法原理', reverse: false, majorCategory: 'tech' },
+
+    { dimension: 'A', text: '我喜欢通过创意设计、文字或艺术形式表达想法', reverse: false },
+    { dimension: 'A', text: '我更愿意做有创造性、不按固定流程的工作', reverse: false },
+    { dimension: 'A', text: '我对审美、排版、视觉呈现比较敏感', reverse: false },
+    { dimension: 'A', text: '我经常产生独特的想法并想付诸实践', reverse: false },
+    { dimension: 'A', text: '我享受艺术创作和灵感迸发的过程', reverse: false, direction: 'job' },
+    { dimension: 'A', text: '我善于用非传统方式解决问题', reverse: false, direction: 'job' },
+    { dimension: 'A', text: '我喜欢独立工作而不是按指令完成任务', reverse: false, direction: 'graduate' },
+    { dimension: 'A', text: '我对色彩和构图有天生的敏感度', reverse: false, direction: 'graduate' },
+    { dimension: 'A', text: '我享受音乐、绘画或写作等艺术活动', reverse: false, direction: 'public' },
+    { dimension: 'A', text: '我喜欢尝试新的艺术形式和创作方法', reverse: false, direction: 'public' },
+    { dimension: 'A', text: '我更喜欢有明确步骤的工作任务', reverse: true },
+    { dimension: 'A', text: '我更注重结果而不是过程的美感', reverse: true },
+    { dimension: 'A', text: '我对艺术和创意活动缺乏兴趣', reverse: true },
+    { dimension: 'A', text: '我能接受为追求完美效果而反复修改作品', reverse: false, majorCategory: 'design', direction: 'job' },
+    { dimension: 'A', text: '我对UI/UX设计有浓厚兴趣', reverse: false, majorCategory: 'design', direction: 'job' },
+    { dimension: 'A', text: '我喜欢用文字表达复杂的思想', reverse: false, majorCategory: 'lang' },
+
+    { dimension: 'S', text: '我乐于倾听和帮助他人解决学习或生活中的问题', reverse: false },
+    { dimension: 'S', text: '我喜欢参与志愿服务、社群运营类的活动', reverse: false },
+    { dimension: 'S', text: '我擅长和不同的人沟通协作，愿意从事服务类工作', reverse: false },
+    { dimension: 'S', text: '我享受教导和传授知识给他人的过程', reverse: false, direction: 'job' },
+    { dimension: 'S', text: '我关心社会问题，愿意为公共利益出力', reverse: false, direction: 'job' },
+    { dimension: 'S', text: '我擅长调解冲突、维护团队和谐', reverse: false, direction: 'graduate' },
+    { dimension: 'S', text: '我更喜欢与人互动而不是独自工作', reverse: false, direction: 'public' },
+    { dimension: 'S', text: '我愿意倾听他人的倾诉并给予支持', reverse: false, direction: 'public' },
+    { dimension: 'S', text: '我享受帮助他人成长和进步的过程', reverse: false, direction: 'public' },
+    { dimension: 'S', text: '我善于理解他人的处境和感受', reverse: false, direction: 'public' },
+    { dimension: 'S', text: '我更喜欢独立完成工作而不是团队协作', reverse: true },
+    { dimension: 'S', text: '我不太擅长处理复杂的人际关系', reverse: true },
+    { dimension: 'S', text: '我对帮助他人没有太大兴趣', reverse: true },
+    { dimension: 'S', text: '我能够耐心倾听并理解他人的情绪和需求', reverse: false, majorCategory: 'social' },
+    { dimension: 'S', text: '我对心理咨询和辅导有兴趣', reverse: false, majorCategory: 'social' },
+    { dimension: 'S', text: '我愿意花时间关心和照顾病人', reverse: false, majorCategory: 'medical' },
+
+    { dimension: 'E', text: '我喜欢带领团队完成任务，承担组织与决策工作', reverse: false },
+    { dimension: 'E', text: '我对商业运营、市场推广、创业类话题感兴趣', reverse: false },
+    { dimension: 'E', text: '我愿意挑战有业绩目标、能快速获得回报的工作', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我善于说服他人接受我的观点和建议', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我享受竞争和冒险带来的刺激感', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我对权力和影响力有较强的渴望', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我善于发现商机并付诸行动', reverse: false, direction: 'job' },
+    { dimension: 'E', text: '我愿意承担管理职责，带领团队达成目标', reverse: false, direction: 'graduate' },
+    { dimension: 'E', text: '我享受制定战略和实现目标的过程', reverse: false, direction: 'public' },
+    { dimension: 'E', text: '我善于谈判和达成商业合作', reverse: false, direction: 'public' },
+    { dimension: 'E', text: '我更倾向于稳定的工作环境而不愿冒险', reverse: true },
+    { dimension: 'E', text: '我更愿意做执行者而不是决策者', reverse: true },
+    { dimension: 'E', text: '我对商业和管理没有兴趣', reverse: true },
+    { dimension: 'E', text: '我愿意为创业梦想承担风险', reverse: false, majorCategory: 'business', direction: 'job' },
+    { dimension: 'E', text: '我对市场营销和品牌建设有热情', reverse: false, majorCategory: 'business', direction: 'job' },
+    { dimension: 'E', text: '我喜欢分析市场趋势并做出商业决策', reverse: false, majorCategory: 'business' },
+
+    { dimension: 'C', text: '我喜欢按规范流程做事，确保细节准确无误', reverse: false },
+    { dimension: 'C', text: '我擅长整理资料、数据统计与事务性工作', reverse: false },
+    { dimension: 'C', text: '我更偏好稳定、规则清晰的工作环境', reverse: false },
+    { dimension: 'C', text: '我习惯按照计划严格执行任务', reverse: false },
+    { dimension: 'C', text: '我注重工作的准确性和完整性', reverse: false, direction: 'job' },
+    { dimension: 'C', text: '我喜欢处理数字、报表、数据核对工作', reverse: false, direction: 'graduate' },
+    { dimension: 'C', text: '我习惯将工作安排得井井有条', reverse: false, direction: 'graduate' },
+    { dimension: 'C', text: '我愿意遵守规章制度而不是打破规则', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我注重工作的条理性和系统性', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我擅长处理行政事务和文书工作', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我注重文件的规范性和程序的合规性', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我习惯于按部就班地完成任务', reverse: false, direction: 'public' },
+    { dimension: 'C', text: '我更喜欢灵活自由的工作方式', reverse: true },
+    { dimension: 'C', text: '我经常打破常规寻找新方法', reverse: true },
+    { dimension: 'C', text: '我对规则和流程感到束缚', reverse: true },
+    { dimension: 'C', text: '我愿意严格遵守职业规范和操作流程', reverse: false, majorCategory: 'medical' },
+    { dimension: 'C', text: '我注重法律条文和规章制度的学习', reverse: false, majorCategory: 'law', direction: 'public' }
+];
+
+const directionWeightConfig = [
+    { direction: 'job', R: 1.2, I: 0.9, A: 1.0, S: 0.8, E: 1.3, C: 0.9 },
+    { direction: 'graduate', R: 0.8, I: 1.4, A: 0.9, S: 0.8, E: 0.7, C: 1.2 },
+    { direction: 'public', R: 0.7, I: 0.8, A: 0.7, S: 1.3, E: 1.0, C: 1.5 },
+    { direction: 'undecided', R: 1.0, I: 1.0, A: 1.0, S: 1.0, E: 1.0, C: 1.0 }
+];
+
+const learningPlanData = {
+  job: {
+    freshman: {
+      currentStatus: '大一新生，专业基础阶段',
+      abilities: ['正在学习专业基础课程', '初步了解行业概况', '掌握基础编程/专业技能'],
+      phases: [
+        {phase: '大一上学期', tasks: ['认真学习高数、线代、概率论等数学基础课程', '掌握一门编程语言基础（Python/Java/C++）', '加入专业相关社团或技术俱乐部', '了解本专业就业方向和行业前景', '考取英语四级']},
+        {phase: '大一下学期', tasks: ['深入学习数据结构与算法基础', '完成课程配套的编程练习项目', '参加校内编程竞赛或技能比赛', '开始建立个人GitHub代码仓库', '考取计算机二级证书']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，专业能力成型阶段',
+      abilities: ['已掌握专业基础课程', '具备基础编程能力', '了解行业技术栈'],
+      phases: [
+        {phase: '大二上学期', tasks: ['深入学习专业核心课程（操作系统、数据库、网络）', '学习主流技术栈（Web开发/移动开发/数据分析）', '参加专业技能竞赛（ACM、程序设计赛等）', '完成3-5个完整的技术小项目', '考取英语六级']},
+        {phase: '大二下学期', tasks: ['寻找第一份实习或兼职机会', '深入学习一门技术方向（前端/后端/算法）', '参与开源项目贡献', '建立个人技术博客', '为大三实习做准备']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，求职准备关键期',
+      abilities: ['掌握专业核心技能', '有项目实践经验', '了解目标岗位要求'],
+      phases: [
+        {phase: '大三上学期', tasks: ['系统准备秋招（算法刷题、项目整理、面试准备）', '争取名企暑期实习机会', '完成一个高质量的技术项目', '积累GitHub开源项目贡献经验', '完善个人简历和技术博客']},
+        {phase: '大三下学期', tasks: ['全力冲刺暑期实习申请', '参加企业宣讲会和招聘活动', '深入准备技术面试（算法、系统设计）', '学习目标岗位入职前技能', '建立行业人脉关系']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，求职冲刺阶段',
+      abilities: ['具备完整专业技能', '有实习/项目经验', '准备进入职场'],
+      phases: [
+        {phase: '大四上学期', tasks: ['全力冲刺秋招，获取offer', '参加校园招聘宣讲会和双选会', '完成毕业设计和毕业论文', '准备入职体检和三方协议签订', '提前学习目标岗位入职前技能']},
+        {phase: '大四下学期', tasks: ['完成毕业答辩', '办理入职手续', '参加入职前培训', '建立职场人脉关系', '规划职业发展路径']}
+      ]
+    },
+    graduate: {
+      currentStatus: '毕业一年内，职场新人阶段',
+      abilities: ['具备完整专业技能', '有实习/项目经验', '完成学生到职场人的转变'],
+      phases: [
+        {phase: '毕业后第1-3个月', tasks: ['完成试用期工作', '熟悉公司业务和团队', '学习职场沟通和协作', '建立职业习惯和工作节奏', '参加新员工培训']},
+        {phase: '毕业后第4-6个月', tasks: ['独立承担工作任务', '提升专业技能深度', '建立跨部门合作关系', '准备试用期答辩/转正', '规划职业发展方向']},
+        {phase: '毕业后第7-12个月', tasks: ['成为团队骨干成员', '参与重要项目', '积累成功案例', '准备晋升或跳槽', '持续学习提升竞争力']}
+      ]
+    }
+  },
+  graduate: {
+    freshman: {
+      currentStatus: '大一新生，考研基础积累期',
+      abilities: ['正在学习专业基础课程', '英语基础待提升', '数学基础待夯实'],
+      phases: [
+        {phase: '大一上学期', tasks: ['认真学习高数、线代等数学课程（考研数学基础）', '扎实学习英语，为考研英语做准备', '了解考研基本信息和流程', '保持高GPA，为复试做准备', '考取英语四级']},
+        {phase: '大一下学期', tasks: ['继续夯实数学基础', '学习专业基础课程', '了解目标院校和专业方向', '参加学术讲座和科研活动', '考取英语六级']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，考研方向探索期',
+      abilities: ['数学基础已建立', '英语能力提升中', '专业方向待确定'],
+      phases: [
+        {phase: '大二上学期', tasks: ['确定考研目标院校和专业方向', '继续夯实数学基础', '阅读目标专业经典教材', '参与科研项目积累科研经历', '关注目标院校招生信息']},
+        {phase: '大二下学期', tasks: ['开始接触考研英语词汇', '学习专业课核心内容', '参加学科竞赛积累履历', '联系目标院校学长学姐', '准备考研复习资料']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，考研备考关键期',
+      abilities: ['数学基础扎实', '英语能力达标', '专业方向已确定'],
+      phases: [
+        {phase: '大三上学期', tasks: ['系统复习考研数学（教材+课后习题）', '背诵考研英语核心词汇', '通读专业课教材构建知识框架', '收集目标院校真题和参考书目', '制定详细复习计划']},
+        {phase: '大三下学期', tasks: ['进入强化复习阶段', '攻克数学重难点题型', '开始做英语真题', '深入学习专业课', '参加考研辅导班或网课']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，考研冲刺与复试阶段',
+      abilities: ['复习充分', '模拟考试经验丰富', '准备复试'],
+      phases: [
+        {phase: '大四上学期', tasks: ['全力冲刺考研初试（12月）', '进行多次模拟考试', '查漏补缺，强化薄弱环节', '准备考研复试资料', '关注目标院校复试信息']},
+        {phase: '大四下学期', tasks: ['准备考研复试', '参加复试面试', '联系导师', '关注调剂信息', '准备入学手续']}
+      ]
+    },
+    graduate: {
+      currentStatus: '研究生阶段',
+      abilities: ['已完成考研', '进入研究生学习', '科研能力提升'],
+      phases: [
+        {phase: '研一', tasks: ['完成课程学习', '确定研究方向', '参与导师课题', '学习科研方法', '发表第一篇论文']},
+        {phase: '研二', tasks: ['深入研究课题', '发表高质量论文', '参加学术会议', '准备实习或就业', '考虑读博或就业']},
+        {phase: '研三', tasks: ['完成毕业论文', '参加答辩', '找工作或申请博士', '办理毕业手续', '规划职业发展']}
+      ]
+    }
+  },
+  public: {
+    freshman: {
+      currentStatus: '大一新生，考公意识培养期',
+      abilities: ['了解考公基本信息', '培养综合素质', '学习基础课程'],
+      phases: [
+        {phase: '大一上学期', tasks: ['了解公务员考试基本信息', '学习行测基础题型', '关注时政热点', '培养公文写作能力', '保持良好成绩']},
+        {phase: '大一下学期', tasks: ['深入了解公务员岗位', '开始学习申论', '参与学生会或社团', '培养组织协调能力', '考取英语四级']}
+      ]
+    },
+    sophomore: {
+      currentStatus: '大二学生，考公基础积累期',
+      abilities: ['行测基础扎实', '申论写作能力提升', '综合素质培养'],
+      phases: [
+        {phase: '大二上学期', tasks: ['系统学习行测各模块', '练习申论写作', '关注国家政策', '参与社会实践', '考取英语六级']},
+        {phase: '大二下学期', tasks: ['进行行测真题训练', '积累申论素材', '了解选调生政策', '准备入党', '培养政治素养']}
+      ]
+    },
+    junior: {
+      currentStatus: '大三学生，考公备战期',
+      abilities: ['行测成绩稳定', '申论能力提升', '备考经验丰富'],
+      phases: [
+        {phase: '大三上学期', tasks: ['全力备战国考/省考', '参加模拟考试', '针对性强化薄弱环节', '关注岗位招考信息', '准备报名材料']},
+        {phase: '大三下学期', tasks: ['冲刺备考', '参加各类公务员考试', '准备面试', '关注选调生报名', '积累面试经验']}
+      ]
+    },
+    senior: {
+      currentStatus: '大四学生，考公冲刺与入职阶段',
+      abilities: ['考试经验丰富', '面试能力强', '准备入职'],
+      phases: [
+        {phase: '大四上学期', tasks: ['参加国考/省考笔试', '准备面试', '关注体检政审', '准备录用手续', '规划职业发展']},
+        {phase: '大四下学期', tasks: ['参加面试', '完成体检政审', '办理入职手续', '参加岗前培训', '适应公务员工作']}
+      ]
+    },
+    graduate: {
+      currentStatus: '公务员入职初期',
+      abilities: ['已入职', '适应工作环境', '职业发展规划'],
+      phases: [
+        {phase: '入职前3个月', tasks: ['完成岗前培训', '熟悉工作流程', '建立同事关系', '了解单位文化', '制定工作目标']},
+        {phase: '入职3-6个月', tasks: ['独立承担工作', '提升业务能力', '积累工作经验', '准备转正考核', '规划职业发展']},
+        {phase: '入职6-12个月', tasks: ['成为业务骨干', '参与重要项目', '提升综合能力', '准备晋升', '持续学习']}
+      ]
+    }
+  }
+};
+
+function initDatabase() {
+  let completed = 0;
+  const total = allMajorsData.length + Object.keys(majorCategoryMap).length + questionBank.length + directionWeightConfig.length + 30 + 200 + 1 + 120;
+
+  allMajorsData.forEach(majorData => {
+    db.run(
+      'INSERT OR IGNORE INTO majors (name, category, description) VALUES (?, ?, ?)',
+      [majorData.name, majorData.category, majorData.name + '专业发展路线'],
+      function(err) {
+        if (err) {
+          console.error('Error inserting major:', err);
+          return;
+        }
+
+        const majorId = this.lastID || 0;
+
+        if (majorId === 0) {
+          db.get('SELECT id FROM majors WHERE name = ?', [majorData.name], (err, row) => {
+            if (row) {
+              insertRoutes(row.id, majorData.routes);
+            }
+          });
+        } else {
+          insertRoutes(majorId, majorData.routes);
+        }
+
+        completed++;
+        checkComplete();
+      }
+    );
+  });
+
+  function insertRoutes(majorId, routes) {
+    Object.keys(routes).forEach(direction => {
+      routes[direction].forEach(route => {
+        db.run(
+          'INSERT OR IGNORE INTO routes (major_id, direction, title, detail, requirement, salary, promotion) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          [majorId, direction, route.title, route.detail, route.requirement || '', route.salary, route.promotion || ''],
+          (err) => {
+            if (err) {
+              console.error('Error inserting route:', err);
+            }
+          }
+        );
+      });
+    });
+  }
+
+  Object.keys(majorCategoryMap).forEach(majorName => {
+    db.run(
+      'INSERT OR IGNORE INTO major_categories (major_name, category) VALUES (?, ?)',
+      [majorName, majorCategoryMap[majorName]],
+      (err) => {
+        if (err) console.error('Error inserting major category:', err);
+        completed++;
+        checkComplete();
+      }
+    );
+  });
+
+  questionBank.forEach(question => {
+    db.run(
+      'INSERT OR IGNORE INTO questions (dimension, text, reverse, major_category, direction) VALUES (?, ?, ?, ?, ?)',
+      [question.dimension, question.text, question.reverse ? 1 : 0, question.majorCategory || '', question.direction || ''],
+      (err) => {
+        if (err) console.error('Error inserting question:', err);
+        completed++;
+        checkComplete();
+      }
+    );
+  });
+
+  directionWeightConfig.forEach(config => {
+    db.run(
+      'INSERT OR IGNORE INTO direction_weights (direction, R, I, A, S, E, C) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [config.direction, config.R, config.I, config.A, config.S, config.E, config.C],
+      (err) => {
+        if (err) console.error('Error inserting direction weight:', err);
+        completed++;
+        checkComplete();
+      }
+    );
+  });
+
+  Object.keys(learningPlanData).forEach(direction => {
+    Object.keys(learningPlanData[direction]).forEach(grade => {
+      const plan = learningPlanData[direction][grade];
+      db.run(
+        'INSERT OR IGNORE INTO learning_plans (direction, grade, current_status, abilities, phases) VALUES (?, ?, ?, ?, ?)',
+        [direction, grade, plan.currentStatus, JSON.stringify(plan.abilities), JSON.stringify(plan.phases)],
+        (err) => {
+          if (err) console.error('Error inserting learning plan:', err);
+          completed++;
+          checkComplete();
+        }
+      );
+    });
+  });
+
+  const majorSkillMap = {
+    '计算机科学与技术':{job:['编程(Python/Java/C++)','数据结构与算法','项目实战经验','面试刷题(LeetCode)','系统设计','GitHub开源'],graduate:['高等数学','数据结构','操作系统','计算机网络','考研英语','政治'],public:['行测(数量/言语)','申论写作','时政热点','逻辑推理','公共基础','计算机基础'],undecided:['编程基础(Python)','数据结构','计算机网络','数据库','操作系统','GitHub']},
+    '软件工程':{job:['面向对象编程','软件测试','版本控制(Git)','敏捷开发','需求分析','Spring/React'],graduate:['数据结构','操作系统','软件工程理论','考研英语','政治','高等数学'],public:['行测(数量/言语)','申论写作','时政热点','逻辑推理','公共基础','信息技术基础'],undecided:['编程基础(Java/Python)','数据结构','软件工程概论','数据库基础','Git','需求分析基础']},
+    '数据科学与大数据技术':{job:['数据清洗(ETL)','机器学习/Python','SQL/Hive','数据可视化(Tableau)','统计学','Spark/Flink'],graduate:['高等数学','概率论','机器学习','考研英语','政治','数据结构'],public:['行测(数量/资料分析)','申论写作','时政热点','逻辑推理','公共基础','数据思维'],undecided:['Python基础','SQL','统计学基础','数据处理','数据可视化入门','机器学习入门']},
+    '人工智能':{job:['深度学习(PyTorch)','自然语言处理','计算机视觉','Python','数学基础','模型部署'],graduate:['高等数学','线性代数','机器学习','概率论','考研英语','政治'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','科技常识'],undecided:['Python','高等数学','线性代数','机器学习入门','数据结构','算法基础']},
+    '电子信息工程':{job:['电路设计(Altium)','嵌入式开发(STM32)','信号处理','通信协议','C/C++','硬件调试'],graduate:['信号与系统','数字信号处理','通信原理','考研英语','政治','高等数学'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','电工基础'],undecided:['电路基础','C语言','模拟电子技术','数字电子技术','信号与系统基础','单片机入门']},
+    '通信工程':{job:['通信协议(5G/LTE)','网络规划','信号处理','射频技术','光纤通信','Python'],graduate:['通信原理','信号与系统','数字信号处理','考研英语','政治','高等数学'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','信息技术基础'],undecided:['通信原理基础','信号与系统','C语言','计算机网络','电子电路','高等数学']},
+    '电气工程及其自动化':{job:['PLC编程','电路设计','电机控制','供配电设计','AutoCAD电气','传感器技术'],graduate:['电路理论','电机学','电力系统分析','考研英语','政治','高等数学'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','电工基础'],undecided:['自动控制基础','C语言','传感器基础','电路基础','高等数学','PLC入门']},
+    '自动化':{job:['控制理论','PLC/SCADA','传感器技术','机器人(ROS)','嵌入式系统','MATLAB'],graduate:['自动控制原理','现代控制理论','考研英语','政治','高等数学','线性代数'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','自动化基础'],undecided:['自动控制基础','C语言','传感器基础','电路基础','高等数学','PLC入门']},
+    '机械设计制造及其自动化':{job:['CAD/SolidWorks','机械设计','材料力学','数控编程','有限元分析','工艺设计'],graduate:['机械原理','材料力学','机械设计','考研英语','政治','高等数学'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','机械基础'],undecided:['机械制图','CAD','材料力学基础','机械原理','高等数学','金工实习']},
+    '土木工程':{job:['结构力学','AutoCAD','工程造价','施工管理','BIM建模(Revit)','测量学'],graduate:['结构力学','混凝土结构','土力学','考研英语','政治','高等数学'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','工程管理'],undecided:['结构力学基础','AutoCAD','工程测量','材料力学','混凝土结构基础','工程管理概论']},
+    '建筑学':{job:['建筑设计','SketchUp/Rhino','空间规划','BIM建模','建筑史','效果图(VRay)'],graduate:['建筑史','建筑设计理论','城市规划','考研英语','政治','快题设计'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','城建规划'],undecided:['建筑概论','手绘基础','CAD/SketchUp','中外建筑史','空间设计','美术基础']},
+    '城乡规划':{job:['城市规划','GIS','交通规划','环境设计','AutoCAD','空间分析'],graduate:['城市规划原理','区域规划','GIS','考研英语','政治','快题设计'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','城建规划'],undecided:['城市规划概论','GIS基础','CAD','设计基础','地理信息系统','城市社会学']},
+    '金融学':{job:['财务分析','投资管理','估值建模(DCF)','Excel高级应用','CFA/FRM基础','Wind/Bloomberg'],graduate:['微观经济学','宏观经济学','金融学','数学三','考研英语','政治'],public:['行测(数量/资料分析)','申论写作','经济金融基础','时政热点','逻辑推理','公共基础'],undecided:['经济学基础','会计学基础','Excel','数据分析','金融市场基础','统计学']},
+    '会计学':{job:['财务报表','税务筹划','审计实务','Excel','会计准则','财务软件(用友/金蝶)'],graduate:['会计学','财务管理','管理学','考研英语','政治','数学三'],public:['行测(数量/资料分析)','申论写作','会计基础','时政热点','逻辑推理','公共基础'],undecided:['会计学原理','财务管理基础','Excel','税法入门','审计基础','经济法']},
+    '工商管理':{job:['项目管理','数据分析','沟通协调','商业策划','PPT演示','团队管理'],graduate:['管理学','经济学','运筹学','考研英语','政治','数学三'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','管理常识'],undecided:['管理学原理','经济学基础','数据分析','沟通表达','市场营销基础','组织行为学']},
+    '市场营销':{job:['市场调研','品牌策划','数据分析(Excel/SQL)','文案撰写','新媒体运营','活动策划'],graduate:['营销管理','消费者行为','管理学','考研英语','政治','数学三'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','经济基础'],undecided:['市场营销学','消费者心理','数据分析','文案写作','市场调研','新媒体运营基础']},
+    '人力资源管理':{job:['招聘面试','绩效管理(KPI/OKR)','劳动法','沟通培训','HR系统(钉钉/飞书)','组织发展'],graduate:['管理学','组织行为学','人力资源','考研英语','政治','数学三'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','人事管理'],undecided:['管理学','组织行为学','劳动法基础','沟通协调','招聘基础','绩效管理入门']},
+    '国际经济与贸易':{job:['英语商务','外贸流程','报关报检','跨境支付','贸易谈判','供应链管理'],graduate:['国际贸易理论','经济学','国际金融','考研英语','政治','数学三'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','国际常识'],undecided:['经济学基础','国际贸易实务','英语','商务沟通','国际金融基础','市场营销']},
+    '经济学':{job:['宏观分析','微观分析','计量分析(Stata/SPSS)','政策研究','Excel','行业研究报告'],graduate:['微观经济学','宏观经济学','计量经济学','数学三','考研英语','政治'],public:['行测(数量/资料分析)','申论写作','经济学基础','时政热点','逻辑推理','公共基础'],undecided:['微观经济学','宏观经济学','统计学','数学基础','计量经济学入门','经济法']},
+    '财务管理':{job:['财务分析','预算管理','Excel','资金管理','税法基础','财务报表编制'],graduate:['财务管理','会计学','管理学','考研英语','政治','数学三'],public:['行测(数量/资料分析)','申论写作','财务基础','时政热点','逻辑推理','公共基础'],undecided:['会计学基础','财务管理','Excel','财务分析入门','税法基础','投资学基础']},
+    '法学':{job:['法律检索','文书写作','案例分析','辩论技巧','法规解读','合同审查'],graduate:['法理学','民法学','刑法学','考研英语','政治','专业综合'],public:['行测(言语/判断)','申论写作','法律基础','时政热点','逻辑推理','公共基础'],undecided:['法理学基础','宪法学','民法学入门','刑法学入门','法律写作','案例分析']},
+    '社会工作':{job:['个案工作','社区服务','心理咨询','社会调查','活动策划','沟通协调'],graduate:['社会工作理论','社会学','心理学','考研英语','政治','社会政策'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','社区治理'],undecided:['社会学概论','心理学基础','个案工作方法','沟通技巧','社区服务','社会调查']},
+    '行政管理':{job:['公文写作','会议组织','档案管理','办公软件','沟通协调','行政流程'],graduate:['行政管理学','公共管理','政治学','考研英语','政治','管理学'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','行政管理'],undecided:['管理学原理','公共管理导论','公文写作','办公软件','政治学基础','沟通协调']},
+    '汉语言文学':{job:['文案写作','文学鉴赏','编辑排版','新媒体运营','古文阅读','内容策划'],graduate:['文学理论','语言学','古代文学','考研英语','政治','文学综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','公文写作'],undecided:['现代汉语','古代文学','写作能力','文学鉴赏','语言学概论','编辑排版']},
+    '新闻学':{job:['新闻采写','视频剪辑(PR/FCP)','新媒体运营','采访技巧','内容策划','数据分析'],graduate:['新闻传播理论','新闻史','传播学','考研英语','政治','新闻实务'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','舆论分析'],undecided:['新闻学概论','采访写作','传播学基础','新媒体认知','摄影基础','视频剪辑入门']},
+    '广告学':{job:['创意策划','文案撰写','PS/AI设计','品牌策划','视频剪辑','媒介投放'],graduate:['广告学','传播学','营销学','考研英语','政治','设计理论'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','传播基础'],undecided:['广告学概论','创意设计基础','文案写作','市场调研','PS/AI基础','品牌策划入门']},
+    '英语':{job:['英语口语','翻译(笔译/口译)','跨文化沟通','商务英语','写作','CAT工具'],graduate:['语言学','英美文学','翻译理论','二外','政治','英语综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','英语翻译'],undecided:['英语听说读写','翻译基础','英美文化','跨文化沟通','写作','商务英语入门']},
+    '日语':{job:['日语口语','日语翻译','日本文化','商务日语','JLPT N1备考','CAT工具'],graduate:['日语语言学','日本文学','翻译理论','二外','政治','日语综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','日语翻译'],undecided:['日语听说读写','翻译基础','日本文化','语言表达','商务日语入门','英语基础']},
+    '数学与应用数学':{job:['数学建模','MATLAB/Python','逻辑推理','统计分析','算法设计','数据挖掘'],graduate:['数学分析','高等代数','概率论','考研英语','政治','数学综合'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','数理分析'],undecided:['数学分析','高等代数','概率论','逻辑思维','数学建模入门','MATLAB基础']},
+    '应用物理学':{job:['实验设计','MATLAB','数据分析','仪器操作','物理仿真','半导体基础'],graduate:['量子力学','电动力学','热力学','考研英语','政治','物理综合'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','科技常识'],undecided:['高等数学','力学','电磁学','实验方法','量子力学基础','MATLAB基础']},
+    '化学':{job:['实验操作','仪器分析(HPLC/GC)','化学合成','实验室安全','数据处理','质量检测'],graduate:['有机化学','物理化学','分析化学','考研英语','政治','化学综合'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','化学基础'],undecided:['有机化学','无机化学','分析化学','物理化学','实验操作','仪器分析入门']},
+    '生物科学':{job:['实验操作(PCR/电泳)','细胞培养','显微技术','数据分析','分子克隆','生物信息'],graduate:['生物化学','分子生物学','遗传学','考研英语','政治','生物综合'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','生物基础'],undecided:['生物化学','细胞生物学','遗传学','分子生物学','实验操作','数据分析']},
+    '环境工程':{job:['环境监测','水处理工艺','固废处理','环评报告','AutoCAD','数据分析'],graduate:['环境工程原理','水污染控制','大气污染控制','考研英语','政治','高等数学'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','环保法规'],undecided:['环境科学概论','化学基础','工程制图','数据分析','水处理基础','环境监测']},
+    '临床医学':{job:['临床诊断','医患沟通','病历书写','急救技能','影像判读','手术基础'],graduate:['内科学','外科学','病理学','考研英语','政治','医学综合'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','医学基础'],undecided:['人体解剖学','生理学','病理学','诊断学基础','药理学','医学伦理学']},
+    '护理学':{job:['基础护理','急救技能','无菌操作','医患沟通','病例记录','仪器监护'],graduate:['护理学基础','内科护理','外科护理','考研英语','政治','护理综合'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','护理基础'],undecided:['护理学基础','人体解剖学','生理学','无菌技术','药理学基础','健康评估']},
+    '药学':{job:['药物分析','药理学','制剂制备','GMP规范','仪器操作','注册申报'],graduate:['药理学','药物化学','药剂学','考研英语','政治','药学综合'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','药品法规'],undecided:['药理学基础','药物化学','药剂学','药物分析','有机化学','药事管理']},
+    '心理学':{job:['心理咨询','量表测评','SPSS/R','实验设计','沟通技巧','案例分析'],graduate:['普通心理学','实验心理学','心理统计','考研英语','政治','心理学综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','心理常识'],undecided:['普通心理学','实验心理学','心理统计','沟通技巧','发展心理学','社会心理学']},
+    '教育学':{job:['教学设计','课堂管理','PPT制作','教育心理学','课程开发','教学评估'],graduate:['教育学原理','教育心理学','中外教育史','考研英语','政治','教育综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','教育理论'],undecided:['教育学原理','心理学基础','教学设计','表达沟通','教育史','课程论基础']},
+    '学前教育':{job:['幼儿活动设计','绘本教学','手工制作','音乐律动','保育技能','家长沟通'],graduate:['学前教育学','儿童心理学','幼儿园课程','考研英语','政治','教育综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','早教理论'],undecided:['学前教育学','儿童发展心理','艺术基础','活动设计','钢琴/声乐','保育基础']},
+    '体育教育':{job:['运动训练','赛事裁判','体能教学','运动解剖','急救技能','体育管理'],graduate:['运动生理学','运动训练学','体育概论','考研英语','政治','体育综合'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','体育常识'],undecided:['运动解剖学','运动生理学','体育教学法','体能训练','运动训练学','体育心理学']},
+    '美术学':{job:['手绘基础','色彩理论','素描','油画/国画','艺术史','创作能力'],graduate:['美术史','艺术概论','美术教育','考研英语','政治','专业创作'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','文化常识'],undecided:['素描','色彩','美术史','创作能力','速写','艺术概论']},
+    '视觉传达设计':{job:['平面设计','PS/AI','版式设计','品牌设计','插画','动效设计'],graduate:['设计史','设计概论','视觉传达','考研英语','政治','专业设计'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','设计基础'],undecided:['设计基础','PS/AI','版式设计','色彩构成','字体设计','品牌设计入门']},
+    '数字媒体艺术':{job:['视频剪辑','3D建模(Blender/C4D)','动画制作','UI设计','摄影','后期特效(AE)'],graduate:['数字媒体概论','影视理论','交互设计','考研英语','政治','专业创作'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','新媒体'],undecided:['数字媒体概论','PS','视频剪辑基础','摄影基础','UI设计入门','三维建模基础']},
+    '音乐学':{job:['乐理知识','乐器演奏','视唱练耳','音乐史','作曲编曲','音乐教育'],graduate:['音乐史','和声学','曲式分析','考研英语','政治','音乐综合'],public:['行测(判断/常识)','申论写作','时政热点','逻辑推理','公共基础','文化常识'],undecided:['基本乐理','视唱练耳','音乐史','器乐基础','声乐基础','和声学入门']},
+    '历史学':{job:['文献检索','史料分析','写作表达','批判思维','考古基础','文化传播'],graduate:['中国史','世界史','史学理论','考研英语','政治','历史综合'],public:['行测(言语/常识)','申论写作','时政热点','逻辑推理','公共基础','历史文化'],undecided:['中国通史','世界通史','文献检索','写作表达','史学理论','考古学基础']},
+    '哲学':{job:['逻辑推理','文本分析','批判思维','论证写作','跨学科思考','教育培训'],graduate:['哲学原理','中哲史','西哲史','考研英语','政治','哲学综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','思辨能力'],undecided:['哲学导论','逻辑学','批判思维','文本分析','中国哲学','西方哲学']},
+    '社会学':{job:['社会调查','SPSS/Stata','数据分析','问卷设计','田野研究','报告撰写'],graduate:['社会学理论','社会研究方法','社会统计','考研英语','政治','社会学综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','社会治理'],undecided:['社会学概论','社会调查方法','统计分析','批判思维','社会理论','SPSS基础']},
+    '统计学':{job:['SPSS/R/Python','数据建模','假设检验','可视化(Tableau)','机器学习','SQL'],graduate:['概率论','数理统计','回归分析','考研英语','政治','统计综合'],public:['行测(数量/资料分析)','申论写作','时政热点','逻辑推理','公共基础','统计基础'],undecided:['概率论','数理统计','R/Python基础','数据可视化','回归分析','SQL基础']},
+    '物流管理':{job:['供应链管理','仓储管理','物流系统(WMS/TMS)','ERP','成本控制','数据分析'],graduate:['物流学','供应链管理','运筹学','考研英语','政治','管理学'],public:['行测(数量/判断)','申论写作','时政热点','逻辑推理','公共基础','物流基础'],undecided:['物流学概论','供应链管理基础','ERP基础','数据分析','仓储管理基础','运筹学入门']},
+    '旅游管理':{job:['酒店运营','景区规划','导游技能','旅游英语','接待礼仪','OTA平台运营'],graduate:['旅游学','管理学','旅游规划','考研英语','政治','旅游综合'],public:['行测(言语/判断)','申论写作','时政热点','逻辑推理','公共基础','文旅政策'],undecided:['旅游学概论','酒店管理基础','服务管理','沟通表达','旅游英语','导游基础']}
+  };
+
+  Object.keys(majorSkillMap).forEach(majorName => {
+    Object.keys(majorSkillMap[majorName]).forEach(direction => {
+      const skills = majorSkillMap[majorName][direction];
+      db.run(
+        'INSERT OR IGNORE INTO major_skills (major_name, direction, skills) VALUES (?, ?, ?)',
+        [majorName, direction, JSON.stringify(skills)],
+        (err) => {
+          if (err) console.error('Error inserting major skill:', err);
+          completed++;
+          checkComplete();
+        }
+      );
+    });
+  });
+
+  db.run(
+    'INSERT OR IGNORE INTO question_versions (version_name, description, is_active) VALUES (?, ?, ?)',
+    ['v1.0', '初始版本，基于霍兰德RIASEC理论的20题测评', 1],
+    (err) => {
+      if (err) console.error('Error inserting question version:', err);
+      completed++;
+      checkComplete();
+    }
+  );
+
+  const abilityBenchmarks = [
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'freshman', ability_name: '编程基础', min_level: 30, avg_level: 50, priority: 'high', description: '掌握至少一门编程语言的基本语法和数据结构', learning_resources: JSON.stringify(['LeetCode入门题库', 'Python编程从入门到实践', 'CS61A课程']) },
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'freshman', ability_name: '英语能力', min_level: 40, avg_level: 60, priority: 'medium', description: '通过CET-4，能够阅读英文技术文档', learning_resources: JSON.stringify(['CET-4真题', 'Codecademy英文课程', '技术博客阅读']) },
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'sophomore', ability_name: '数据结构与算法', min_level: 50, avg_level: 70, priority: 'high', description: '熟练掌握常用数据结构和算法，能够解决中等难度算法题', learning_resources: JSON.stringify(['算法导论', 'LeetCode Hot 100', 'MIT 6.006课程']) },
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'sophomore', ability_name: '数据库基础', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握SQL语法，了解数据库设计原则', learning_resources: JSON.stringify(['MySQL必知必会', '数据库系统概念', 'SQLZoo练习']) },
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'junior', ability_name: '框架开发', min_level: 60, avg_level: 80, priority: 'high', description: '熟练使用至少一个主流框架进行项目开发', learning_resources: JSON.stringify(['Spring Boot官方文档', 'React官方教程', 'Vue.js官方文档']) },
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'junior', ability_name: '系统设计', min_level: 50, avg_level: 70, priority: 'high', description: '能够设计中等规模系统架构', learning_resources: JSON.stringify(['系统设计入门', 'Designing Data-Intensive Applications', '系统设计面试']) },
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'senior', ability_name: '项目实战', min_level: 70, avg_level: 85, priority: 'high', description: '有完整项目经历，能够独立完成功能开发', learning_resources: JSON.stringify(['GitHub开源项目贡献', '个人项目实战', '实习经历']) },
+    { major_name: '计算机科学与技术', direction: 'job', grade: 'senior', ability_name: '面试准备', min_level: 60, avg_level: 80, priority: 'high', description: '掌握面试技巧，能够通过大厂技术面试', learning_resources: JSON.stringify(['剑指Offer', '牛客网面试题', '技术面试必备']) },
+
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'freshman', ability_name: '高等数学', min_level: 60, avg_level: 80, priority: 'high', description: '掌握高等数学基础知识，为考研数学打下基础', learning_resources: JSON.stringify(['同济高数教材', '张宇高数视频', '李永乐线性代数']) },
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'freshman', ability_name: '英语基础', min_level: 50, avg_level: 70, priority: 'high', description: '通过CET-4，准备考研英语', learning_resources: JSON.stringify(['考研英语真题', '朱伟恋练有词', '何凯文长难句']) },
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'sophomore', ability_name: '数据结构', min_level: 70, avg_level: 85, priority: 'high', description: '深入理解数据结构，为考研408做准备', learning_resources: JSON.stringify(['数据结构严蔚敏', '王道数据结构', '天勤数据结构']) },
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'sophomore', ability_name: '操作系统', min_level: 60, avg_level: 80, priority: 'high', description: '掌握操作系统核心原理', learning_resources: JSON.stringify(['操作系统概念', '王道操作系统', 'Linux内核设计']) },
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'junior', ability_name: '计算机网络', min_level: 60, avg_level: 80, priority: 'high', description: '掌握计算机网络协议和原理', learning_resources: JSON.stringify(['计算机网络自顶向下', '王道计算机网络', '谢希仁计算机网络']) },
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'junior', ability_name: '考研政治', min_level: 40, avg_level: 60, priority: 'medium', description: '开始准备考研政治', learning_resources: JSON.stringify(['肖秀荣精讲精练', '徐涛核心考案', '腿姐技巧班']) },
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'senior', ability_name: '考研冲刺', min_level: 70, avg_level: 85, priority: 'high', description: '完成考研复习，参加考试', learning_resources: JSON.stringify(['历年真题', '模拟题', '冲刺背诵手册']) },
+    { major_name: '计算机科学与技术', direction: 'graduate', grade: 'senior', ability_name: '复试准备', min_level: 60, avg_level: 80, priority: 'high', description: '准备考研复试，联系导师', learning_resources: JSON.stringify(['复试面试题', '专业知识梳理', '导师邮件模板']) },
+
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'freshman', ability_name: '行测基础', min_level: 30, avg_level: 50, priority: 'medium', description: '了解行测考试内容和题型', learning_resources: JSON.stringify(['行测入门教材', '粉笔行测5000题', '中公行测教材']) },
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'freshman', ability_name: '申论基础', min_level: 30, avg_level: 50, priority: 'medium', description: '了解申论写作要求和格式', learning_resources: JSON.stringify(['申论范文宝典', '粉笔申论', '中公申论']) },
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'sophomore', ability_name: '行测数量关系', min_level: 40, avg_level: 60, priority: 'high', description: '掌握数量关系解题技巧', learning_resources: JSON.stringify(['数量关系专项', '齐麟数量关系', '花生十三数量']) },
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'sophomore', ability_name: '行测判断推理', min_level: 40, avg_level: 60, priority: 'high', description: '掌握逻辑推理和图形推理', learning_resources: JSON.stringify(['判断推理专项', '龙飞图推', '钩不了沉判断']) },
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'junior', ability_name: '行测资料分析', min_level: 50, avg_level: 70, priority: 'high', description: '掌握资料分析速算技巧', learning_resources: JSON.stringify(['资料分析专项', '齐麟资料分析', '高照资料分析']) },
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'junior', ability_name: '申论写作', min_level: 50, avg_level: 70, priority: 'high', description: '能够写出高质量申论文章', learning_resources: JSON.stringify(['申论写作模板', '站长申论', '李梦圆申论']) },
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'senior', ability_name: '时政热点', min_level: 60, avg_level: 80, priority: 'high', description: '关注时政热点，准备考试', learning_resources: JSON.stringify(['人民日报', '新华社', '时政热点汇编']) },
+    { major_name: '计算机科学与技术', direction: 'public', grade: 'senior', ability_name: '考试冲刺', min_level: 70, avg_level: 85, priority: 'high', description: '完成公务员考试复习，参加考试', learning_resources: JSON.stringify(['历年真题', '模拟题', '冲刺班']) },
+
+    { major_name: '金融学', direction: 'job', grade: 'freshman', ability_name: '数学基础', min_level: 50, avg_level: 70, priority: 'high', description: '掌握高等数学和线性代数', learning_resources: JSON.stringify(['同济高数', '线性代数', '概率论']) },
+    { major_name: '金融学', direction: 'job', grade: 'freshman', ability_name: '经济学基础', min_level: 40, avg_level: 60, priority: 'high', description: '掌握微观经济学和宏观经济学基础', learning_resources: JSON.stringify(['曼昆经济学原理', '高鸿业西方经济学', '经济学人']) },
+    { major_name: '金融学', direction: 'job', grade: 'sophomore', ability_name: '会计基础', min_level: 50, avg_level: 70, priority: 'high', description: '掌握会计学基础知识', learning_resources: JSON.stringify(['会计学原理', '初级会计职称', 'CPA会计']) },
+    { major_name: '金融学', direction: 'job', grade: 'sophomore', ability_name: '金融基础', min_level: 50, avg_level: 70, priority: 'high', description: '掌握货币银行学和金融学', learning_resources: JSON.stringify(['货币银行学', '金融学', '投资学']) },
+    { major_name: '金融学', direction: 'job', grade: 'junior', ability_name: '财务分析', min_level: 60, avg_level: 80, priority: 'high', description: '能够进行财务报表分析', learning_resources: JSON.stringify(['财务报表分析', '财务分析实战', 'Excel财务建模']) },
+    { major_name: '金融学', direction: 'job', grade: 'junior', ability_name: '金融工具', min_level: 50, avg_level: 70, priority: 'medium', description: '了解股票、债券、衍生品等金融工具', learning_resources: JSON.stringify(['金融市场学', '固定收益证券', '期权期货']) },
+    { major_name: '金融学', direction: 'job', grade: 'senior', ability_name: '实习经历', min_level: 60, avg_level: 80, priority: 'high', description: '有金融机构实习经历', learning_resources: JSON.stringify(['投行实习', '券商实习', '银行实习']) },
+    { major_name: '金融学', direction: 'job', grade: 'senior', ability_name: '考证准备', min_level: 50, avg_level: 70, priority: 'medium', description: '准备CFA/CPA等证书考试', learning_resources: JSON.stringify(['CFA备考', 'CPA备考', 'FRM备考']) },
+
+    { major_name: '会计学', direction: 'job', grade: 'freshman', ability_name: '会计基础', min_level: 50, avg_level: 70, priority: 'high', description: '掌握会计学基本原理', learning_resources: JSON.stringify(['会计学原理', '基础会计', '会计入门']) },
+    { major_name: '会计学', direction: 'job', grade: 'freshman', ability_name: '数学基础', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握高等数学基础', learning_resources: JSON.stringify(['同济高数', '微积分', '线性代数']) },
+    { major_name: '会计学', direction: 'job', grade: 'sophomore', ability_name: '财务会计', min_level: 60, avg_level: 80, priority: 'high', description: '掌握财务会计知识', learning_resources: JSON.stringify(['中级财务会计', 'CPA会计', '财务会计教程']) },
+    { major_name: '会计学', direction: 'job', grade: 'sophomore', ability_name: '成本会计', min_level: 50, avg_level: 70, priority: 'medium', description: '掌握成本核算方法', learning_resources: JSON.stringify(['成本会计', '管理会计', '成本核算']) },
+    { major_name: '会计学', direction: 'job', grade: 'junior', ability_name: '审计基础', min_level: 50, avg_level: 70, priority: 'high', description: '掌握审计学基础知识', learning_resources: JSON.stringify(['审计学', 'CPA审计', '审计实务']) },
+    { major_name: '会计学', direction: 'job', grade: 'junior', ability_name: '税务知识', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握税法基础知识', learning_resources: JSON.stringify(['税法', 'CPA税法', '税务会计']) },
+    { major_name: '会计学', direction: 'job', grade: 'senior', ability_name: '实习经历', min_level: 60, avg_level: 80, priority: 'high', description: '有会计师事务所实习经历', learning_resources: JSON.stringify(['四大实习', '内资所实习', '企业财务实习']) },
+    { major_name: '会计学', direction: 'job', grade: 'senior', ability_name: 'CPA备考', min_level: 50, avg_level: 70, priority: 'high', description: '准备CPA考试', learning_resources: JSON.stringify(['CPA六门', 'CPA综合', 'CPA真题']) },
+
+    { major_name: '法学', direction: 'job', grade: 'freshman', ability_name: '法理学', min_level: 50, avg_level: 70, priority: 'high', description: '掌握法理学基础知识', learning_resources: JSON.stringify(['法理学', '西方法律思想史', '法理导论']) },
+    { major_name: '法学', direction: 'job', grade: 'freshman', ability_name: '宪法', min_level: 50, avg_level: 70, priority: 'high', description: '掌握宪法基础知识', learning_resources: JSON.stringify(['宪法学', '宪法导论', '宪法案例']) },
+    { major_name: '法学', direction: 'job', grade: 'sophomore', ability_name: '民法', min_level: 60, avg_level: 80, priority: 'high', description: '掌握民法知识', learning_resources: JSON.stringify(['民法总则', '民法典', '民法案例']) },
+    { major_name: '法学', direction: 'job', grade: 'sophomore', ability_name: '刑法', min_level: 60, avg_level: 80, priority: 'high', description: '掌握刑法知识', learning_resources: JSON.stringify(['刑法学', '刑法分论', '刑法案例']) },
+    { major_name: '法学', direction: 'job', grade: 'junior', ability_name: '商法', min_level: 50, avg_level: 70, priority: 'medium', description: '掌握商法知识', learning_resources: JSON.stringify(['商法学', '公司法', '证券法']) },
+    { major_name: '法学', direction: 'job', grade: 'junior', ability_name: '诉讼法', min_level: 50, avg_level: 70, priority: 'high', description: '掌握民事诉讼和刑事诉讼', learning_resources: JSON.stringify(['民事诉讼法', '刑事诉讼法', '诉讼法案例']) },
+    { major_name: '法学', direction: 'job', grade: 'senior', ability_name: '法考准备', min_level: 60, avg_level: 80, priority: 'high', description: '准备法律职业资格考试', learning_resources: JSON.stringify(['法考精讲', '法考真题', '法考冲刺']) },
+    { major_name: '法学', direction: 'job', grade: 'senior', ability_name: '实习经历', min_level: 50, avg_level: 70, priority: 'medium', description: '有律所或法院实习经历', learning_resources: JSON.stringify(['律所实习', '法院实习', '法务实习']) },
+
+    { major_name: '临床医学', direction: 'job', grade: 'freshman', ability_name: '解剖学', min_level: 60, avg_level: 80, priority: 'high', description: '掌握人体解剖学', learning_resources: JSON.stringify(['系统解剖学', '局部解剖学', '解剖图谱']) },
+    { major_name: '临床医学', direction: 'job', grade: 'freshman', ability_name: '生理学', min_level: 50, avg_level: 70, priority: 'high', description: '掌握生理学知识', learning_resources: JSON.stringify(['生理学', '生理学实验', '生理导论']) },
+    { major_name: '临床医学', direction: 'job', grade: 'sophomore', ability_name: '病理学', min_level: 60, avg_level: 80, priority: 'high', description: '掌握病理学知识', learning_resources: JSON.stringify(['病理学', '病理生理学', '病理图谱']) },
+    { major_name: '临床医学', direction: 'job', grade: 'sophomore', ability_name: '药理学', min_level: 50, avg_level: 70, priority: 'high', description: '掌握药理学知识', learning_resources: JSON.stringify(['药理学', '药物化学', '药理实验']) },
+    { major_name: '临床医学', direction: 'job', grade: 'junior', ability_name: '诊断学', min_level: 60, avg_level: 80, priority: 'high', description: '掌握诊断学知识', learning_resources: JSON.stringify(['诊断学', '体格检查', '影像学']) },
+    { major_name: '临床医学', direction: 'job', grade: 'junior', ability_name: '内科学', min_level: 50, avg_level: 70, priority: 'high', description: '掌握内科学知识', learning_resources: JSON.stringify(['内科学', '内科实习', '内科病例']) },
+    { major_name: '临床医学', direction: 'job', grade: 'senior', ability_name: '外科学', min_level: 50, avg_level: 70, priority: 'high', description: '掌握外科学知识', learning_resources: JSON.stringify(['外科学', '外科实习', '外科病例']) },
+    { major_name: '临床医学', direction: 'job', grade: 'senior', ability_name: '执业医师', min_level: 60, avg_level: 80, priority: 'high', description: '准备执业医师资格考试', learning_resources: JSON.stringify(['执业医师考试', '规培', '临床技能']) },
+
+    { major_name: '英语', direction: 'job', grade: 'freshman', ability_name: '基础英语', min_level: 50, avg_level: 70, priority: 'high', description: '掌握英语听说读写基础', learning_resources: JSON.stringify(['新概念英语', 'CET-4', '英语听力']) },
+    { major_name: '英语', direction: 'job', grade: 'freshman', ability_name: '英语语法', min_level: 50, avg_level: 70, priority: 'medium', description: '掌握英语语法知识', learning_resources: JSON.stringify(['英语语法教程', '张道真语法', '薄冰语法']) },
+    { major_name: '英语', direction: 'job', grade: 'sophomore', ability_name: '专业英语', min_level: 60, avg_level: 80, priority: 'high', description: '掌握专业英语知识', learning_resources: JSON.stringify(['专业英语', 'TEM-4', '英语写作']) },
+    { major_name: '英语', direction: 'job', grade: 'sophomore', ability_name: '翻译基础', min_level: 50, avg_level: 70, priority: 'high', description: '掌握翻译基础知识', learning_resources: JSON.stringify(['翻译理论与实践', 'CATTI三级', '翻译教程']) },
+    { major_name: '英语', direction: 'job', grade: 'junior', ability_name: '口译', min_level: 50, avg_level: 70, priority: 'medium', description: '掌握口译技巧', learning_resources: JSON.stringify(['口译教程', 'CATTI口译', '口译实践']) },
+    { major_name: '英语', direction: 'job', grade: 'junior', ability_name: '笔译', min_level: 50, avg_level: 70, priority: 'medium', description: '掌握笔译技巧', learning_resources: JSON.stringify(['笔译教程', 'CATTI笔译', '笔译实践']) },
+    { major_name: '英语', direction: 'job', grade: 'senior', ability_name: 'TEM-8', min_level: 60, avg_level: 80, priority: 'high', description: '通过专业八级考试', learning_resources: JSON.stringify(['TEM-8真题', '专八词汇', '专八写作']) },
+    { major_name: '英语', direction: 'job', grade: 'senior', ability_name: '实习经历', min_level: 50, avg_level: 70, priority: 'medium', description: '有翻译或教育实习经历', learning_resources: JSON.stringify(['翻译公司实习', '教育机构实习', '外贸实习']) },
+
+    { major_name: '工商管理', direction: 'job', grade: 'freshman', ability_name: '管理学基础', min_level: 50, avg_level: 70, priority: 'high', description: '掌握管理学基础知识', learning_resources: JSON.stringify(['管理学原理', '管理学基础', '管理思想史']) },
+    { major_name: '工商管理', direction: 'job', grade: 'freshman', ability_name: '经济学基础', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握经济学基础知识', learning_resources: JSON.stringify(['经济学原理', '微观经济学', '宏观经济学']) },
+    { major_name: '工商管理', direction: 'job', grade: 'sophomore', ability_name: '市场营销', min_level: 50, avg_level: 70, priority: 'high', description: '掌握市场营销知识', learning_resources: JSON.stringify(['市场营销学', '消费者行为学', '市场调研']) },
+    { major_name: '工商管理', direction: 'job', grade: 'sophomore', ability_name: '财务管理', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握财务管理基础知识', learning_resources: JSON.stringify(['财务管理', '财务分析', '会计基础']) },
+    { major_name: '工商管理', direction: 'job', grade: 'junior', ability_name: '人力资源', min_level: 50, avg_level: 70, priority: 'high', description: '掌握人力资源管理知识', learning_resources: JSON.stringify(['人力资源管理', '组织行为学', '招聘与选拔']) },
+    { major_name: '工商管理', direction: 'job', grade: 'junior', ability_name: '战略管理', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握战略管理知识', learning_resources: JSON.stringify(['战略管理', '竞争战略', '商业模式']) },
+    { major_name: '工商管理', direction: 'job', grade: 'senior', ability_name: '实习经历', min_level: 60, avg_level: 80, priority: 'high', description: '有企业管理实习经历', learning_resources: JSON.stringify(['管培生实习', '咨询实习', '企业实习']) },
+    { major_name: '工商管理', direction: 'job', grade: 'senior', ability_name: '商业分析', min_level: 50, avg_level: 70, priority: 'medium', description: '掌握商业分析能力', learning_resources: JSON.stringify(['商业分析', '数据分析', 'Excel高级']) },
+
+    { major_name: '汉语言文学', direction: 'job', grade: 'freshman', ability_name: '古代文学', min_level: 50, avg_level: 70, priority: 'high', description: '掌握中国古代文学知识', learning_resources: JSON.stringify(['中国古代文学', '唐诗宋词', '古文观止']) },
+    { major_name: '汉语言文学', direction: 'job', grade: 'freshman', ability_name: '现代汉语', min_level: 50, avg_level: 70, priority: 'high', description: '掌握现代汉语知识', learning_resources: JSON.stringify(['现代汉语', '现代汉语词典', '语法教程']) },
+    { major_name: '汉语言文学', direction: 'job', grade: 'sophomore', ability_name: '现当代文学', min_level: 50, avg_level: 70, priority: 'high', description: '掌握中国现当代文学知识', learning_resources: JSON.stringify(['中国现当代文学', '鲁迅作品', '茅盾文学奖']) },
+    { major_name: '汉语言文学', direction: 'job', grade: 'sophomore', ability_name: '写作能力', min_level: 50, avg_level: 70, priority: 'high', description: '掌握写作技巧', learning_resources: JSON.stringify(['写作教程', '散文写作', '小说写作']) },
+    { major_name: '汉语言文学', direction: 'job', grade: 'junior', ability_name: '文学理论', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握文学理论知识', learning_resources: JSON.stringify(['文学理论', '文学批评', '美学原理']) },
+    { major_name: '汉语言文学', direction: 'job', grade: 'junior', ability_name: '语言学', min_level: 40, avg_level: 60, priority: 'medium', description: '掌握语言学知识', learning_resources: JSON.stringify(['语言学纲要', '现代汉语语法', '古代汉语']) },
+    { major_name: '汉语言文学', direction: 'job', grade: 'senior', ability_name: '教师资格证', min_level: 50, avg_level: 70, priority: 'high', description: '准备教师资格证考试', learning_resources: JSON.stringify(['教师资格证', '教育心理学', '教学方法']) },
+    { major_name: '汉语言文学', direction: 'job', grade: 'senior', ability_name: '实习经历', min_level: 50, avg_level: 70, priority: 'medium', description: '有教育或媒体实习经历', learning_resources: JSON.stringify(['教师实习', '媒体实习', '出版社实习']) }
+  ];
+
+  abilityBenchmarks.forEach(benchmark => {
+    db.run(
+      'INSERT OR IGNORE INTO ability_benchmarks (major_name, direction, grade, ability_name, min_level, avg_level, priority, description, learning_resources) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [benchmark.major_name, benchmark.direction, benchmark.grade, benchmark.ability_name, benchmark.min_level, benchmark.avg_level, benchmark.priority, benchmark.description, benchmark.learning_resources],
+      (err) => {
+        if (err) console.error('Error inserting ability benchmark:', err);
+        completed++;
+        checkComplete();
+      }
+    );
+  });
+
+  function checkComplete() {
+    if (completed >= total) {
+      setTimeout(() => {
+        console.log('Database initialization completed');
+        db.close();
+      }, 1000);
+    }
+  }
+}
+
+initDatabase();
