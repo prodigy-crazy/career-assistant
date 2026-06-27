@@ -528,7 +528,7 @@ function initDatabase() {
 
   allMajorsData.forEach(majorData => {
     db.run(
-      'INSERT OR IGNORE INTO majors (name, category, description) VALUES (?, ?, ?)',
+      'INSERT OR IGNORE INTO majors (name, category, description) VALUES (?, ?, ?) ',
       [majorData.name, majorData.category, majorData.name + '专业发展路线'],
       function(err) {
         if (err) {
@@ -572,7 +572,7 @@ function initDatabase() {
 
   Object.keys(majorCategoryMap).forEach(majorName => {
     db.run(
-      'INSERT OR IGNORE INTO major_categories (major_name, category) VALUES (?, ?)',
+      'INSERT OR IGNORE INTO major_categories (major_name, category) VALUES (?, ?) ',
       [majorName, majorCategoryMap[majorName]],
       (err) => {
         if (err) console.error('Error inserting major category:', err);
@@ -596,7 +596,7 @@ function initDatabase() {
 
   directionWeightConfig.forEach(config => {
     db.run(
-      'INSERT OR IGNORE INTO direction_weights (direction, R, I, A, S, E, C) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      'INSERT OR IGNORE INTO direction_weights (direction, R, I, A, S, E, C) VALUES (?, ?, ?, ?, ?, ?, ?) ',
       [config.direction, config.R, config.I, config.A, config.S, config.E, config.C],
       (err) => {
         if (err) console.error('Error inserting direction weight:', err);

@@ -9,14 +9,14 @@
     "build": "npm install && node init-db.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "axios": "^1.6.7",
-    "sqlite3": "^5.1.7",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
-    "bcryptjs": "^2.4.3",
-    "helmet": "^7.1.0"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
