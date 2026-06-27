@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: career-assistant-backend
+    env: node
+    plan: starter
+    buildCommand: npm install && node init-db.js
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    region: singapore
+
+  - type: static
+    name: career-assistant-frontend
+    env: static
+    plan: starter
+    buildCommand: ''
+    staticPublishPath: .
+    region: singapore

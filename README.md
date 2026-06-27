@@ -9,23 +9,31 @@
 ### 核心定位
 
 - **原创测评体系**：基于公有领域的霍兰德职业兴趣理论，原创题库设计
-- **无第三方依赖**：全程使用原生HTML、CSS、JavaScript开发，无商业框架、字体、图标依赖
-- **本地数据存储**：所有用户数据通过浏览器localStorage存储，保护隐私安全
+- **全栈技术方案**：前端原生HTML/CSS/JavaScript + 后端Node.js + SQLite数据库
+- **用户认证系统**：完整的登录/注册功能，支持验证码验证
+- **数据持久化**：用户测评记录存储到后端数据库，登录后可查看历史记录
 - **全平台适配**：响应式设计，完美支持PC端和移动端访问
 
 ## 功能模块
 
-### 1. 首页引导
+### 1. 用户认证
+- **登录/注册**：完整的用户认证系统
+- **验证码验证**：4位数字验证码，支持获取和验证
+- **表单验证**：用户名3-20字符，密码≥6字符
+- **JWT令牌**：登录后获取Token，保护API接口
+
+### 2. 首页引导
 - 醒目的品牌展示与产品定位
 - CSS绘制的阶梯成长图形，象征大学四年的成长路径
+- 自然清新风格的登录注册页面
 - 一键开始规划入口
 
-### 2. 信息填写
+### 3. 信息填写
 - 收集用户基本信息：专业、年级、技能、意向方向
 - 表单验证：必填项校验与错误提示
 - 数据本地持久化存储
 
-### 3. 职业测评
+### 4. 职业测评
 - **20道原创测评题目**，涵盖6个维度：
   - R 现实型（4题）
   - I 研究型（4题）
@@ -37,11 +45,16 @@
 - 实时进度保存，刷新不丢失
 - 流畅的答题体验
 
-### 4. 结果展示
+### 5. 结果展示
 - **Canvas雷达图**：动态绘制六维职业兴趣分布
 - **推荐发展路线**：技术就业 / 考研深造 / 公考体制三条路线适配度分析
 - **能力差距分析**：根据得分最高的维度，提供3项重点提升建议
 - **学期行动清单**：根据年级生成5条可执行的学期任务
+
+### 6. 测评记录
+- 用户登录后可查看自己的历史测评记录
+- 支持查看历史测评报告详情
+- 数据存储到后端数据库，安全可靠
 
 ## 使用流程
 
@@ -64,53 +77,144 @@
 ## 技术实现
 
 ### 技术栈
+
+**前端**
 - **HTML5**：语义化标签，结构清晰
-- **CSS3**：Flexbox布局、Grid布局、媒体查询、CSS变量
+- **CSS3**：Flexbox布局、Grid布局、媒体查询、CSS变量、毛玻璃效果
 - **JavaScript**：原生ES6+，无任何第三方框架
 - **Canvas API**：雷达图绘制
+
+**后端**
+- **Node.js**：服务端运行环境（≥18.0.0）
+- **Express.js**：Web框架
+- **SQLite3**：轻量级数据库
+- **jsonwebtoken**：JWT认证
+- **bcryptjs**：密码加密
+- **helmet**：安全中间件
+- **cors**：跨域处理
 
 ### 架构特点
 
 | 特性 | 实现方式 |
 |------|---------|
 | 单页应用 | JS控制页面显示/隐藏，无刷新切换 |
-| 数据存储 | localStorage，本地持久化 |
+| 用户认证 | JWT令牌 + bcrypt密码加密 |
+| 数据存储 | SQLite数据库 + localStorage |
 | 响应式设计 | 媒体查询自适应PC/平板/手机 |
 | 动画效果 | CSS transition + keyframes |
-| 雷达图 | HTML5 Canvas动态绑制 |
+| 雷达图 | HTML5 Canvas动态绘制 |
+| 安全防护 | Helmet安全头 + JWT验证 |
 
 ### 文件结构
 
 ```
 xingtu/
-├── index.html      # 主页面（4个页面模块）
+├── index.html          # 主页面（登录/注册/首页/测评/结果）
+├── showcase.html       # 展示页面
+├── deploy.bat          # 一键部署脚本（Windows）
+├── docker-compose.yml  # Docker Compose配置
+├── render.yaml         # Render平台部署配置
+├── nginx.conf          # Nginx配置
 ├── css/
-│   └── style.css  # 样式文件（约1000行）
-└── js/
-    └── main.js    # 脚本文件（约250行）
+│   └── style.css       # 样式文件
+├── js/
+│   └── main.js         # 前端脚本
+├── images/
+│   └── background.jpg  # 背景图片
+└── backend/
+    ├── server.js       # 后端入口
+    ├── db.js           # 数据库连接
+    ├── init-db.js      # 数据库初始化
+    ├── package.json    # 后端依赖
+    ├── vercel.json     # Vercel部署配置
+    ├── Dockerfile      # Docker镜像配置
+    └── routes/
+        ├── users.js    # 用户路由（登录/注册）
+        ├── routes.js   # 测评路由
+        └── chat.js     # 聊天路由
 ```
 
 ### 开发环境
 
 - **IDE**：Trae IDE（支持智能提示、代码补全）
-- **本地预览**：Python HTTP Server
+- **前端服务**：Python HTTP Server
+- **后端服务**：Node.js Express
+- **数据库**：SQLite3（嵌入式）
 - **浏览器**：Chrome、Firefox、Safari、Edge等现代浏览器
 
 ## 使用说明
 
-### 本地运行
+### 一键部署（推荐）
 
-1. 克隆或下载项目到本地
-2. 进入项目目录
-3. 启动本地服务器：
-   ```bash
-   # Python 3
-   python -m http.server 8000
+```bash
+# Windows用户直接双击运行
+deploy.bat
 
-   # 或使用 Node.js
-   npx serve .
-   ```
-4. 浏览器访问：`http://localhost:8000`
+# 或使用命令行
+.\deploy.bat
+```
+
+脚本会自动完成：
+1. 检查Node.js和Python环境
+2. 安装后端依赖
+3. 初始化数据库
+4. 启动后端服务（端口3001）
+5. 启动前端服务（端口8080）
+
+### 手动运行
+
+**1. 启动后端服务**
+```bash
+cd backend
+npm install
+node init-db.js
+npm start
+```
+后端服务运行在：http://localhost:3001
+
+**2. 启动前端服务**
+```bash
+python -m http.server 8080
+```
+前端页面访问：http://localhost:8080/index.html
+
+**3. 测试账号**
+- 用户名：`13900139999`
+- 密码：`123456`
+
+### Docker部署
+
+```bash
+docker-compose up -d
+```
+
+### 云平台部署
+
+**Vercel部署（后端）**
+1. 登录Vercel官网：https://vercel.com
+2. 导入项目，选择backend目录
+3. 配置环境变量：`NODE_ENV=production`
+4. 部署完成后获取API地址
+
+**Render部署（全栈）**
+1. 登录Render官网：https://render.com
+2. 导入项目
+3. 使用render.yaml配置自动部署
+
+### API接口
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/users/register` | POST | 用户注册 |
+| `/api/users/login` | POST | 用户登录 |
+| `/api/users/captcha` | POST | 获取验证码 |
+| `/api/test-records` | GET | 获取测评记录 |
+| `/api/test-records` | POST | 保存测评记录 |
+| `/api/test-records/:id` | GET | 获取单条记录 |
+| `/api/professions` | GET | 获取专业列表 |
+| `/api/questions` | GET | 获取测评题目 |
+| `/api/benchmarks` | GET | 获取能力基准 |
+| `/api/routes` | GET | 获取发展路线 |
 
 ### 在线访问
 
@@ -118,17 +222,70 @@ xingtu/
 
 ## 隐私说明
 
-- 所有用户数据均存储在浏览器本地（localStorage）
-- 不向任何服务器传输个人信息
-- 刷新或关闭浏览器后，本地数据保留
-- 点击「重新测评」可清空所有数据
+- 用户注册信息（用户名、密码）存储在后端数据库，密码使用bcrypt加密
+- 用户测评记录存储在后端数据库，仅本人可查看
+- 前端使用localStorage存储临时会话数据
+- JWT令牌存储在localStorage，有效期内自动登录
+- 不向第三方传输任何个人信息
+
+## 安全说明
+
+- 使用bcrypt对密码进行加密存储
+- 使用JWT令牌进行接口认证
+- 使用Helmet中间件设置安全HTTP头
+- 所有API接口均进行身份验证
+- 用户只能访问自己的测评记录
 
 ## 参赛信息
 
 - **作品名称**：大学生成长职途助手
 - **技术方案**：基于Trae IDE SOLO开发
-- **核心技术**：原生HTML + CSS + JavaScript
+- **核心技术**：原生HTML + CSS + JavaScript + Node.js + SQLite
 - **理论依据**：霍兰德职业兴趣理论（公有领域）
+- **项目类型**：全栈Web应用
+
+## 初赛提交材料清单
+
+### 1. 项目源码
+- ✅ 完整前端代码（HTML/CSS/JS）
+- ✅ 完整后端代码（Node.js）
+- ✅ 数据库初始化脚本
+- ✅ 部署配置文件
+
+### 2. 项目文档
+- ✅ README.md（项目说明）
+- ✅ 项目运行流程.md
+- ✅ API接口说明
+
+### 3. 部署配置
+- ✅ deploy.bat（一键部署脚本）
+- ✅ docker-compose.yml（Docker部署）
+- ✅ render.yaml（Render云平台部署）
+- ✅ vercel.json（Vercel部署）
+- ✅ Dockerfile（后端镜像）
+
+### 4. 功能演示
+- ✅ 用户注册/登录功能
+- ✅ 验证码验证功能
+- ✅ 霍兰德职业兴趣测评（20题）
+- ✅ Canvas雷达图展示
+- ✅ 发展路线推荐
+- ✅ 能力差距分析
+- ✅ 学期行动清单
+- ✅ 历史记录查询
+- ✅ 响应式适配
+
+### 5. 技术亮点
+- ✅ 原生技术栈，无第三方框架依赖
+- ✅ 完整的用户认证系统（JWT）
+- ✅ 毛玻璃效果的登录注册页面
+- ✅ 自然清新风格设计（绿水青山主题）
+- ✅ 动态雷达图可视化
+- ✅ 安全防护措施（Helmet、bcrypt）
+
+### 6. 测试账号
+- **用户名**：13900139999
+- **密码**：123456
 
 ---
 
