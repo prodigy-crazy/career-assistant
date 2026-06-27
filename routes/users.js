@@ -177,4 +177,13 @@ router.get('/assessments/:id', (req, res) => {
   }
 });
 
+router.get('/list', (req, res) => {
+  db.all('SELECT id, username, created_at FROM users ORDER BY created_at DESC', (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ count: rows.length, users: rows });
+  });
+});
+
 module.exports = router;
