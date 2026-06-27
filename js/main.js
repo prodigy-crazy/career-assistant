@@ -4,7 +4,7 @@ var selectedQuestions = [];
 
 var API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
   ? 'http://localhost:3001/api' 
-  : '/api';
+  : 'https://career-assistant-backend-1ndf.onrender.com/api';
 
 var cachedData = {
   questions: null,
