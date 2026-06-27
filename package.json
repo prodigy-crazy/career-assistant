@@ -1,0 +1,13 @@
+{
+  "name": "career-assistant",
+  "version": "1.0.0",
+  "description": "大学生成长职途助手",
+  "scripts": {
+    "install-backend": "cd backend && npm install",
+    "build": "cd backend && npm install && node init-db.js",
+    "start": "cd backend && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
