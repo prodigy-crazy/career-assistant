@@ -1,4 +1,5 @@
 const db = require('./db');
+const bcrypt = require('bcryptjs');
 
 const allMajorsData = [
   {
@@ -523,7 +524,7 @@ const learningPlanData = {
 
 function initDatabase() {
   let completed = 0;
-  const total = allMajorsData.length + Object.keys(majorCategoryMap).length + questionBank.length + directionWeightConfig.length + 30 + 200 + 1 + 120;
+  const total = allMajorsData.length + Object.keys(majorCategoryMap).length + questionBank.length + directionWeightConfig.length + 30 + 200 + 1 + 120 + 3;
 
   allMajorsData.forEach(majorData => {
     db.run(
@@ -789,6 +790,25 @@ function initDatabase() {
     { major_name: '汉语言文学', direction: 'job', grade: 'senior', ability_name: '教师资格证', min_level: 50, avg_level: 70, priority: 'high', description: '准备教师资格证考试', learning_resources: JSON.stringify(['教师资格证', '教育心理学', '教学方法']) },
     { major_name: '汉语言文学', direction: 'job', grade: 'senior', ability_name: '实习经历', min_level: 50, avg_level: 70, priority: 'medium', description: '有教育或媒体实习经历', learning_resources: JSON.stringify(['教师实习', '媒体实习', '出版社实习']) }
   ];
+
+  const testUsers = [
+    { username: 'testuser001', password: '123456' },
+    { username: 'testuser2024', password: '123456' },
+    { username: 'demo', password: '123456' }
+  ];
+
+  testUsers.forEach(user => {
+    const hashedPassword = bcrypt.hashSync(user.password, 8);
+    db.run(
+      'INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)',
+      [user.username, hashedPassword],
+      (err) => {
+        if (err) console.error('Error inserting test user:', err);
+        completed++;
+        checkComplete();
+      }
+    );
+  });
 
   abilityBenchmarks.forEach(benchmark => {
     db.run(

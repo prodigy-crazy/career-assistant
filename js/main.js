@@ -25,16 +25,39 @@ var fallbackData = {
   majorCategoryMap: {}
 };
 
-function fetchFromBackend(endpoint, params) {
+function fetchWithRetry(url, options, maxRetries, delay) {
+  return fetch(url, options)
+    .then(function(response) {
+      if (response.ok) {
+        return response;
+      }
+      if (maxRetries > 0 && (response.status === 500 || response.status === 502 || response.status === 503 || response.status === 401)) {
+        console.warn('Retrying after status:', response.status, url);
+        return new Promise(function(resolve) { setTimeout(resolve, delay); })
+          .then(function() { return fetchWithRetry(url, options, maxRetries - 1, delay * 2); });
+      }
+      return response;
+    })
+    .catch(function(err) {
+      if (maxRetries > 0) {
+        console.warn('Retrying after error:', err.message, url);
+        return new Promise(function(resolve) { setTimeout(resolve, delay); })
+          .then(function() { return fetchWithRetry(url, options, maxRetries - 1, delay * 2); });
+      }
+      throw err;
+    });
+}
+
+function fetchFromBackend(endpoint, params, options) {
   var url = API_BASE_URL + endpoint;
   if (params) {
     var query = new URLSearchParams(params).toString();
     if (query) url += '?' + query;
   }
-  return fetch(url)
+  return fetchWithRetry(url, options || {}, 2, 5000)
     .then(function(response) {
       if (!response.ok) {
-        console.warn('Backend API failed:', endpoint);
+        console.warn('Backend API failed:', endpoint, response.status);
         return null;
       }
       return response.json();
@@ -268,7 +291,7 @@ function getCaptcha(type) {
     btn.disabled = true;
     btn.textContent = '获取中...';
     
-    fetch(`${API_BASE_URL}/users/captcha?username=${encodeURIComponent(username)}`)
+    fetchWithRetry(`${API_BASE_URL}/users/captcha?username=${encodeURIComponent(username)}`, {}, 2, 5000)
         .then(function(response) {
             return response.json();
         })
@@ -324,13 +347,13 @@ function handleLogin(event) {
         return;
     }
     
-    fetch(`${API_BASE_URL}/users/login`, {
+    fetchWithRetry(`${API_BASE_URL}/users/login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ username, password, captcha })
-    })
+    }, 2, 5000)
         .then(function(response) {
             return response.json();
         })
@@ -385,13 +408,13 @@ function handleRegister(event) {
         return;
     }
     
-    fetch(`${API_BASE_URL}/users/register`, {
+    fetchWithRetry(`${API_BASE_URL}/users/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ username, password, captcha })
-    })
+    }, 2, 5000)
         .then(function(response) {
             return response.json();
         })
@@ -477,11 +500,11 @@ function loadUserRecords() {
         return;
     }
     
-    fetch(`${API_BASE_URL}/test-records`, {
+    fetchWithRetry(`${API_BASE_URL}/test-records`, {
         headers: {
             'Authorization': 'Bearer ' + token
         }
-    })
+    }, 2, 5000)
         .then(function(response) {
             if (!response.ok) {
                 throw new Error('获取记录失败');
@@ -740,7 +763,7 @@ function saveTestRecord() {
  return { question_id: selectedQuestions[idx].id, value: val };
  });
 
- fetch(API_BASE_URL + '/test-records', {
+ fetchWithRetry(API_BASE_URL + '/test-records', {
  method: 'POST',
  headers: {
  'Content-Type': 'application/json',
@@ -753,7 +776,7 @@ function saveTestRecord() {
  scores: scores,
  answers: userAnswers
  })
- })
+ }, 2, 5000)
  .then(function(response) {
  if (!response.ok) {
  console.error('Failed to save test record');
@@ -1198,7 +1221,7 @@ container.innerHTML+=categoryHtml;
 
 async function fetchRoutesFromBackend(major) {
  try {
- var response = await fetch(API_BASE_URL + '/majors/name/' + encodeURIComponent(major) + '/routes');
+ var response = await fetchWithRetry(API_BASE_URL + '/majors/name/' + encodeURIComponent(major) + '/routes', {}, 2, 5000);
  if (response.ok) {
  var routes = await response.json();
  var routeData = { job: [], graduate: [], public: [], other: [] };
